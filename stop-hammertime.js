@@ -1,9 +1,9 @@
 console.log('Loading function');
 
-const AWS = require('aws-sdk');
+AWS = require('aws-sdk');
 AWS.config.region = 'ap-southeast-2';
 
-const async = require('async')
+async = require('async');
 
 
 exports.handler = function(event, context) {
@@ -59,7 +59,7 @@ exports.handler = function(event, context) {
         instances.forEach(function(instance, i) {
           console.log(instance.InstanceId + ' (' + valueForKey('Name', instance.Tags) + ')');
         });
-        console.log('\n')
+        console.log('\n');
 
         callback(null, null);
       }
@@ -81,13 +81,13 @@ exports.handler = function(event, context) {
           } else {
             return true;
           }
-        })
+        });
 
         console.log("ASGs to spin down:");
         asgs.forEach(function(asg, i) {
           console.log(asg.AutoScalingGroupName + ' (' + valueForKey('Name', asg.Tags) + ')');
         });
-        console.log('\n')
+        console.log('\n');
 
         callback(null, null);
 
@@ -97,11 +97,11 @@ exports.handler = function(event, context) {
   }
 
   function valueForKey(aKey, tags) {
-    returnValue = ''
+    returnValue = '';
 
     tags.forEach(function(tag) {
-      if (tag['Key'] === aKey) {
-        returnValue = tag['Value'];
+      if (tag.Key === aKey) {
+        returnValue = tag.Value;
       }
     });
 
@@ -112,12 +112,12 @@ exports.handler = function(event, context) {
     returnValue = false;
 
     tags.forEach(function(tag) {
-      if (tag['Key'] === aKey) {
+      if (tag.Key === aKey) {
         returnValue = true;
       }
     });
 
     return returnValue;
-  };
+  }
 
 };
