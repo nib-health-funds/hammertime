@@ -1,0 +1,18 @@
+{
+  "name": "hammertime",
+  "version": "1.0.0",
+  "description": "Stops and starts instances and ASGs",
+  "main": "start-hammertime.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.nib.com.au:redqueen/hammertime.git"
+  },
+  "author": "Ian Donaldson",
+  "license": "proprietary",
+  "dependencies": {
+    "async": "^1.5.2"
+  }
+}
