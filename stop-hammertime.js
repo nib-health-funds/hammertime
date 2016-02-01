@@ -16,10 +16,8 @@ exports.handler = function(event, context) {
     console.warn("Dryrun mode - no actions will be performed\n");
   }
 
-  async.parallel(
-  [
-
-  function(callback) {
+  async.series(
+  [function(callback) {
     doEc2(callback);
   },
 
@@ -29,6 +27,7 @@ exports.handler = function(event, context) {
 
   function(err, results) {
     if (err) {
+      console.log("Error: " + err);
       context.fail(err);
     } else {
       context.succeed('Done.');
@@ -66,12 +65,39 @@ exports.handler = function(event, context) {
         });
         console.log('\n');
 
-        tagStopTime(instances.map(function(instance) { return instance.InstanceId }), callback);
-        stopEc2Instance(instances.map(function(instance) { return instance.InstanceId }), callback);
+        async.series(
+        [function(callback2) {
+          tagStopTime(instances.map(function(instance) {
+            return instance.InstanceId
+          }), callback2);
+        },
 
-        callback(null, null);
+        function(callback2) {
+          stopEc2Instance(instances.map(function(instance) {
+            return instance.InstanceId
+          }), callback2);
+        }],
+
+        function(err, results) {
+          if (err) {
+            callback(err, null);
+          } else {
+            console.log("EC2 done\n");
+            callback(null, null);
+          }
+        });
       }
     });
+  }
+
+  function filterError(error) {
+    returnValue = error;
+
+    if (error == 'DryRunOperation: Request would have succeeded, but DryRun flag is set.') {
+      returnValue = null;
+    }
+
+    return returnValue;
   }
 
   function tagStopTime(resources, callback) {
@@ -87,8 +113,10 @@ exports.handler = function(event, context) {
     console.log('Tagging ' + resources);
 
     ec2.createTags(params, function(err, data) {
-      if (err) {
+      if (filterError(err)) {
         callback(err, null);
+      } else {
+        callback(null, null);
       }
     });
   }
@@ -103,10 +131,12 @@ exports.handler = function(event, context) {
     console.log('Stopping ' + instances);
 
     ec2.stopInstances(params, function(err, data) {
-      if (err) {
-          callback(err, null);
-        }
-      });
+      if (filterError(err)) {
+        callback(err, null);
+      } else {
+        callback(null, null);
+      }
+    });
   }
 
   function doAsg(callback) {
@@ -131,10 +161,48 @@ exports.handler = function(event, context) {
         });
         console.log('\n');
 
-        callback(null, null);
+        async.series(
+        [function(callback2) {
+          tagStopTime(asgs.map(function(asg) {
+            return asg.AutoScalingGroupName
+          }), callback2);
+        },
 
+        function(callback2) {
+          tagAsgSize(asgs, callback2);
+        }],
+
+        function(err, results) {
+          if (err) {
+            callback(err, null);
+          } else {
+            console.log("ASGs done\n");
+            callback(null, null);
+          }
+        });
       }
+    });
+  }
 
+  function tagAsgSize(asgs, callback) {
+    asgs.forEach(function(asg) {
+      // MinSize MaxSize DesiredCapacity
+      var params = {
+        Resources: [asg.AutoScalingGroupName],
+        Tags: [{
+          Key: 'hammertime:originalASGSize',
+          Value: asg.MinSize + ' ' + asg.MaxSize + ' ' + asg.DesiredCapacity
+        }],
+        DryRun: dryrun
+      };
+
+      console.log('Tagging ' + asg.AutoScalingGroupName);
+
+      ec2.createTags(params, function(err, data) {
+        if (err) {
+          callback(err, null);
+        }
+      });
     });
   }
 
