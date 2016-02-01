@@ -1,5 +1,7 @@
 # hammertime
 
+![Stop! Hammer Time!](hammertime.gif)
+
 Lambdas intended to be run as scheduled functions on non-production
 AWS accounts.
 
