@@ -167,9 +167,11 @@ exports.handler = function(event, context) {
             return asg.AutoScalingGroupName
           }), callback2);
         },
-
         function(callback2) {
           tagAsgSize(asgs, callback2);
+        },
+        function(callback2) {
+          spinDownAsgs(asgs, callback2)
         }],
 
         function(err, results) {
@@ -186,7 +188,6 @@ exports.handler = function(event, context) {
 
   function tagAsgSize(asgs, callback) {
     asgs.forEach(function(asg) {
-      // MinSize MaxSize DesiredCapacity
       var params = {
         Resources: [asg.AutoScalingGroupName],
         Tags: [{
@@ -196,13 +197,39 @@ exports.handler = function(event, context) {
         DryRun: dryrun
       };
 
-      console.log('Tagging ' + asg.AutoScalingGroupName);
+      console.log('Recording original size of ' + asg.AutoScalingGroupName);
 
       ec2.createTags(params, function(err, data) {
-        if (err) {
+        if (filterError(err)) {
           callback(err, null);
+        } else {
+          callback(null, null);
         }
       });
+    });
+  }
+
+  function spinDownAsgs(asgs, callback) {
+    asgs.forEach(function(asg) {
+      var params = {
+        AutoScalingGroupName: asg.AutoScalingGroupName,
+        DesiredCapacity: 0,
+        MinSize: 0,
+      };
+
+      console.log('Spinning down ASG ' + asg.AutoScalingGroupName)
+
+      if (!dryrun) {
+        autoscaling.updateAutoScalingGroup(params, function(err, data) {
+          if (err) {
+            callback(err, null);
+          } else {
+            callback(null, null);
+          }
+        });
+      } else {
+        callback(null, null);
+      }
     });
   }
 
