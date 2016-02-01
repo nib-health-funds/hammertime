@@ -5,10 +5,16 @@ AWS.config.region = 'ap-southeast-2';
 
 async = require('async');
 
+dryrun = true;
+
 
 exports.handler = function(event, context) {
   var ec2 = new AWS.EC2();
   var autoscaling = new AWS.AutoScaling();
+
+  if (dryrun) {
+    console.warn("Dryrun mode - no actions will be performed\n");
+  }
 
   async.parallel(
   [
@@ -28,7 +34,6 @@ exports.handler = function(event, context) {
       context.succeed('Done.');
     }
   });
-
 
   function doEc2(callback) {
 
@@ -61,13 +66,50 @@ exports.handler = function(event, context) {
         });
         console.log('\n');
 
+        tagStopTime(instances.map(function(instance) { return instance.InstanceId }), callback);
+        stopEc2Instance(instances.map(function(instance) { return instance.InstanceId }), callback);
+
         callback(null, null);
       }
     });
   }
 
-  function doAsg(callback) {
+  function tagStopTime(resources, callback) {
+    var params = {
+      Resources: resources,
+      Tags: [{
+        Key: 'stop:hammertime',
+        Value: new Date().toISOString()
+      }],
+      DryRun: dryrun
+    };
 
+    console.log('Tagging ' + resources);
+
+    ec2.createTags(params, function(err, data) {
+      if (err) {
+        callback(err, null);
+      }
+    });
+  }
+
+  function stopEc2Instance(instances, callback) {
+    var params = {
+      InstanceIds: instances,
+      DryRun: dryrun,
+      Force: false
+    };
+
+    console.log('Stopping ' + instances);
+
+    ec2.stopInstances(params, function(err, data) {
+      if (err) {
+          callback(err, null);
+        }
+      });
+  }
+
+  function doAsg(callback) {
     var params = {};
 
     autoscaling.describeAutoScalingGroups(params, function(err, data) {
