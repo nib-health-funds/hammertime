@@ -84,7 +84,7 @@
           ]
         },
         "Timeout": 60,
-        "Handler": "exports.handler",
+        "Handler": "stop-hammertime.handler",
         "Runtime": "nodejs",
         "MemorySize": 128
       }
@@ -107,7 +107,7 @@
           ]
         },
         "Timeout": 60,
-        "Handler": "exports.handler",
+        "Handler": "start-hammertime.handler",
         "Runtime": "nodejs",
         "MemorySize": 128
       }
