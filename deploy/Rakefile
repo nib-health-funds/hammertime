@@ -1,5 +1,7 @@
-require 'sceptre'
 require 'cloudformer'
+require_relative 'assume_role.rb'
+
+AssumeRole.new.set_credentials!
 
 environment = ENV['ENVIRONMENT']
 Sceptre.assume_deployer_role(environment)
