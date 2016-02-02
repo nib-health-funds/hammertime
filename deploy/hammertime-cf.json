@@ -74,8 +74,8 @@
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "nib-shared-artifacts",
-          "S3Key": "lambdas/stop-hammertime.zip"
+          "S3Bucket": "nib-lambdas",
+          "S3Key": "stop-hammertime.zip"
         },
         "Role": {
           "Fn::GetAtt": [
@@ -97,8 +97,8 @@
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "nib-shared-artifacts",
-          "S3Key": "lambdas/start-hammertime.zip"
+          "S3Bucket": "nib-lambdas",
+          "S3Key": "start-hammertime.zip"
         },
         "Role": {
           "Fn::GetAtt": [
