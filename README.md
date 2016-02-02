@@ -1,5 +1,6 @@
 # hammertime
 [![Build status](https://badge.buildkite.com/faa22b548667df904a6d6c67f2e63ed4e2e954ea6f87d4021c.svg)](https://buildkite.com/nib-health-funds-ltd/hammertime)
+
 ![Stop! Hammer Time!](hammertime.gif)
 
 Lambdas intended to be run as scheduled functions on non-production
