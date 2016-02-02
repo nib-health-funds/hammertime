@@ -4,7 +4,7 @@ require 'cloudformer'
 environment = ENV['ENVIRONMENT']
 Sceptre.assume_deployer_role(environment)
 
-Cloudformer::Tasks.new(stack) do |t|
+Cloudformer::Tasks.new("hammertime") do |t|
   t.template = "hammertime-cf.json"
   t.capabilities = %w(CAPABILITY_IAM)
 end
