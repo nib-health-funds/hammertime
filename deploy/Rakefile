@@ -4,7 +4,6 @@ require_relative 'assume_role.rb'
 AssumeRole.new.set_credentials!
 
 environment = ENV['ENVIRONMENT']
-Sceptre.assume_deployer_role(environment)
 
 Cloudformer::Tasks.new("hammertime") do |t|
   t.template = "hammertime-cf.json"
