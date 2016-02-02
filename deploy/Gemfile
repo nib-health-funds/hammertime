@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-gem 'sceptre', git: 'git@git.nib.com.au:redqueen/sceptre.git'
 gem 'cloudformer'
+gem 'aws-sdk-v1'
