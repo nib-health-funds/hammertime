@@ -7,5 +7,6 @@ environment = ENV['ENVIRONMENT']
 
 Cloudformer::Tasks.new("hammertime") do |t|
   t.template = "hammertime-cf.json"
+  t.parameters = {}
   t.capabilities = %w(CAPABILITY_IAM)
 end
