@@ -33,7 +33,7 @@
         "PolicyName": "HammertimeEC2ASGRolePolicy",
         "Roles": [
           {
-            "Ref": "EbsBackupExecutionRole"
+            "Ref": "HammertimeExecutionRole"
           }
         ],
         "PolicyDocument": {
