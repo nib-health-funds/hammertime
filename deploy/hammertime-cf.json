@@ -1,6 +1,12 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "AWS CloudFormation Hammertime stack",
+  "Parameters": {
+    "LambdaVersion": {
+      "Description": "Version string for Lambda functions",
+      "Type": "String"
+    }
+  },
   "Resources": {
     "HammertimeExecutionRole": {
       "Type": "AWS::IAM::Role",
@@ -75,7 +81,18 @@
       "Properties": {
         "Code": {
           "S3Bucket": "nib-lambdas",
-          "S3Key": "stop-hammertime.zip"
+          "S3Key": {
+            "Fn::Join": [
+              "",
+              [
+                "stop-hammertime-",
+                {
+                  "Ref": "LambdaVersion"
+                },
+                ".zip"
+              ]
+            ]
+          }
         },
         "Role": {
           "Fn::GetAtt": [
@@ -98,7 +115,18 @@
       "Properties": {
         "Code": {
           "S3Bucket": "nib-lambdas",
-          "S3Key": "start-hammertime.zip"
+          "S3Key": {
+            "Fn::Join": [
+              "",
+              [
+                "start-hammertime-",
+                {
+                  "Ref": "LambdaVersion"
+                },
+                ".zip"
+              ]
+            ]
+          }
         },
         "Role": {
           "Fn::GetAtt": [

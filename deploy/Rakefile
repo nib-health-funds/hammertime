@@ -4,10 +4,11 @@ require_relative 'assume_role.rb'
 AssumeRole.new.set_credentials!
 
 environment = ENV['ENVIRONMENT']
+version = "1.#{ENV['BUILDKITE_BUILD_NUMBER']}"
 
 Cloudformer::Tasks.new("hammertime") do |t|
   t.template = "hammertime-cf.json"
   t.tags = []
-  t.parameters = {}
+  t.parameters = { "LambdaVersion" => version }
   t.capabilities = %w(CAPABILITY_IAM)
 end
