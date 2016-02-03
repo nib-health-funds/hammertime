@@ -46,7 +46,7 @@
           "Version": "2012-10-17",
           "Statement": [
             {
-              "Sid": "Stmt1454384406267",
+              "Sid": "1",
               "Action": [
                 "ec2:CreateTags",
                 "ec2:DeleteTags",
@@ -58,7 +58,7 @@
               "Resource": "*"
             },
             {
-              "Sid": "Stmt1454384458071",
+              "Sid": "2",
               "Action": [
                 "autoscaling:CreateOrUpdateTags",
                 "autoscaling:DeleteTags",
@@ -67,6 +67,16 @@
               ],
               "Effect": "Allow",
               "Resource": "*"
+            },
+            {
+              "Sid": "3",
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Effect": "Allow",
+              "Resource": "arn:aws:logs:*:*:*"
             }
           ]
         }
