@@ -167,9 +167,11 @@ exports.handler = function(event, context) {
             return asg.AutoScalingGroupName
           }), callback2);
         },
+
         function(callback2) {
           tagAsgSize(asgs, callback2);
         },
+
         function(callback2) {
           spinDownAsgs(asgs, callback2)
         }],
@@ -210,23 +212,29 @@ exports.handler = function(event, context) {
   }
 
   function spinDownAsgs(asgs, callback) {
-    asgs.forEach(function(asg) {
+    async.each(asgs, function(asg, callback2) {
       var params = {
         AutoScalingGroupName: asg.AutoScalingGroupName,
         DesiredCapacity: 0,
         MinSize: 0,
       };
 
-      console.log('Spinning down ASG ' + asg.AutoScalingGroupName)
+      console.log('Spinning down ASG ' + asg.AutoScalingGroupName);
 
       if (!dryrun) {
         autoscaling.updateAutoScalingGroup(params, function(err, data) {
           if (err) {
-            callback(err, null);
+            callback2(err);
           } else {
-            callback(null, null);
+            callback2();
           }
         });
+      } else {
+        callback2();
+      }
+    }, function(err) {
+      if (err) {
+        callback(err, null);
       } else {
         callback(null, null);
       }
