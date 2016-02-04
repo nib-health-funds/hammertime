@@ -63,33 +63,38 @@ exports.handler = function(event, context) {
           }
         });
 
-        console.log("Instances to start:");
-        instances.forEach(function(instance, i) {
-          console.log(instance.InstanceId + ' (' + valueForKey('Name', instance.Tags) + ')');
-        });
-        console.log('\n');
+        if (instances.length > 0) {
+          console.log("Instances to start:");
+          instances.forEach(function(instance, i) {
+            console.log(instance.InstanceId + ' (' + valueForKey('Name', instance.Tags) + ')');
+          });
+          console.log('\n');
 
-        async.series(
-        [function(callback2) {
-          startEc2Instances(instances.map(function(instance) {
-            return instance.InstanceId
-          }), callback2);
-        },
+          async.series(
+          [function(callback2) {
+            startEc2Instances(instances.map(function(instance) {
+              return instance.InstanceId
+            }), callback2);
+          },
 
-        function(callback2) {
-          removeHammertimeTag(instances.map(function(instance) {
-            return instance.InstanceId
-          }), callback2);
-        }],
+          function(callback2) {
+            removeHammertimeTag(instances.map(function(instance) {
+              return instance.InstanceId
+            }), callback2);
+          }],
 
-        function(err, results) {
-          if (err) {
-            callback(err, null);
-          } else {
-            console.log("EC2 done\n");
-            callback(null, null);
-          }
-        });
+          function(err, results) {
+            if (err) {
+              callback(err, null);
+            } else {
+              console.log("EC2 done\n");
+              callback(null, null);
+            }
+          });
+        } else {
+          console.log("No EC2 instances found to start");
+          callback(null, null)
+        }
       }
     });
   }
@@ -104,11 +109,13 @@ exports.handler = function(event, context) {
     return returnValue;
   }
 
-  function removeHammertimeTag(resources, callback) {
+  function removeHammertimeTags(resources, callback) {
     var params = {
       Resources: resources,
       Tags: [{
         Key: 'stop:hammertime'
+      }, {
+        Key: 'hammertime:originalASGSize'
       }],
       DryRun: dryrun
     };
@@ -157,71 +164,61 @@ exports.handler = function(event, context) {
           }
         });
 
-        console.log("ASGs to spin up:");
-        asgs.forEach(function(asg, i) {
-          console.log(asg.AutoScalingGroupName + ' (' + valueForKey('Name', asg.Tags) + ')');
-        });
-        console.log('\n');
+        if (asgs.length > 0) {
+          console.log("ASGs to spin up:");
+          asgs.forEach(function(asg, i) {
+            console.log(asg.AutoScalingGroupName + ' (' + valueForKey('Name', asg.Tags) + ')');
+          });
+          console.log('\n');
 
-        async.series(
-        [function(callback2) {
-          tagStopTime(asgs.map(function(asg) {
-            return asg.AutoScalingGroupName
-          }), callback2);
-        },
+          async.series(
+          [function(callback2) {
+            spinUpAsgs(asgs, callback2)
+          },
 
-        function(callback2) {
-          tagAsgSize(asgs, callback2);
-        },
+          function(callback2) {
+            removeHammertimeTags(asgs.map(function(asg) {
+              return asg.AutoScalingGroupName
+            }), callback2);
+          }],
 
-        function(callback2) {
-          spinDownAsgs(asgs, callback2)
-        }],
-
-        function(err, results) {
-          if (err) {
-            callback(err, null);
-          } else {
-            console.log("ASGs done\n");
-            callback(null, null);
-          }
-        });
+          function(err, results) {
+            if (err) {
+              callback(err, null);
+            } else {
+              console.log("ASGs done\n");
+              callback(null, null);
+            }
+          });
+        } else {
+          console.log("No ASGs found to spin up");
+          callback(null, null)
+        }
       }
     });
   }
 
-  function tagAsgSize(asgs, callback) {
-    asgs.forEach(function(asg) {
-      var params = {
-        Resources: [asg.AutoScalingGroupName],
-        Tags: [{
-          Key: 'hammertime:originalASGSize',
-          Value: asg.MinSize + ' ' + asg.MaxSize + ' ' + asg.DesiredCapacity
-        }],
-        DryRun: dryrun
-      };
-
-      console.log('Recording original size of ' + asg.AutoScalingGroupName);
-
-      ec2.createTags(params, function(err, data) {
-        if (filterError(err)) {
-          callback(err, null);
-        } else {
-          callback(null, null);
-        }
-      });
-    });
-  }
-
-  function spinDownAsgs(asgs, callback) {
+  function spinUpAsgs(asgs, callback) {
     async.each(asgs, function(asg, callback2) {
+      console.log('Spinning up ASG ' + asg.AutoScalingGroupName);
+
+      originalSize = valueForKey('hammertime:originalASGSize', asg.Tags);
+
+      if (originalSize == null) {
+        callback2('ASG tagged with hammertime but original size not tagged', null);
+      }
+
+      originalSizeArray = originalSize.split(' ');
+      minSize = originalSizeArray[0];
+      maxSize = originalSizeArray[1];
+      desiredCapacity = originalSizeArray[2];
+
       var params = {
         AutoScalingGroupName: asg.AutoScalingGroupName,
-        DesiredCapacity: 0,
-        MinSize: 0,
+        MinSize: minSize,
+        MaxSize: maxSize,
+        DesiredCapacity: desiredCapacity
       };
-
-      console.log('Spinning down ASG ' + asg.AutoScalingGroupName);
 
       if (!dryrun) {
         autoscaling.updateAutoScalingGroup(params, function(err, data) {
