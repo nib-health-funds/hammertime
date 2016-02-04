@@ -41,8 +41,7 @@ exports.handler = function(event, context) {
       Filters: [{
         Name: 'instance-state-name',
         Values: ['stopped']
-      },
-      {
+      }, {
         Name: 'tag-key',
         Values: ['stop:hammertime']
       }]
@@ -57,7 +56,7 @@ exports.handler = function(event, context) {
           return reservation.Instances;
         })).filter(function(instance) {
           // Theoretically we shouldn't have instances that are stopped and part of an ASG, but paranoia
-          if (tagsContainsKey(instance.Tags, 'aws:autoscaling:groupName') {
+          if (tagsContainsKey(instance.Tags, 'aws:autoscaling:groupName')) {
             return false;
           } else {
             return true;
@@ -81,8 +80,8 @@ exports.handler = function(event, context) {
           removeHammertimeTag(instances.map(function(instance) {
             return instance.InstanceId
           }), callback2);
-        }
-      ],
+        }],
+
         function(err, results) {
           if (err) {
             callback(err, null);
