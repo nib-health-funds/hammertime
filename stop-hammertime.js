@@ -73,7 +73,7 @@ exports.handler = function(event, context) {
         },
 
         function(callback2) {
-          stopEc2Instance(instances.map(function(instance) {
+          stopEc2Instances(instances.map(function(instance) {
             return instance.InstanceId
           }), callback2);
         }],
@@ -121,7 +121,7 @@ exports.handler = function(event, context) {
     });
   }
 
-  function stopEc2Instance(instances, callback) {
+  function stopEc2Instances(instances, callback) {
     var params = {
       InstanceIds: instances,
       DryRun: dryrun,
