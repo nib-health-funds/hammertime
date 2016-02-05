@@ -1,12 +1,11 @@
 console.log('Loading function');
 
 AWS = require('aws-sdk');
-// AWS.config.region = 'ap-southeast-2';
-AWS.config.region = 'ap-northeast-1';
+AWS.config.region = 'ap-southeast-2';
 
 async = require('async');
 
-dryrun = false;
+dryrun = true;
 
 
 exports.handler = function(event, context) {
