@@ -1,7 +1,8 @@
 console.log('Loading function');
 
 AWS = require('aws-sdk');
-AWS.config.region = 'ap-southeast-2';
+// AWS.config.region = 'ap-southeast-2';
+AWS.config.region = 'ap-northeast-1';
 
 async = require('async');
 
