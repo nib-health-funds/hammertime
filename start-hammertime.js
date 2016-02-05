@@ -6,7 +6,7 @@ AWS.config.region = 'ap-northeast-1';
 
 async = require('async');
 
-dryrun = true;
+dryrun = false;
 
 
 exports.handler = function(event, context) {
