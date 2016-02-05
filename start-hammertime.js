@@ -121,7 +121,7 @@ exports.handler = function(event, context) {
       DryRun: dryrun
     };
 
-    console.log('Tagging ' + resources);
+    console.log('Untagging ' + resources);
 
     ec2.deleteTags(params, function(err, data) {
       if (filterError(err)) {
