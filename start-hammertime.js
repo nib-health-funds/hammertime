@@ -79,7 +79,7 @@ exports.handler = function(event, context) {
           },
 
           function(callback2) {
-            removeHammertimeTag(instances.map(function(instance) {
+            removeHammertimeTags(instances.map(function(instance) {
               return instance.InstanceId
             }), callback2);
           }],
