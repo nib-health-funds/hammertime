@@ -170,13 +170,7 @@ exports.handler = function(event, context) {
 
           async.series(
           [function(callback2) {
-            tagStopTime(asgs.map(function(asg) {
-              return asg.AutoScalingGroupName
-            }), callback2);
-          },
-
-          function(callback2) {
-            tagAsgSize(asgs, callback2);
+            tagAsg(asgs, callback2);
           },
 
           function(callback2) {
@@ -199,20 +193,28 @@ exports.handler = function(event, context) {
     });
   }
 
-  function tagAsgSize(asgs, callback) {
+  function tagAsg(asgs, callback) {
     asgs.forEach(function(asg) {
       var params = {
-        Resources: [asg.AutoScalingGroupName],
         Tags: [{
           Key: 'hammertime:originalASGSize',
+          PropagateAtLaunch: false,
+          ResourceId: asg.AutoScalingGroupName,
+          ResourceType: 'auto-scaling-group',
           Value: asg.MinSize + ' ' + asg.MaxSize + ' ' + asg.DesiredCapacity
-        }],
-        DryRun: dryrun
+        },
+        {
+          Key: 'stop:hammertime',
+          PropagateAtLaunch: false,
+          ResourceId: asg.AutoScalingGroupName,
+          ResourceType: 'auto-scaling-group',
+          Value: new Date().toISOString()
+        }]
       };
 
-      console.log('Recording original size of ' + asg.AutoScalingGroupName);
+      console.log('Tagging and recording original size of ' + asg.AutoScalingGroupName);
 
-      ec2.createTags(params, function(err, data) {
+      autoscaling.createOrUpdateTags(params, function(err, data) {
         if (filterError(err)) {
           callback(err, null);
         } else {
