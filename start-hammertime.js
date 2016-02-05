@@ -136,10 +136,12 @@ exports.handler = function(event, context) {
         Tags: [{
           Key: 'hammertime:originalASGSize',
           ResourceId: asg.AutoScalingGroupName,
+          ResourceType: 'auto-scaling-group'
         },
         {
           Key: 'stop:hammertime',
           ResourceId: asg.AutoScalingGroupName,
+          ResourceType: 'auto-scaling-group'
         }]
       };
 
