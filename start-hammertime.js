@@ -79,7 +79,7 @@ exports.handler = function(event, context) {
           },
 
           function(callback2) {
-            removeHammertimeTags(instances.map(function(instance) {
+            removeHammertimeEC2Tags(instances.map(function(instance) {
               return instance.InstanceId
             }), callback2);
           }],
@@ -110,13 +110,11 @@ exports.handler = function(event, context) {
     return returnValue;
   }
 
-  function removeHammertimeTags(resources, callback) {
+  function removeHammertimeEC2Tags(resources, callback) {
     var params = {
       Resources: resources,
       Tags: [{
         Key: 'stop:hammertime'
-      }, {
-        Key: 'hammertime:originalASGSize'
       }],
       DryRun: dryrun
     };
@@ -129,6 +127,31 @@ exports.handler = function(event, context) {
       } else {
         callback(null, null);
       }
+    });
+  }
+
+  function removeHammertimeASGTags(resources, callback) {
+    asgs.forEach(function(asg) {
+      var params = {
+        Tags: [{
+          Key: 'hammertime:originalASGSize',
+          ResourceId: asg.AutoScalingGroupName,
+        },
+        {
+          Key: 'stop:hammertime',
+          ResourceId: asg.AutoScalingGroupName,
+        }]
+      };
+
+      console.log('Untagging ' + asg.AutoScalingGroupName);
+
+      autoscaling.deleteTags(params, function(err, data) {
+        if (filterError(err)) {
+          callback(err, null);
+        } else {
+          callback(null, null);
+        }
+      });
     });
   }
 
@@ -178,7 +201,7 @@ exports.handler = function(event, context) {
           },
 
           function(callback2) {
-            removeHammertimeTags(asgs.map(function(asg) {
+            removeHammertimeASGTags(asgs.map(function(asg) {
               return asg.AutoScalingGroupName
             }), callback2);
           }],
