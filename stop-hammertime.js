@@ -5,7 +5,7 @@ AWS.config.region = 'ap-southeast-2';
 
 async = require('async');
 
-dryrun = true;
+dryrun = false;
 
 
 exports.handler = function(event, context) {
@@ -223,8 +223,8 @@ exports.handler = function(event, context) {
     });
   }
 
-  function spinDownAsgs(asgs, callback) {
-    async.each(asgs, function(asg, callback2) {
+  function spinDownAsgs(asgs, local_callback) {
+    async.each(asgs, function(asg, spinDownAsgCallback) {
       var params = {
         AutoScalingGroupName: asg.AutoScalingGroupName,
         DesiredCapacity: 0,
@@ -236,19 +236,19 @@ exports.handler = function(event, context) {
       if (!dryrun) {
         autoscaling.updateAutoScalingGroup(params, function(err, data) {
           if (err) {
-            callback2(err);
+            spinDownAsgCallback(err);
           } else {
-            callback2();
+            spinDownAsgCallback();
           }
         });
       } else {
-        callback2();
+        spinDownAsgCallback();
       }
     }, function(err) {
       if (err) {
-        callback(err, null);
+        local_callback(err, null);
       } else {
-        callback(null, null);
+        local_callback(null, null);
       }
     });
   }
