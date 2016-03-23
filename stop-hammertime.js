@@ -35,6 +35,7 @@ exports.handler = function(event, context) {
   });
 
   function doEc2(callback) {
+    console.log("Checking EC2 instances");
 
     var params = {
       DryRun: false,
@@ -145,6 +146,7 @@ exports.handler = function(event, context) {
   }
 
   function doAsg(callback) {
+    console.log("Checking ASGs");
     var params = {};
 
     autoscaling.describeAutoScalingGroups(params, function(err, data) {
