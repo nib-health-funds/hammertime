@@ -67,17 +67,17 @@ exports.handler = function(event, context) {
           });
           console.log('\n');
 
+          instanceToStop = instances.map(function(instance) {
+            return instance.InstanceId
+          });
+
           async.series(
-          [function(callback2) {
-            tagStopTime(instances.map(function(instance) {
-              return instance.InstanceId
-            }), callback2);
+          [function(ec2Callback) {
+            tagStopTime(instanceToStop, ec2Callback);
           },
 
-          function(callback2) {
-            stopEc2Instances(instances.map(function(instance) {
-              return instance.InstanceId
-            }), callback2);
+          function(ec2Callback) {
+            stopEc2Instances(instanceToStop, ec2Callback);
           }],
 
           function(err, results) {
