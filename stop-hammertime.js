@@ -48,7 +48,7 @@ exports.handler = function(event, context) {
     ec2.describeInstances(params, function(err, data) {
       if (err) {
         console.log("Error: " + err);
-        callback(err, null);
+        return callback(err, null);
       } else {
         instances = [].concat.apply([], data.Reservations.map(function(reservation) {
           return reservation.Instances;
@@ -82,7 +82,7 @@ exports.handler = function(event, context) {
 
           function(err, results) {
             if (err) {
-              callback(err, null);
+              return callback(err, null);
             } else {
               console.log("EC2 done\n");
               callback(null, null);
@@ -120,7 +120,7 @@ exports.handler = function(event, context) {
 
     ec2.createTags(params, function(err, data) {
       if (filterError(err)) {
-        callback(err, null);
+        return callback(err, null);
       } else {
         callback(null, null);
       }
@@ -138,7 +138,7 @@ exports.handler = function(event, context) {
 
     ec2.stopInstances(params, function(err, data) {
       if (filterError(err)) {
-        callback(err, null);
+        return callback(err, null);
       } else {
         callback(null, null);
       }
@@ -152,7 +152,7 @@ exports.handler = function(event, context) {
     autoscaling.describeAutoScalingGroups(params, function(err, data) {
       if (err) {
         console.log("Error: " + err);
-        callback(err, null);
+        return callback(err, null);
       } else {
         asgs = data.AutoScalingGroups.filter(function(asg) {
           if (tagsContainsKey(asg.Tags, 'hammertime:canttouchthis')) {
@@ -180,7 +180,7 @@ exports.handler = function(event, context) {
 
           function(err, results) {
             if (err) {
-              callback(err, null);
+              return callback(err, null);
             } else {
               console.log("ASGs done\n");
               callback(null, null);
@@ -217,7 +217,7 @@ exports.handler = function(event, context) {
 
       autoscaling.createOrUpdateTags(params, function(err, data) {
         if (filterError(err)) {
-          callback(err, null);
+          return callback(err, null);
         } else {
           callback(null, null);
         }
@@ -238,7 +238,7 @@ exports.handler = function(event, context) {
       if (!dryrun) {
         autoscaling.updateAutoScalingGroup(params, function(err, data) {
           if (err) {
-            spinDownAsgCallback(err);
+            return spinDownAsgCallback(err);
           } else {
             spinDownAsgCallback();
           }
@@ -248,7 +248,7 @@ exports.handler = function(event, context) {
       }
     }, function(err) {
       if (err) {
-        local_callback(err, null);
+        return local_callback(err, null);
       } else {
         local_callback(null, null);
       }
