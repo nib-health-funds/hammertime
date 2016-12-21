@@ -17,7 +17,7 @@ end
 task :upload do
   sh 'rm -f *.zip && buildkite-agent artifact download "*.zip" ./' # && aws s3 cp stop-hammertime-*.zip s3://nib-kaos-lambdas/ && aws s3 cp start-hammertime-*.zip s3://nib-kaos-lambdas/'
   artifact = Dir.glob("*.zip").first
-  s3     = Aws::S3::Client.new
+  s3     = AWS::S3::Client.new
   File.open(artifact) do |file|
     mime_type = MIME::Types.type_for(s3_key).first
     content_type = mime_type.nil? ? 'text/plain' : mime_type.content_type # default to text/plain if no file extension/unknown file extension
