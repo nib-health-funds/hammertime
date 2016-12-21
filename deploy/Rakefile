@@ -19,8 +19,7 @@ task :upload do
   artifact = Dir.glob("*.zip").first
   s3     = AWS::S3::Client.new
   File.open(artifact) do |file|
-    mime_type = MIME::Types.type_for(s3_key).first
-    content_type = mime_type.nil? ? 'text/plain' : mime_type.content_type # default to text/plain if no file extension/unknown file extension
+    content_type = 'text/plain'
     s3.put_object(bucket: 'nib-kaos-lambdas', key: artifact, body: file, acl: 'public-read', content_type: content_type)
   end
 end
