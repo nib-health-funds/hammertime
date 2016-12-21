@@ -12,3 +12,7 @@ Cloudformer::Tasks.new("hammertime") do |t|
   t.parameters = { "LambdaVersion" => version }
   t.capabilities = %w(CAPABILITY_IAM)
 end
+
+task :upload do
+  sh 'rm -f *.zip && buildkite-agent artifact download "*.zip" ./ && aws s3 cp stop-hammertime-*.zip s3://nib-kaos-lambdas/ && aws s3 cp start-hammertime-*.zip s3://nib-kaos-lambdas/'
+end
