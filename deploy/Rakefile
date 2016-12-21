@@ -16,7 +16,7 @@ end
 
 task :upload do
   sh 'rm -f *.zip && buildkite-agent artifact download "*.zip" ./' # && aws s3 cp stop-hammertime-*.zip s3://nib-kaos-lambdas/ && aws s3 cp start-hammertime-*.zip s3://nib-kaos-lambdas/'
-  file_name = Dir.glob("*.zip") do |file|
+  Dir.glob("*.zip") do |file_name|
     bucket_name = 'nib-kaos-lambdas'
     s3 = AWS::S3.new
     key = File.basename(file_name)
