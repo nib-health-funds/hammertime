@@ -90,7 +90,7 @@
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "nib-lambdas",
+          "S3Bucket": "nib-kaos-lambdas",
           "S3Key": {
             "Fn::Join": [
               "",
@@ -124,7 +124,7 @@
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": "nib-lambdas",
+          "S3Bucket": "nib-kaos-lambdas",
           "S3Key": {
             "Fn::Join": [
               "",
