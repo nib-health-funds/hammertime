@@ -5,8 +5,8 @@ AWS.config.region = 'ap-southeast-2';
 
 async = require('async');
 
-dryrun = true;
-
+// This should be something to do with slices & env vars?
+dryrun = false;
 
 exports.handler = function(event, context) {
   var ec2 = new AWS.EC2();
@@ -171,7 +171,7 @@ exports.handler = function(event, context) {
 
           async.series(
           [function(callback2) {
-            tagAsg(asgs, callback2);
+            tagAsgs(asgs, callback2);
           },
 
           function(callback2) {
@@ -194,8 +194,8 @@ exports.handler = function(event, context) {
     });
   }
 
-  function tagAsg(asgs, callback) {
-    asgs.forEach(function(asg) {
+  function tagAsg(asg) {
+    return new Promise((resolve, reject) => {
       var params = {
         Tags: [{
           Key: 'hammertime:originalASGSize',
@@ -217,15 +217,35 @@ exports.handler = function(event, context) {
 
       autoscaling.createOrUpdateTags(params, function(err, data) {
         if (filterError(err)) {
-          return callback(err, null);
+          return reject(err);
         } else {
-          callback(null, null);
+          resolve(null);
         }
       });
     });
   }
 
+  function tagAsgs(asgs, callback) {
+    // If we map this
+    // Have a promise defined which simply tags
+    // done?
+    console.log("This is where we test my promises");
+    Promise.all(asgs.map(function(asg) {
+      console.log("Promising to tag " + asg);
+      tagAsg(asg);
+    })).then((data) => {
+      console.log("I promise they're all tagged");
+      callback(null, null);
+    }).catch((err) => {
+      console.log(err)
+      callback(err,null);
+    })
+  }
+
   function spinDownAsgs(asgs, local_callback) {
+    console.log("This is where we'd spinDownAsgs");
+    local_callback("Yeah nah, not ready to test this bit");
+
     async.each(asgs, function(asg, spinDownAsgCallback) {
       var params = {
         AutoScalingGroupName: asg.AutoScalingGroupName,
