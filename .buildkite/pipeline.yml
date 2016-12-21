@@ -1,0 +1,29 @@
+---
+steps:
+
+  - name: ':package: Build and Package'
+    command: './package.sh'
+    env:
+      AWS_REGION: ap-southeast-2
+    agents:
+      os: 'linux'
+    artifact_paths: '*.zip'
+
+  - wait
+
+  - name: ':shipit: Ship to s3'
+    command: 'rm *.zip && buildkite-agent artifact download "*.zip" ./ && aws s3 cp stop-hammertime-*.zip s3://nib-lambdas/ && aws s3 cp start-hammertime-*.zip s3://nib-lambdas/'
+    env:
+      AWS_REGION: ap-southeast-2
+    agents:
+      os: 'linux'
+
+  - wait
+
+  - name: ':shipit: Deploy to kaos (東京)'
+    command: 'cd deploy && ./deploy.sh'
+    env:
+      AWS_REGION: ap-southeast-2
+      ENVIRONMENT: kaos
+    agents:
+      os: 'linux'
