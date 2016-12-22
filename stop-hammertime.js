@@ -172,11 +172,9 @@ exports.handler = function(event, context) {
           async.series(
           [function(callback2) {
             tagAsgs(asgs).done(function (results) {
-                // results is an array of the values stored in a.json and b.json
               console.log("done tagging asgs");
               console.log('results' + results);
             }, function (err) {
-               // If any of the files fails to be read, err is the first error
               console.log("error tagging asgs");
               console.log('ERROR' + error);
             });
