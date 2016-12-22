@@ -171,7 +171,15 @@ exports.handler = function(event, context) {
 
           async.series(
           [function(callback2) {
-            tagAsgs(asgs, callback2);
+            tagAsgs(asgs).done(function (results) {
+                // results is an array of the values stored in a.json and b.json
+              console.log("done tagging asgs");
+              console.log('results' + results);
+            }, function (err) {
+               // If any of the files fails to be read, err is the first error
+              console.log("error tagging asgs");
+              console.log('ERROR' + error);
+            });
           },
 
           function(callback2) {
@@ -225,21 +233,22 @@ exports.handler = function(event, context) {
     });
   }
 
-  function tagAsgs(asgs, callback) {
+
+
+  function tagAsgs(asgs) {
+    return Promise.all(asgs.map(tagAsg));
     // If we map this
     // Have a promise defined which simply tags
     // done?
-    console.log("This is where we test my promises");
-    Promise.all(asgs.map(function(asg) {
-      console.log("Promising to tag " + asg);
-      tagAsg(asg);
-    })).then((data) => {
-      console.log("I promise they're all tagged");
-      callback(null, null);
-    }).catch((err) => {
-      console.log(err)
-      callback(err,null);
-    })
+    // console.log("This is where we test my promises");
+    // var promise = Promise.all(asgs.map(tagAsg))
+    // promise.then((data) => {
+    //   console.log("I promise they're all tagged");
+    //   callback(null, null);
+    // }).catch((err) => {
+    //   console.log(err)
+    //   callback(err,null);
+    // })
   }
 
   function spinDownAsgs(asgs, local_callback) {
