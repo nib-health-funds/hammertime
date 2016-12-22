@@ -171,12 +171,11 @@ exports.handler = function(event, context) {
 
           async.series(
           [function(callback2) {
-            tagAsgs(asgs).done(function (results) {
-              console.log("done tagging asgs");
-              console.log('results' + results);
-            }, function (err) {
-              console.log("error tagging asgs");
-              console.log('ERROR' + error);
+            tagAsgs(asgs).then(function (results) {
+              console.log("tagged asg " + asg.AutoScalingGroupName);
+            }).catch(function (err) {
+              console.log("error tagging asg " + asg.AutoScalingGroupName);
+              console.log('ERROR' + err);
             });
           },
 
