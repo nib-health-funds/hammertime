@@ -5,7 +5,7 @@ AWS.config.region = 'ap-southeast-2';
 
 async = require('async');
 
-dryrun = true;
+dryrun = false;
 
 
 exports.handler = function(event, context) {
@@ -203,6 +203,8 @@ exports.handler = function(event, context) {
 
           function(callback2) {
             removeHammertimeASGTags(asgs.map(function(asg) {
+              console.log("Deleting tag");
+              console.log("Deleting tags for asg " + asg.AutoScalingGroupName);
               return asg.AutoScalingGroupName
             }), callback2);
           }],
@@ -246,7 +248,9 @@ exports.handler = function(event, context) {
       };
 
       if (!dryrun) {
+        console.log("Updating autoscaling group");
         autoscaling.updateAutoScalingGroup(params, function(err, data) {
+          console.log("Updating autoscaling group " + asg.AutoScalingGroupName);
           if (err) {
             callback2(err);
           } else {
