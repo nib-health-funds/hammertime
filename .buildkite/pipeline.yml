@@ -5,7 +5,7 @@ env:
 steps:
   - name: ':nodejs: Test & Deploy'
     command: '
-      docker run -v $PWD:/tmp -w /tmp node:4 /bin/sh -c "
+      docker run -v $PWD:/tmp -w /tmp node:4 /bin/bash -c "
         set -eo pipefail &&
         npm install -q &&
         npm test &&
