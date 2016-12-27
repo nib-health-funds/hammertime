@@ -1,4 +1,0 @@
-source 'https://rubygems.org'
-
-gem 'cloudformer'
-gem 'aws-sdk-v1'

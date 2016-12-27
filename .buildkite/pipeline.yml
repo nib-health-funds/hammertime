@@ -1,30 +1,18 @@
----
+env:
+  AWS_REGION: ap-southeast-2
+  DEFAULT_AWS_REGION: ap-southeast-2
+
 steps:
-
-  - name: ':package: Build and Package'
-    command: './package.sh'
-    env:
-      AWS_REGION: ap-southeast-2
+  - name: ':nodejs: Test & Deploy'
+    command: '
+      docker run -v $PWD:/tmp -w /tmp node:4 /bin/sh -c "
+        set -eo pipefail &&
+        npm install -q &&
+        npm test &&
+        npm deploy
+      "
+    '
     agents:
       os: 'linux'
-    artifact_paths: '*.zip'
-
-  - wait
-
-  - name: ':shipit: Ship to s3'
-    command: 'cd deploy && bundle install && rake upload'
-    env:
-      AWS_REGION: ap-southeast-2
-      ENVIRONMENT: kaos
-    agents:
-      os: 'linux'
-
-  - wait
-
-  - name: ':shipit: Deploy to kaos (東京)'
-    command: 'cd deploy && ./deploy.sh'
-    env:
-      AWS_REGION: ap-southeast-2
-      ENVIRONMENT: kaos
-    agents:
-      os: 'linux'
+    concurrency: 1
+    concurrency_group: "${BUILDKITE_PIPELINE_SLUG}/deploy-${BUILDKITE_BRANCH}-to-kaos"

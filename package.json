@@ -1,0 +1,20 @@
+{
+  "name": "hammertime",
+  "version": "2.0.0",
+  "description": "U Can't Touch This",
+  "main": "handler.js",
+  "scripts": {
+    "deploy": "node_modules/serverless/bin/serverless deploy --verbose",
+    "test": "mocha \"cleanup/*.test.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.nib.com.au:nib-au/hammertime.git"
+  },
+  "author": "nib",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "serverless": "^1.4.0"
+  }
+}

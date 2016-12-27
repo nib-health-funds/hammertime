@@ -1,0 +1,37 @@
+service: hammertime
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  stage: kaos
+  region: ap-southeast-2
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "ec2:CreateTags"
+        - "ec2:DeleteTags"
+        - "ec2:DescribeInstances"
+        - "ec2:StartInstances"
+        - "ec2:StopInstances"
+        - "autoscaling:CreateOrUpdateTags"
+        - "autoscaling:DeleteTags"
+        - "autoscaling:DescribeAutoScalingGroups"
+        - "autoscaling:UpdateAutoScalingGroup"
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - "logs:CreateLogGroup"
+        - "logs:CreateLogStream"
+        - "logs:PutLogEvents"
+      Resource: "arn:aws:logs:*:*:*"
+
+functions:
+  stop-hammertime:
+    handler: handler.stop
+#    events:
+#      - schedule: cron(...)
+
+  start-hammertime:
+    handler: handler.start
+#    events:
+#      - schedule: cron(...)
