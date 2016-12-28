@@ -3,7 +3,7 @@
 set -eo pipefail
 echo "--- installing deps..."
 npm install --quiet --progress=false
-sudo apt-get install -yq jq awscli
+apt-get install -yq jq awscli
 
 echo "--- running tests..."
 npm test
