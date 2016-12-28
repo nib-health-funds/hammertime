@@ -4,7 +4,19 @@ env:
 
 steps:
   - name: ':nodejs: Test & Deploy'
-    command: 'docker run -t -v $PWD:/tmp -w /tmp node:4 /bin/bash ./deploy.sh'
+    command: '
+    sudo apt-get -qq install -y jq &&
+    CREDENTIALS=$(aws sts assume-role
+      --role-arn "arn:aws:iam::384553929753:role/deployer-artifacts-DeployerRole-1X76QQA70P2X2"
+      --role-session-name="HammertimeDeploy") &&
+    docker run
+      -e AWS_ACCESS_KEY_ID=$(echo $CREDENTIALS | jq -r ".Credentials.AccessKeyId")
+      -e AWS_SECRET_ACCESS_KEY=$(echo $CREDENTIALS | jq -r ".Credentials.SecretAccessKey")
+      -e AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r ".Credentials.SessionToken")
+      -v $PWD:/tmp
+      -w /tmp
+      -t node:4 /bin/bash .buildkite/steps/deploy.sh
+    '
     agents:
       os: 'linux'
     concurrency: 1

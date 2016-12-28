@@ -5,7 +5,8 @@
   "main": "handler.js",
   "scripts": {
     "deploy": "node_modules/serverless/bin/serverless deploy --verbose",
-    "test": "node_modules/mocha/bin/mocha test/*.test.js"
+    "test": "node_modules/mocha/bin/mocha test/*.test.js",
+    "assume-role": "node assume-deployer-role.js"
   },
   "repository": {
     "type": "git",
@@ -13,7 +14,9 @@
   },
   "author": "nib",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "aws-sdk": "^2.7.19"
+  },
   "devDependencies": {
     "mocha": "^3.2.0",
     "serverless": "^1.4.0"
