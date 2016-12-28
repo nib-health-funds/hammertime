@@ -4,7 +4,7 @@ env:
 
 steps:
   - name: ':nodejs: Test & Deploy'
-    command: 'docker run -v $PWD:/tmp -w /tmp node:4 /bin/bash ./deploy.sh'
+    command: 'docker run -t -v $PWD:/tmp -w /tmp node:4 /bin/bash ./deploy.sh'
     agents:
       os: 'linux'
     concurrency: 1
