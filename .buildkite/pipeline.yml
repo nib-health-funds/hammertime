@@ -9,3 +9,14 @@ steps:
       os: 'linux'
     concurrency: 1
     concurrency_group: "${BUILDKITE_PIPELINE_SLUG}/deploy-${BUILDKITE_BRANCH}-to-kaos"
+
+  - block: ':bomb:'
+    branches: '!master'
+
+  - name: ':boom: Destroy Stack'
+    command: 'docker run -v $PWD:/tmp -w /tmp -t node:4 .buildkite/steps/destroy.sh'
+    agents:
+      os: 'linux'
+    concurrency: 1
+    concurrency_group: "${BUILDKITE_PIPELINE_SLUG}/deploy-${BUILDKITE_BRANCH}-to-kaos"
+    branches: '!master'

@@ -5,8 +5,8 @@
   "main": "handler.js",
   "scripts": {
     "deploy": "node_modules/serverless/bin/serverless deploy --verbose",
-    "test": "node_modules/mocha/bin/mocha test/*.test.js",
-    "assume-role": "node assume-deployer-role.js"
+    "deploy": "node_modules/serverless/bin/serverless delete --verbose",
+    "test": "node_modules/mocha/bin/mocha test/*.test.js"
   },
   "repository": {
     "type": "git",
