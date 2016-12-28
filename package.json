@@ -5,7 +5,7 @@
   "main": "handler.js",
   "scripts": {
     "deploy": "node_modules/serverless/bin/serverless deploy --verbose",
-    "deploy": "node_modules/serverless/bin/serverless delete --verbose",
+    "destroy": "node_modules/serverless/bin/serverless remove --verbose",
     "test": "node_modules/mocha/bin/mocha test/*.test.js"
   },
   "repository": {
