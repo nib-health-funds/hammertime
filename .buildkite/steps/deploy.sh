@@ -1,14 +1,15 @@
 #!/bin/bash
 
 set -eo pipefail
-echo "--- installing deps..."
+echo "--- Installing dependencies"
 npm install --quiet --progress=false
-apt-get install -yq jq awscli
+apt-get update -qq
+apt-get install -yqq jq awscli
 
-echo "--- running tests..."
+echo "--- Running tests"
 npm test
 
-echo "--- deploying to kaos..."
+echo "--- Deploying to Kaos"
 CREDENTIALS=$(aws sts assume-role --role-arn "arn:aws:iam::384553929753:role/deployer-artifacts-DeployerRole-1X76QQA70P2X2" --role-session-name="HammertimeDeploy")
 export AWS_ACCESS_KEY_ID=$(echo $CREDENTIALS | jq -r ".Credentials.AccessKeyId")
 export AWS_SECRET_ACCESS_KEY=$(echo $CREDENTIALS | jq -r ".Credentials.SecretAccessKey")
