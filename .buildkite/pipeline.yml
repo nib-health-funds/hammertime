@@ -4,7 +4,8 @@ env:
 
 steps:
   - name: ':nodejs: Test & Deploy'
-    command: 'docker run -v $PWD:/tmp -w /tmp -t node:4 /bin/bash .buildkite/steps/deploy.sh'
+    command: '
+      docker run -e SLICE=$BUILDKITE_BRANCH -v $PWD:/tmp -w /tmp -t node:4 /bin/bash .buildkite/steps/deploy.sh'
     agents:
       os: 'linux'
     concurrency: 1

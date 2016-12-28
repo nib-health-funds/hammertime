@@ -3,7 +3,7 @@ service: hammertime
 provider:
   name: aws
   runtime: nodejs4.3
-  stage: ${env:BUILDKITE_BRANCH}
+  stage: ${env:SLICE}
   region: ap-southeast-2
   deploymentBucket: nib-kaos-lambdas
   iamRoleStatements:
