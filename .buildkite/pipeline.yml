@@ -15,7 +15,7 @@ steps:
     branches: '!master'
 
   - name: ':boom: Destroy Stack'
-    command: 'docker run -v $PWD:/tmp -w /tmp -t node:4 .buildkite/steps/destroy.sh'
+    command: 'docker run -v $PWD:/tmp -w /tmp -t node:4 /bin/bash .buildkite/steps/destroy.sh'
     agents:
       os: 'linux'
     concurrency: 1
