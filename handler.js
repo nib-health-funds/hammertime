@@ -9,7 +9,7 @@ module.exports.stop = (event, context, callback) => {
     .then(stopHammertime.tagStopTime)
     .then(stopHammertime.stopInstances)
     .then(instances => {
-      console.log(`Stopped ${instances}`);
+      console.log(`Stopped ${instances}.`);
       callback(null, { message: 'Doneskies.' }, event);
     })
     .catch(err => {

@@ -6,7 +6,7 @@ describe('stop-hammertime', () => {
 
   describe('listInstancesToStop()', () => {
 
-    before(() => {
+    it('should return valid instances to shut down', () => {
       const mockResponse = {
         "Reservations": [
           {
@@ -58,17 +58,11 @@ describe('stop-hammertime', () => {
         ]
       };
       AWS.mock('EC2', 'describeInstances', mockResponse);
-    });
 
-    it('should return valid instances to shut down', () => {
       return stopHammertime.listInstancesToStop()
         .then(instances => {
           assert.deepEqual(instances, ['i-bbbbbbbb']);
         });
-    });
-
-    it('returns an empty array when no instances found', () => {
-
     });
   });
 
