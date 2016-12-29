@@ -2,6 +2,26 @@
 
 const AWS = require('aws-sdk');
 
+function stopEC2() {
+  return new Promise((resolve, reject) => {
+    listInstancesToStop()
+      .then(tagStopTime)
+      .then(stopInstances)
+      .then(resolve)
+      .catch(reject);
+  });
+}
+
+function stopASG() {
+  return new Promise((resolve, reject) => {
+    listASGsToStop()
+      .then(tagStopTimeAndSize)
+      .then(spinDownASGs)
+      .then(resolve)
+      .catch(reject);
+  });
+}
+
 function listInstancesToStop() {
   const ec2 = new AWS.EC2();
   const params = {
@@ -17,6 +37,16 @@ function listInstancesToStop() {
     ec2.describeInstances(params)
       .promise()
       .then(data => { resolve(filterInstances(data)) })
+      .catch(err => { reject(err) });
+  });
+}
+
+function listASGsToStop() {
+  const autoscaling = new AWS.AutoScaling();
+  return new Promise((resolve, reject) => {
+    autoscaling.describeAutoScalingGroups()
+      .promise()
+      .then(data => { resolve(filterASGs(data)) })
       .catch(err => { reject(err) });
   });
 }
@@ -40,6 +70,34 @@ function tagStopTime(resources) {
     });
 }
 
+function tagStopTimeAndSize(asgs) {
+  const autoscaling = new AWS.AutoScaling();
+  const tags = asgs.map(timeAndSizeTags)
+                   .reduce((prev, curr) => { return prev.concat(curr) });
+
+  const params = { Tags: tags }
+}
+
+function timeAndSizeTags(asg) {
+    return [
+      {
+        Key: 'hammertime:originalASGSize',
+        PropagateAtLaunch: false,
+        ResourceId: asg.AutoScalingGroupName,
+        ResourceType: 'auto-scaling-group',
+        Value: `${asg.MinSize},${asg.MaxSize},${asg.DesiredCapacity}`
+      },
+      {
+        Key: 'stop:hammertime',
+        PropagateAtLaunch: false,
+        ResourceId: asg.AutoScalingGroupName,
+        ResourceType: 'auto-scaling-group',
+        Value: new Date().toISOString()
+      }
+    ]
+  }
+}
+
 function stopInstances(instances) {
   const ec2 = new AWS.EC2();
   const params = { InstanceIds: instances };
@@ -60,10 +118,20 @@ function filterInstances(data) {
           .map(instance => { return instance.InstanceId })
 }
 
-function instanceCanBeStopped(instance) {
-  return !instance.Tags.some(tag => {
-    return (tag.Key === 'aws:autoscaling:groupName' || tag.Key === 'hammertime:canttouchthis')
-  })
+function filterASGs(data) {
+  return data.AutoScalingGroups.filter(asgCanBeStopped);
 }
 
-module.exports = { listInstancesToStop, tagStopTime, stopInstances };
+function instanceCanBeStopped(instance) {
+  return !instance.Tags.some(tag => {
+    return (tag.Key === 'aws:autoscaling:groupName' || tag.Key === 'hammertime:canttouchthis');
+  });
+}
+
+function asgCanBeStopped(asg) {
+  return !asg.Tags.some(tag => {
+    return (tag.Key === 'hammertime:canttouchthis');
+  });
+}
+
+module.exports = { stopEC2, stopASG };

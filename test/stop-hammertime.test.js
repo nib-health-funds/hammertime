@@ -4,19 +4,15 @@ const AWS            = require('aws-sdk-mock');
 
 describe('stop-hammertime', () => {
 
-  describe('listInstancesToStop()', () => {
+  describe('stopEC2()', () => {
 
-    it('should return valid instances to shut down', () => {
-      const mockResponse = {
+    it('should shut down valid instances only', () => {
+      const mockInstances = {
         "Reservations": [
           {
             "Instances": [
               {
                 "InstanceId": "i-aaaaaaaa",
-                "State": {
-                  "Code": 16,
-                  "Name": "running"
-                },
                 "Tags": [
                   {
                     "Key": "aws:autoscaling:groupName",
@@ -30,10 +26,6 @@ describe('stop-hammertime', () => {
             "Instances": [
               {
                 "InstanceId": "i-bbbbbbbb",
-                "State": {
-                  "Code": 16,
-                  "Name": "running"
-                },
                 "Tags": []
               }
             ]
@@ -42,10 +34,6 @@ describe('stop-hammertime', () => {
             "Instances": [
               {
                 "InstanceId": "i-cccccccc",
-                "State": {
-                  "Code": 16,
-                  "Name": "running"
-                },
                 "Tags": [
                   {
                     "Key": "hammertime:canttouchthis",
@@ -57,13 +45,54 @@ describe('stop-hammertime', () => {
           }
         ]
       };
-      AWS.mock('EC2', 'describeInstances', mockResponse);
+      AWS.mock('EC2', 'describeInstances', mockInstances);
+      AWS.mock('EC2', 'createTags', {});
+      AWS.mock('EC2', 'stopInstances', {});
 
-      return stopHammertime.listInstancesToStop()
+      return stopHammertime.stopEC2()
         .then(instances => {
           assert.deepEqual(instances, ['i-bbbbbbbb']);
         });
     });
+
+  });
+
+  describe('stopASG()', () => {
+
+    it('should spin down valid ASGs only', () => {
+      const mockASGs = {
+        "AutoScalingGroups": [
+          {
+            "DesiredCapacity": 3,
+            "Tags": [
+              {
+                Key: "hammertime:canttouchthis",
+                Value: ""
+              }
+            ],
+            "AutoScalingGroupName": "cant-touch-this-asg",
+            "MinSize": 3,
+            "MaxSize": 3
+          },
+          {
+            "DesiredCapacity": 3,
+            "Tags": [],
+            "AutoScalingGroupName": "can-touch-this-asg",
+            "MinSize": 3,
+            "MaxSize": 3
+          }
+        ]
+      };
+      AWS.mock('AutoScaling', 'describeAutoScalingGroups', mockASGs);
+      AWS.mock('AutoScaling', 'createOrUpdateTags', {});
+      AWS.mock('AutoScaling', 'updateAutoScalingGroup', {});
+
+      return stopHammertime.stopASG()
+        .then(asg => {
+          assert.deepEqual(asg, ['can-touch-this-asg']);
+        });
+    });
+
   });
 
 });
