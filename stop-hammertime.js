@@ -16,7 +16,7 @@ function listInstancesToStop() {
   return new Promise((resolve, reject) => {
     ec2.describeInstances(params)
       .promise()
-      .then(resolve(filterInstances(data)))
+      .then(data => { resolve(filterInstances(data)) })
       .catch(err => { reject(err) });
   });
 }
@@ -37,10 +37,7 @@ function tagStopTime(resources) {
 
 function stopInstances(instances) {
   const ec2 = new AWS.EC2();
-  const params = { InstanceIds: instances }
-  instances.forEach(instance => {
-    console.log(`Stopping ${instance}`);
-  });
+  const params = { InstanceIds: instances };
   return ec2.stopInstances(params).promise();
 }
 
