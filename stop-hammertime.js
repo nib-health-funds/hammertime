@@ -1,36 +1,38 @@
 'use strict';
 
 const AWS = require('aws-sdk');
-
-const ec2 = new AWS.EC2();
 const autoscaling = new AWS.AutoScaling();
 
-function findInstances() {
-  return new Promise((resolve, reject) => {
-    listRunningInstances()
-      .then(runningInstances => { return filterByIgnoreTag(runningInstances); })
-      .then(filteredInstances => { return tagInstances(filteredInstances); })
-      .then(taggedInstances => { return stopInstances(taggedInstances); })
-      .catch(error => {
-        reject(error);
-        console.error(error);
-      });
-  });
-}
-
-function listRunningInstances() {
+function listInstancesToStop() {
+  const ec2 = new AWS.EC2();
   const params = {
-    DryRun: false,
-    Filters: [{
-      Name: 'instance-state-name',
-      Values: ['running']
-    }]
-  };
+      Filters: [
+        {
+          Name: 'instance-state-name',
+          Values: ['running']
+        }
+      ]
+    }
 
   return new Promise((resolve, reject) => {
-    console.log("Looking for solitary instances to shut down...");
-
+    ec2.describeInstances(params)
+      .promise()
+      .then(data => { resolve(filterInstances(data)); })
+      .catch(err => { reject(err) });
   });
 }
 
-module.exports = { listRunningInstances };
+function filterInstances(data) {
+  return data
+          .Reservations
+          .map(reservation => { return reservation.Instances })
+          .reduce((prev, curr) => { return prev.concat(curr) })
+          .filter(instanceCanBeStopped)
+          .map(instance => { return instance.InstanceId })
+}
+
+function instanceCanBeStopped(instance) {
+  return !instance.Tags.some(tag => { return (tag.Key === 'aws:autoscaling:groupName' || tag.Key === 'hammertime:canttouchthis') })
+}
+
+module.exports = { listInstancesToStop };

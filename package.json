@@ -18,7 +18,9 @@
     "aws-sdk": "^2.7.19"
   },
   "devDependencies": {
+    "aws-sdk-mock": "^1.6.1",
     "mocha": "^3.2.0",
+    "mock-aws": "^1.2.3",
     "serverless": "^1.4.0"
   }
 }
