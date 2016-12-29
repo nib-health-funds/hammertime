@@ -5,13 +5,13 @@ const startHammertime = require('./start-hammertime');
 
 module.exports.stop = (event, context, callback) => {
   console.log('Stop. Hammertime!');
-  listInstancesToStop()
-    .then(tagStopTime)
+  stopHammertime.listInstancesToStop()
+    .then(stopHammertime.tagStopTime)
     .then(instances => {
       instances.forEach(instance => {
         console.log(`Stopping ${instance}`);
       });
-      stopInstances(instances);
+      stopHammertime.stopInstances(instances);
     })
     .then((response) => {
       console.log(response);
