@@ -1,7 +1,6 @@
 'use strict';
 
 const AWS = require('aws-sdk');
-const autoscaling = new AWS.AutoScaling();
 
 function listInstancesToStop() {
   const ec2 = new AWS.EC2();
@@ -17,9 +16,37 @@ function listInstancesToStop() {
   return new Promise((resolve, reject) => {
     ec2.describeInstances(params)
       .promise()
-      .then(data => { resolve(filterInstances(data)); })
+      .then(data => {
+        filterInstances(data);
+      })
+      .then(instancesToStop => {
+        instancesToStop.forEach(instance => {
+          console.log(`Stopping ${instance}`);
+        });
+        resolve(instancesToStop);
+      })
       .catch(err => { reject(err) });
   });
+}
+
+function tagStopTime(resources) {
+  const ec2 = new AWS.EC2();
+  const params = {
+      Resources: resources,
+      Tags: [
+        {
+          Key: 'stop:hammertime',
+          Value: new Date().toISOString()
+        }
+      ]
+    }
+  return ec2.createTags(params).promise();
+}
+
+function stopInstances(instances) {
+  const ec2 = new AWS.EC2();
+  const params = { InstanceIds: instances }
+  return ec2.stopInstances(params).promise();
 }
 
 function filterInstances(data) {
@@ -32,7 +59,9 @@ function filterInstances(data) {
 }
 
 function instanceCanBeStopped(instance) {
-  return !instance.Tags.some(tag => { return (tag.Key === 'aws:autoscaling:groupName' || tag.Key === 'hammertime:canttouchthis') })
+  return !instance.Tags.some(tag => {
+    return (tag.Key === 'aws:autoscaling:groupName' || tag.Key === 'hammertime:canttouchthis')
+  })
 }
 
-module.exports = { listInstancesToStop };
+module.exports = { listInstancesToStop, tagStopTime, stopInstances };

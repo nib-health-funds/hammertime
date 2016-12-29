@@ -68,13 +68,4 @@ describe('stop-hammertime', () => {
     });
   });
 
-  describe('tagInstances()', () => {
-    xit('should tag with stop time', () => {
-    });
-  });
-
-  describe('stopInstances()', () => {
-    xit('should stop instances', () => {
-    });
-  });
 });
