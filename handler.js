@@ -7,14 +7,9 @@ module.exports.stop = (event, context, callback) => {
   console.log('Stop. Hammertime!');
   stopHammertime.listInstancesToStop()
     .then(stopHammertime.tagStopTime)
+    .then(stopHammertime.stopInstances)
     .then(instances => {
-      instances.forEach(instance => {
-        console.log(`Stopping ${instance}`);
-      });
-      stopHammertime.stopInstances(instances);
-    })
-    .then((response) => {
-      console.log(response);
+      console.log(`Stopped ${instances}`);
       callback(null, { message: 'Doneskies.' }, event);
     })
     .catch(err => {

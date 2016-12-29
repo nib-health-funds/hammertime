@@ -66,6 +66,10 @@ describe('stop-hammertime', () => {
           assert.deepEqual(instances, ['i-bbbbbbbb']);
         });
     });
+
+    it('returns an empty array when no instances found', () => {
+
+    });
   });
 
 });

@@ -3,6 +3,7 @@
 const AWS = require('aws-sdk');
 
 function listInstancesToStop() {
+  console.log('listInstancesToStop()');
   const ec2 = new AWS.EC2();
   const params = {
       Filters: [
@@ -22,6 +23,7 @@ function listInstancesToStop() {
 }
 
 function tagStopTime(resources) {
+  console.log('tagStopTime()');
   const ec2 = new AWS.EC2();
   const params = {
       Resources: resources,
@@ -32,16 +34,28 @@ function tagStopTime(resources) {
         }
       ]
     }
-  return ec2.createTags(params).promise();
+    return new Promise((resolve, reject) => {
+      ec2.createTags(params)
+        .promise()
+        .then(data => { resolve(resources) })
+        .catch(err => { reject(err) });
+    });
 }
 
 function stopInstances(instances) {
+  console.log('stopInstances()');
   const ec2 = new AWS.EC2();
   const params = { InstanceIds: instances, DryRun: true };
-  return ec2.stopInstances(params).promise();
+  return new Promise((resolve, reject) => {
+    ec2.stopInstances(params)
+      .promise()
+      .then(data => { resolve(instances) })
+      .catch(err => { reject(err) });
+  });
 }
 
 function filterInstances(data) {
+  console.log('filterInstances()');
   return data
           .Reservations
           .map(reservation => { return reservation.Instances })
