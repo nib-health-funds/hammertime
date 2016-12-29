@@ -17,13 +17,11 @@ function listInstancesToStop() {
     ec2.describeInstances(params)
       .promise()
       .then(data => {
-        filterInstances(data);
-      })
-      .then(instancesToStop => {
-        instancesToStop.forEach(instance => {
+        const instances = filterInstances(data);
+        instances.forEach(instance => {
           console.log(`Stopping ${instance}`);
         });
-        resolve(instancesToStop);
+        resolve(instances);
       })
       .catch(err => { reject(err) });
   });
