@@ -37,7 +37,7 @@ function tagStopTime(resources) {
 
 function stopInstances(instances) {
   const ec2 = new AWS.EC2();
-  const params = { InstanceIds: instances };
+  const params = { InstanceIds: instances, DryRun: true };
   return ec2.stopInstances(params).promise();
 }
 
