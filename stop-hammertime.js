@@ -15,8 +15,8 @@ function stopEC2() {
 function stopASG() {
   return new Promise((resolve, reject) => {
     listASGsToStop()
-      .then(tagStopTimeAndSize)
-      .then(spinDownASGs)
+      .then(tagASGs)
+      .then(stopASGs)
       .then(resolve)
       .catch(reject);
   });
@@ -37,7 +37,7 @@ function listInstancesToStop() {
     ec2.describeInstances(params)
       .promise()
       .then(data => { resolve(filterInstances(data)) })
-      .catch(err => { reject(err) });
+      .catch(reject);
   });
 }
 
@@ -70,16 +70,24 @@ function tagStopTime(resources) {
     });
 }
 
-function tagStopTimeAndSize(asgs) {
-  const autoscaling = new AWS.AutoScaling();
-  const tags = asgs.map(timeAndSizeTags)
-                   .reduce((prev, curr) => { return prev.concat(curr) });
-
-  const params = { Tags: tags }
+function tagASGs(asgs) {
+  const taggedASGs = asgs.map(asg => {
+    return tagStopTimeAndSize(asg);
+  });
+  return Promise.all(taggedASGs);
 }
 
-function timeAndSizeTags(asg) {
-    return [
+function stopASGs(asgs) {
+  const stoppedASGs = asgs.map(asg => {
+    return spinDownASG(asg);
+  });
+  return Promise.all(stoppedASGs);
+}
+
+function tagStopTimeAndSize(asg) {
+  return new Promise((resolve, reject) => {
+    const autoscaling = new AWS.AutoScaling();
+    const tags = [
       {
         Key: 'hammertime:originalASGSize',
         PropagateAtLaunch: false,
@@ -94,17 +102,40 @@ function timeAndSizeTags(asg) {
         ResourceType: 'auto-scaling-group',
         Value: new Date().toISOString()
       }
-    ]
-  }
+    ];
+    const params = { Tags: tags };
+
+    autoscaling.createOrUpdateTags(params)
+      .promise()
+      .then(data => { resolve(asg) })
+      .catch(err => { reject(err) });
+  });
 }
 
 function stopInstances(instances) {
-  const ec2 = new AWS.EC2();
-  const params = { InstanceIds: instances };
   return new Promise((resolve, reject) => {
+    const ec2 = new AWS.EC2();
+    const params = { InstanceIds: instances };
+
     ec2.stopInstances(params)
       .promise()
       .then(data => { resolve(instances) })
+      .catch(reject);
+  });
+}
+
+function spinDownASG(asg) {
+  return new Promise((resolve, reject) => {
+    const autoscaling = new AWS.AutoScaling();
+    const params = {
+      AutoScalingGroupName: asg.AutoScalingGroupName,
+      DesiredCapacity: 0,
+      MinSize: 0,
+    };
+
+    autoscaling.updateAutoScalingGroup(params)
+      .promise()
+      .then(data => { resolve(asg) })
       .catch(err => { reject(err) });
   });
 }

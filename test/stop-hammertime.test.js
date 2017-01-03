@@ -88,8 +88,8 @@ describe('stop-hammertime', () => {
       AWS.mock('AutoScaling', 'updateAutoScalingGroup', {});
 
       return stopHammertime.stopASG()
-        .then(asg => {
-          assert.deepEqual(asg, ['can-touch-this-asg']);
+        .then(asgs => {
+          assert.deepEqual(asgs[0].AutoScalingGroupName, 'can-touch-this-asg');
         });
     });
 

@@ -33,7 +33,7 @@ functions:
 #    events:
 #      - schedule: cron(...)
 
-#   start-hammertime:
-#     handler: handler.start
+  start-hammertime:
+    handler: handler.start
 #    events:
 #      - schedule: cron(...)
