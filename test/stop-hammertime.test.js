@@ -7,7 +7,7 @@ describe('stop-hammertime', () => {
   describe('stopEC2()', () => {
 
     it('should shut down valid instances only', () => {
-      const mockInstances = {
+      let mockInstances = {
         "Reservations": [
           {
             "Instances": [
@@ -60,7 +60,7 @@ describe('stop-hammertime', () => {
   describe('stopASG()', () => {
 
     it('should spin down valid ASGs only', () => {
-      const mockASGs = {
+      let mockASGs = {
         "AutoScalingGroups": [
           {
             "DesiredCapacity": 3,
