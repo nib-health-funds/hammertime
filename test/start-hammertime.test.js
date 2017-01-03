@@ -1,3 +1,5 @@
+'use strict';
+
 const assert          = require('assert');
 const startHammertime = require('../start-hammertime');
 const AWS             = require('aws-sdk-mock');
