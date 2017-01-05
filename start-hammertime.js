@@ -12,6 +12,10 @@ function startEC2() {
   });
 }
 
+function startASG() {
+  
+}
+
 function listInstancesToStart() {
   return new Promise((resolve, reject) => {
     const ec2 = new AWS.EC2();
@@ -80,3 +84,5 @@ function instanceCanBeStarted(instance) {
     return (tag.Key === 'aws:autoscaling:groupName');
   });
 }
+
+module.exports = { startEC2, startASG };
