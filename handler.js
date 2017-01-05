@@ -23,7 +23,7 @@ module.exports.stop = (event, context, callback) => {
 module.exports.start = (event, context, callback) => {
   console.log('Break it down!');
   Promise.all([
-    stopHammertime.startEC2(),
+    startHammertime.startEC2(),
     //stopHammertime.startASG(),
   ]).then(responses => {
     console.log(responses);
