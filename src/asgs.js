@@ -52,20 +52,19 @@ function listTargetASGs(filter) {
 }
 
 function getAllASGs(nextToken, allASGs) {
-  const autoscaling = new AWS.AutoScaling();
-  const params = {
-    MaxRecords: 100
-  };
-
-  if (nextToken) {
-    params.NextToken = nextToken;
-  }
-
-  if (!allASGs) {
-    allASGs = [];
-  }
-
   return new Promise((resolve, reject) => {
+    const autoscaling = new AWS.AutoScaling();
+    const params = {
+      MaxRecords: 100
+    };
+
+    if (nextToken) {
+      params.NextToken = nextToken;
+    }
+
+    if (!allASGs) {
+      allASGs = [];
+    }
     autoscaling.describeAutoScalingGroups(params)
       .promise()
       .then(data => {
