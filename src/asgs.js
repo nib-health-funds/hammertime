@@ -42,16 +42,16 @@ function startASGs(asgs) {
 
 function listTargetASGs(filter) {
   return new Promise((resolve, reject) => {
-    getAllASGs([])
-      .then(data => {
-        const targetASGs = data.AutoScalingGroups.filter(filter);
+    getAllASGs()
+      .then(allASGs => {
+        const targetASGs = allASGs.filter(filter);
         resolve(targetASGs);
       })
       .catch(reject);
   });
 }
 
-function getAllASGs(nextToken, allAsgs) {
+function getAllASGs(nextToken, allASGs) {
   const autoscaling = new AWS.AutoScaling();
   const params = {
     MaxRecords: 100
@@ -61,16 +61,23 @@ function getAllASGs(nextToken, allAsgs) {
     params.NextToken = nextToken;
   }
 
-  return autoscaling.describeAutoScalingGroups(params)
-    .promise()
-    .then(data => {
-      allAsgs.push.apply(allAsgs, data.AutoScalingGroups);
-      if (data.NextToken) {
-        return getAllASGs(data.NextToken, allAsgs);
-      } else {
-        return allAsgs;
-      }
-    });
+  if (!allASGs) {
+    allASGs = [];
+  }
+
+  return new Promise((resolve, reject) => {
+    autoscaling.describeAutoScalingGroups(params)
+      .promise()
+      .then(data => {
+        allASGs.push.apply(allASGs, data.AutoScalingGroups);
+        if (data.NextToken) {
+          return getAllASGs(data.NextToken, allASGs);
+        } else {
+          resolve(allASGs);
+        }
+      })
+      .catch(reject);
+  });
 }
 
 function stoppableASG(asg) {

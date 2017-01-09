@@ -30,7 +30,8 @@ describe('asgs', () => {
             "MinSize": 3,
             "MaxSize": 3
           }
-        ]
+        ],
+        "NextToken": ""
       };
       AWS.mock('AutoScaling', 'describeAutoScalingGroups', mockASGs);
 
