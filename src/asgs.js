@@ -42,8 +42,12 @@ function startASGs(asgs) {
 
 function listTargetASGs(filter) {
   const autoscaling = new AWS.AutoScaling();
+  const params = {
+    MaxRecords: 0
+  };
+
   return new Promise((resolve, reject) => {
-    autoscaling.describeAutoScalingGroups()
+    autoscaling.describeAutoScalingGroups(params)
       .promise()
       .then(data => {
         const targetASGs = data.AutoScalingGroups.filter(filter);
