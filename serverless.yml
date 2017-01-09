@@ -29,11 +29,11 @@ provider:
 
 functions:
   stop-hammertime:
-    handler: handler.stop
+    handler: hammertime.stop
 #    events:
 #      - schedule: cron(...)
 
   start-hammertime:
-    handler: handler.start
+    handler: hammertime.start
 #    events:
 #      - schedule: cron(...)
