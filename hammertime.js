@@ -9,7 +9,8 @@ module.exports.stop = (event, context, callback) => {
     stopInstances(),
     stopASGs(),
   ]).then(responses => {
-    callback(null, { message: 'All instances and ASGs stopped successfully. Good night!' }, event);
+    console.log('All instances and ASGs stopped successfully. Good night!');
+    callback(null, { message: 'Stop: Hammertime successfully completed.' }, event);
   }).catch(err => {
     console.error(err);
     callback(err);
@@ -22,7 +23,8 @@ module.exports.start = (event, context, callback) => {
     startInstances(),
     startASGs(),
   ]).then(responses => {
-    callback(null, { message: 'All instances and ASGs started successfully. Good morning!' }, event);
+    console.log('All instances and ASGs started successfully. Good morning!');
+    callback(null, { message: 'Start: Hammertime successfully completed.' }, event);
   }).catch(err => {
     console.error(err);
     callback(err);
@@ -34,9 +36,9 @@ function stopInstances() {
     instances.listInstancesToStop()
       .then(stoppableInstances => {
         console.log("Found the following instances to shut down...");
-	stoppableInstances.forEach(instance => {
+	      stoppableInstances.forEach(instance => {
           console.log(instance);
-	});
+	      });
         return instances.tagInstances(stoppableInstances);
       })
       .then(taggedInstances => {
@@ -53,9 +55,9 @@ function startInstances() {
     instances.listInstancesToStart()
       .then(startableInstances => {
         console.log("Found the following instances to start up...");
-	startableInstances.forEach(instance => {
+        startableInstances.forEach(instance => {
           console.log(instance);
-	});
+	      });
         return instances.startInstances(startableInstances);
       })
       .then(startedInstances => {
@@ -73,8 +75,8 @@ function stopASGs() {
       .then(stoppableASGs => {
         console.log("Found the following ASGs to spin down...");
         stoppableASGs.forEach(asg => {
-	  console.log(asg.AutoScalingGroupName);
-	});
+	        console.log(asg.AutoScalingGroupName);
+	      });
         return asgs.tagASGs(stoppableASGs);
       })
       .then(taggedASGs => {
@@ -92,8 +94,8 @@ function startASGs() {
       .then(startableASGs => {
         console.log("Found the following ASGs to spin up...");
         startableASGs.forEach(asg => {
-	  console.log(asg.AutoScalingGroupName);
-	});
+	        console.log(asg.AutoScalingGroupName);
+	      });
         return asgs.startASGs(startableASGs);
       })
       .then(startedASGs => {

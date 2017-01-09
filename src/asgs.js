@@ -91,7 +91,7 @@ function tagASG(asg) {
             console.warn(`Throttling the AWS API trying to tag ${asg.AutoScalingGroupName}. Backing off... (${number}/10)`);
             retry(err);
           }
-          reject(err);
+          throw(err);
         });
     })
     .then(data => { resolve(asg) })
@@ -125,7 +125,7 @@ function untagASG(asg) {
             console.warn(`Throttling the AWS API trying to untag ${asg.AutoScalingGroupName}. Backing off... (${number}/10)`);
             retry(err);
           }
-          reject(err);
+          throw(err);
         });
     })
     .then(data => { resolve(asg) })
@@ -150,7 +150,7 @@ function spinDownASG(asg) {
             console.warn(`Throttling the AWS API trying to spin down ${asg.AutoScalingGroupName}. Backing off... (${number}/10)`);
             retry(err);
           }
-          reject(err);
+          throw(err);
         });
     })
     .then(data => { resolve(asg) })
@@ -177,7 +177,7 @@ function spinUpASG(asg) {
             console.warn(`Throttling the AWS API trying to spin up ${asg.AutoScalingGroupName}. Backing off... (${number}/10)`);
             retry(err);
           }
-          reject(err);
+          throw(err);
         });
     })
     .then(data => { resolve(asg) })
