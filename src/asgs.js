@@ -41,23 +41,36 @@ function startASGs(asgs) {
 }
 
 function listTargetASGs(filter) {
-  const autoscaling = new AWS.AutoScaling();
-  const params = {
-    // you have to specify a max records, or else deal with pagination
-    // i'm feeling lazy so this is a "future hailey" problem :)
-    // i'm sorry, future me
-    MaxRecords: 500
-  };
-
   return new Promise((resolve, reject) => {
-    autoscaling.describeAutoScalingGroups(params)
-      .promise()
+    getAllASGs([])
       .then(data => {
         const targetASGs = data.AutoScalingGroups.filter(filter);
         resolve(targetASGs);
       })
       .catch(reject);
   });
+}
+
+function getAllASGs(nextToken, allAsgs) {
+  const autoscaling = new AWS.AutoScaling();
+  const params = {
+    MaxRecords: 100
+  };
+
+  if (nextToken) {
+    params.NextToken = nextToken;
+  }
+
+  return autoscaling.describeAutoScalingGroups(params)
+    .promise()
+    .then(data => {
+      allAsgs.push.apply(allAsgs, data.AutoScalingGroups);
+      if (data.NextToken) {
+        return getAllASGs(data.NextToken, allAsgs);
+      } else {
+        return allAsgs;
+      }
+    });
 }
 
 function stoppableASG(asg) {
