@@ -30,10 +30,12 @@ provider:
 functions:
   stop-hammertime:
     handler: hammertime.stop
+    timeout: 60
 #    events:
 #      - schedule: cron(...)
 
   start-hammertime:
     handler: hammertime.start
+    timeout: 60
 #    events:
 #      - schedule: cron(...)

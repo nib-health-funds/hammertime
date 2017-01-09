@@ -36,7 +36,9 @@ function stopInstances() {
     instances.listInstancesToStop()
       .then(stoppableInstances => {
         console.log("Found the following instances to shut down...");
-        console.log(stoppableInstances);
+	startableInstances.forEach(instance => {
+          console.log(instance);
+	});
         return instances.tagInstances;
       })
       .then(taggedInstances => {
@@ -55,7 +57,9 @@ function startInstances() {
     instances.listInstancesToStart()
       .then(startableInstances => {
         console.log("Found the following instances to start up...");
-        console.log(startableInstances);
+	startableInstances.forEach(instance => {
+          console.log(instance);
+	});
         return instances.startInstances;
       })
       .then(startedInstances => {
@@ -72,7 +76,9 @@ function stopASGs() {
     asgs.listASGsToStop()
       .then(stoppableASGs => {
         console.log("Found the following ASGs to spin down...");
-        console.log(stoppableASGs);
+        stoppableASGs.forEach(asg => {
+	  console.log(asg.AutoScalingGroupName);
+	});
         return asgs.tagASGs;
       })
       .then(taggedASGs => {
@@ -91,7 +97,9 @@ function startASGs() {
     asgs.listASGsToStart()
       .then(startableASGs => {
         console.log("Found the following ASGs to spin up...");
-        console.log(startableASGs);
+        startableASGs.forEach(asg => {
+	  console.log(asg.AutoScalingGroupName);
+	});
         return asgs.spinUpASGs;
       })
       .then(startedASGs => {
