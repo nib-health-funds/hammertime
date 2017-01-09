@@ -9,7 +9,6 @@ module.exports.stop = (event, context, callback) => {
     stopInstances(),
     stopASGs(),
   ]).then(responses => {
-    responses.forEach(res => console.log(res));
     callback(null, { message: 'All instances and ASGs stopped successfully. Good night!' }, event);
   }).catch(err => {
     console.error(err);
@@ -23,7 +22,6 @@ module.exports.start = (event, context, callback) => {
     startInstances(),
     startASGs(),
   ]).then(responses => {
-    responses.forEach(res => console.log(res));
     callback(null, { message: 'All instances and ASGs started successfully. Good morning!' }, event);
   }).catch(err => {
     console.error(err);
@@ -43,9 +41,7 @@ function stopInstances() {
       })
       .then(taggedInstances => {
         console.log("Finished tagging instances. Moving on to stop them.");
-        console.log("Not stopping them for now!")
-        //return instances.stopInstances;
-        return taggedInstances;
+        return instances.stopInstances;
       })
       .then(resolve)
       .catch(reject);
@@ -83,9 +79,7 @@ function stopASGs() {
       })
       .then(taggedASGs => {
         console.log("Finished tagging ASGs. Moving on to spin them down.");
-        console.log("Not spinning them down for now!")
-        //return asgs.stopASGs;
-        return taggedASGs;
+        return asgs.stopASGs;
       })
       .then(resolve)
       .catch(reject);
