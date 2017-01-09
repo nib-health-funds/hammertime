@@ -36,7 +36,7 @@ function stopInstances() {
     instances.listInstancesToStop()
       .then(stoppableInstances => {
         console.log("Found the following instances to shut down...");
-	startableInstances.forEach(instance => {
+	stoppableInstances.forEach(instance => {
           console.log(instance);
 	});
         return instances.tagInstances;
