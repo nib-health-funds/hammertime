@@ -9,8 +9,8 @@ module.exports.stop = (event, context, callback) => {
     stopInstances(),
     stopASGs(),
   ]).then(responses => {
-    console.log(responses);
-    callback(null, { message: 'Doneskies.' }, event);
+    responses.forEach(res => console.log(res));
+    callback(null, { message: 'All instances and ASGs stopped successfully. Good night!' }, event);
   }).catch(err => {
     console.error(err);
     callback(err);
@@ -23,8 +23,8 @@ module.exports.start = (event, context, callback) => {
     startInstances(),
     startASGs(),
   ]).then(responses => {
-    console.log(responses);
-    callback(null, { message: 'Doneskies.' }, event);
+    responses.forEach(res => console.log(res));
+    callback(null, { message: 'All instances and ASGs started successfully. Good morning!' }, event);
   }).catch(err => {
     console.error(err);
     callback(err);
