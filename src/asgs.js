@@ -43,51 +43,50 @@ function startASGs(asgs) {
 function listTargetASGs(filter) {
   const autoscaling = new AWS.AutoScaling();
   const params = {
-    MaxRecords: 100
   };
 
   return new Promise((resolve, reject) => {
-    getAllASGs()
+    autoscaling.describeAutoScalingGroups(params)
+      .promise()
       .then(data => {
-        console.log(data);
-        const targetASGs = data.filter(filter);
+        const targetASGs = data.AutoScalingGroups.filter(filter);
         resolve(targetASGs);
       })
       .catch(reject);
   });
 }
 
-function getAllASGs(nextToken, allASGs) {
-  const autoscaling = new AWS.AutoScaling();
-  const params = {
-    MaxRecords: 100
-  };
-
-  if (nextToken) {
-    params.NextToken = nextToken;
-  }
-
-  if (!allASGs) {
-    allASGs = [];
-  }
-
-  return new Promise((resolve, reject) => {
-    autoscaling.describeAutoScalingGroups(params)
-      .promise()
-      .then(data => {
-        allASGs.push.apply(allASGs, data.AutoScalingGroups);
-        console.log(allASGs);
-        if (data.NextToken) {
-          console.log("in recursive");
-          return getAllASGs(data.NextToken, allASGs);
-        } else {
-          console.log("resolving")
-          return resolve(allASGs);
-        }
-      })
-      .catch(reject);
-  });
-}
+// function getAllASGs(nextToken, allASGs) {
+//   const autoscaling = new AWS.AutoScaling();
+//   const params = {
+//     MaxRecords: 100
+//   };
+//
+//   if (nextToken) {
+//     params.NextToken = nextToken;
+//   }
+//
+//   if (!allASGs) {
+//     allASGs = [];
+//   }
+//
+//   return new Promise((resolve, reject) => {
+//     autoscaling.describeAutoScalingGroups(params)
+//       .promise()
+//       .then(data => {
+//         allASGs.push.apply(allASGs, data.AutoScalingGroups);
+//         console.log(allASGs);
+//         if (data.NextToken) {
+//           console.log("in recursive");
+//           return getAllASGs(data.NextToken, allASGs);
+//         } else {
+//           console.log("resolving")
+//           return resolve(allASGs);
+//         }
+//       })
+//       .catch(reject);
+//   });
+// }
 
 function stoppableASG(asg) {
   return !hasTag(asg, 'hammertime:canttouchthis');
