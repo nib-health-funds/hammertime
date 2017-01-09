@@ -43,7 +43,10 @@ function startASGs(asgs) {
 function listTargetASGs(filter) {
   const autoscaling = new AWS.AutoScaling();
   const params = {
-    MaxRecords: 0
+    // you have to specify a max records, or else deal with pagination
+    // i'm feeling lazy so this is a "future hailey" problem :)
+    // i'm sorry, future me
+    MaxRecords: 500
   };
 
   return new Promise((resolve, reject) => {
