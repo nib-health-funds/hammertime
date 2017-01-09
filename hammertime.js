@@ -36,6 +36,11 @@ function stopInstances() {
     instances.listInstancesToStop()
       .then(stoppableInstances => {
         console.log("Found the following instances to shut down...");
+        if (stoppableInstances.length === 0) {
+          console.log("None! Moving on.");
+          resolve("No instances to shut down");
+        }
+
 	      stoppableInstances.forEach(instance => {
           console.log(instance);
 	      });
@@ -55,6 +60,11 @@ function startInstances() {
     instances.listInstancesToStart()
       .then(startableInstances => {
         console.log("Found the following instances to start up...");
+        if (startableInstances.length === 0) {
+          console.log("None! Moving on.");
+          resolve("No instances to turn on");
+        }
+
         startableInstances.forEach(instance => {
           console.log(instance);
 	      });
@@ -74,6 +84,11 @@ function stopASGs() {
     asgs.listASGsToStop()
       .then(stoppableASGs => {
         console.log("Found the following ASGs to spin down...");
+        if (stoppableASGs.length === 0) {
+          console.log("None! Moving on.");
+          resolve("No ASGs to spin down");
+        }
+
         stoppableASGs.forEach(asg => {
 	        console.log(asg.AutoScalingGroupName);
 	      });
@@ -93,6 +108,11 @@ function startASGs() {
     asgs.listASGsToStart()
       .then(startableASGs => {
         console.log("Found the following ASGs to spin up...");
+        if (startableASGs.length === 0) {
+          console.log("None! Moving on.");
+          resolve("No ASGs to spin up");
+        }
+
         startableASGs.forEach(asg => {
 	        console.log(asg.AutoScalingGroupName);
 	      });
