@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.7.19",
+    "promise-retry": "^1.1.1",
     "serverless": "^1.4.0"
   },
   "devDependencies": {

@@ -94,7 +94,7 @@ function startASGs() {
         startableASGs.forEach(asg => {
 	  console.log(asg.AutoScalingGroupName);
 	});
-        return asgs.spinUpASGs(startableASGs);
+        return asgs.startASGs(startableASGs);
       })
       .then(startedASGs => {
         console.log("Finished spinning up ASGs. Moving on to untag them.");

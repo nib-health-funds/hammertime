@@ -9,7 +9,8 @@ module.exports = {
   startASGs
 };
 
-const AWS = require('aws-sdk');
+const AWS          = require('aws-sdk');
+const promiseRetry = require('promise-retry');
 
 function listASGsToStop() {
   return listTargetASGs(stoppableASG);
@@ -82,10 +83,19 @@ function tagASG(asg) {
   };
 
   return new Promise((resolve, reject) => {
-    autoscaling.createOrUpdateTags(params)
-      .promise()
-      .then(data => { resolve(asg) })
-      .catch(reject);
+    promiseRetry((retry, number) => {
+      return autoscaling.createOrUpdateTags(params)
+        .promise()
+        .catch(err => {
+          if (err.code === 'Throttling') {
+            console.warn(`Throttling the AWS API trying to tag ${asg.AutoScalingGroupName}. Backing off... (${number}/10)`);
+            retry(err);
+          }
+          reject(err);
+        });
+    })
+    .then(data => { resolve(asg) })
+    .catch(reject);
   });
 }
 
@@ -107,10 +117,19 @@ function untagASG(asg) {
   };
 
   return new Promise((resolve, reject) => {
-    autoscaling.deleteTags(params)
-      .promise()
-      .then(data => { resolve(asg) })
-      .catch(reject);
+    promiseRetry((retry, number) => {
+      return autoscaling.deleteTags(params)
+        .promise()
+        .catch(err => {
+          if (err.code === 'Throttling') {
+            console.warn(`Throttling the AWS API trying to untag ${asg.AutoScalingGroupName}. Backing off... (${number}/10)`);
+            retry(err);
+          }
+          reject(err);
+        });
+    })
+    .then(data => { resolve(asg) })
+    .catch(reject);
   });
 }
 
@@ -123,10 +142,19 @@ function spinDownASG(asg) {
   };
 
   return new Promise((resolve, reject) => {
-    autoscaling.updateAutoScalingGroup(params)
-      .promise()
-      .then(data => { resolve(asg) })
-      .catch(reject);
+    promiseRetry((retry, number) => {
+      return autoscaling.updateAutoScalingGroup(params)
+        .promise()
+        .catch(err => {
+          if (err.code === 'Throttling') {
+            console.warn(`Throttling the AWS API trying to spin down ${asg.AutoScalingGroupName}. Backing off... (${number}/10)`);
+            retry(err);
+          }
+          reject(err);
+        });
+    })
+    .then(data => { resolve(asg) })
+    .catch(reject);
   });
 }
 
@@ -141,10 +169,19 @@ function spinUpASG(asg) {
   };
 
   return new Promise((resolve, reject) => {
-    autoscaling.updateAutoScalingGroup(params)
-      .promise()
-      .then(data => { resolve(asg) })
-      .catch(reject);
+    promiseRetry((retry, number) => {
+      return autoscaling.updateAutoScalingGroup(params)
+        .promise()
+        .catch(err => {
+          if (err.code === 'Throttling') {
+            console.warn(`Throttling the AWS API trying to spin up ${asg.AutoScalingGroupName}. Backing off... (${number}/10)`);
+            retry(err);
+          }
+          reject(err);
+        });
+    })
+    .then(data => { resolve(asg) })
+    .catch(reject);
   });
 }
 
