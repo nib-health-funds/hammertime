@@ -37,11 +37,11 @@ function stopInstances() {
 	stoppableInstances.forEach(instance => {
           console.log(instance);
 	});
-        return instances.tagInstances();
+        return instances.tagInstances(stoppableInstances);
       })
       .then(taggedInstances => {
         console.log("Finished tagging instances. Moving on to stop them.");
-        return instances.stopInstances();
+        return instances.stopInstances(taggedInstances);
       })
       .then(resolve)
       .catch(reject);
@@ -56,11 +56,11 @@ function startInstances() {
 	startableInstances.forEach(instance => {
           console.log(instance);
 	});
-        return instances.startInstances();
+        return instances.startInstances(startableInstances);
       })
       .then(startedInstances => {
         console.log("Finished starting instances. Moving on to untag them.");
-        return instances.untagInstances();
+        return instances.untagInstances(startedInstances);
       })
       .then(resolve)
       .catch(reject);
@@ -75,11 +75,11 @@ function stopASGs() {
         stoppableASGs.forEach(asg => {
 	  console.log(asg.AutoScalingGroupName);
 	});
-        return asgs.tagASGs();
+        return asgs.tagASGs(stoppableASGs);
       })
       .then(taggedASGs => {
         console.log("Finished tagging ASGs. Moving on to spin them down.");
-        return asgs.stopASGs();
+        return asgs.stopASGs(taggedASGs);
       })
       .then(resolve)
       .catch(reject);
@@ -94,11 +94,11 @@ function startASGs() {
         startableASGs.forEach(asg => {
 	  console.log(asg.AutoScalingGroupName);
 	});
-        return asgs.spinUpASGs();
+        return asgs.spinUpASGs(startableASGs);
       })
       .then(startedASGs => {
         console.log("Finished spinning up ASGs. Moving on to untag them.");
-        return asgs.untagASGs();
+        return asgs.untagASGs(startedASGs);
       })
       .then(resolve)
       .catch(reject);
