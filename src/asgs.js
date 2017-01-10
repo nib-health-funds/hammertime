@@ -21,12 +21,12 @@ function listASGsToStart() {
 }
 
 function tagASGs(asgs) {
-  const taggedASGs = asgs.map(asg => tagASG(asg));
+  const taggedASGs = asgs.AutoScalingGroups.map(asg => tagASG(asg));
   return Promise.all(taggedASGs);
 }
 
 function untagASGs(asgs) {
-  const untaggedASGs = asgs.map(asg => untagASG(asg));
+  const untaggedASGs = asgs.AutoScalingGroups.map(asg => untagASG(asg));
   return Promise.all(untaggedASGs);
 }
 
@@ -41,52 +41,48 @@ function startASGs(asgs) {
 }
 
 function listTargetASGs(filter) {
-  const autoscaling = new AWS.AutoScaling();
-  const params = {
-  };
-
   return new Promise((resolve, reject) => {
-    autoscaling.describeAutoScalingGroups(params)
-      .promise()
-      .then(data => {
-        const targetASGs = data.AutoScalingGroups.filter(filter);
-        resolve(targetASGs);
+    getAllASGs()
+      .then(allASGs => {
+        const filteredASGs = allASGs.filter(filter);
+        resolve(filteredASGs);
       })
       .catch(reject);
   });
 }
 
-// function getAllASGs(nextToken, allASGs) {
-//   const autoscaling = new AWS.AutoScaling();
-//   const params = {
-//     MaxRecords: 100
-//   };
-//
-//   if (nextToken) {
-//     params.NextToken = nextToken;
-//   }
-//
-//   if (!allASGs) {
-//     allASGs = [];
-//   }
-//
-//   return new Promise((resolve, reject) => {
-//     autoscaling.describeAutoScalingGroups(params)
-//       .promise()
-//       .then(data => {
-//         allASGs.push.apply(allASGs, data.AutoScalingGroups);
-//         console.log(allASGs);
-//         if (data.NextToken) {
-//           console.log("in recursive");
-//           return getAllASGs(data.NextToken, allASGs);
-//         } else {
-//           console.log("resolving")
-//           return resolve(allASGs);
-//         }
-//       })
-//       .catch(reject);
-//   });
-// }
+
+function getAllASGs() {
+  const autoscaling = new AWS.AutoScaling();
+  const params = {};
+
+  return new Promise((resolve, reject) => {
+    autoscaling.describeAutoScalingGroups(params)
+      .promise()
+      .then(data => {
+        followPages(resolve, reject, [], data);
+      });
+  });
+}
+
+function followPages(resolve, reject, allAsgs, data) {
+  const autoscaling = new AWS.AutoScaling();
+  const params = {};
+
+  allAsgs.push.apply(allAsgs, data.AutoScalingGroups);
+
+  if (data.NextToken) {
+    params.NextToken = data.NextToken;
+    autoscaling.describeAutoScalingGroups(params)
+      .promise()
+      .then(res => {
+        followPages(resolve, reject, allAsgs, res);
+      })
+      .catch(reject);
+  } else {
+    resolve(allAsgs)
+  }
+}
 
 function stoppableASG(asg) {
   return !hasTag(asg, 'hammertime:canttouchthis');
