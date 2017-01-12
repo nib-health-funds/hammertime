@@ -21,12 +21,12 @@ function listASGsToStart() {
 }
 
 function tagASGs(asgs) {
-  const taggedASGs = asgs.AutoScalingGroups.map(asg => tagASG(asg));
+  const taggedASGs = asgs.map(asg => tagASG(asg));
   return Promise.all(taggedASGs);
 }
 
 function untagASGs(asgs) {
-  const untaggedASGs = asgs.AutoScalingGroups.map(asg => untagASG(asg));
+  const untaggedASGs = asgs.map(asg => untagASG(asg));
   return Promise.all(untaggedASGs);
 }
 
