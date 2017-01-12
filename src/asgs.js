@@ -191,7 +191,7 @@ function spinDownASG(asg) {
 
 function spinUpASG(asg) {
   const autoscaling = new AWS.AutoScaling();
-  const originalASGSize = valueForKey('hammertime:originalASGSize').split(',');
+  const originalASGSize = valueForKey(asg.Tags, 'hammertime:originalASGSize').split(',');
   const params = {
     AutoScalingGroupName: asg.AutoScalingGroupName,
     MinSize: originalASGSize[0],
