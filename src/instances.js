@@ -72,7 +72,7 @@ function untagInstances(instanceIds) {
     ]
   };
 
-  return new Promise((reolve, reject) => {
+  return new Promise((resolve, reject) => {
     ec2.deleteTags(params)
       .promise()
       .then(data => { resolve(instanceIds) })
