@@ -1,0 +1,22 @@
+env:
+  AWS_REGION: ap-southeast-2
+  DEFAULT_AWS_REGION: ap-southeast-2
+
+steps:
+  - name: ':nodejs: Test & Deploy'
+    command: 'docker run -e SLICE=$BUILDKITE_BRANCH -v $PWD:/tmp -w /tmp -t node:4 /bin/bash .buildkite/steps/deploy.sh'
+    agents:
+      os: 'linux'
+    concurrency: 1
+    concurrency_group: "${BUILDKITE_PIPELINE_SLUG}/deploy-${BUILDKITE_BRANCH}-to-kaos"
+
+  - block: ':bomb:'
+    branches: '!master'
+
+  - name: ':boom: Destroy Stack'
+    command: 'docker run -e SLICE=$BUILDKITE_BRANCH -v $PWD:/tmp -w /tmp -t node:4 /bin/bash .buildkite/steps/destroy.sh'
+    agents:
+      os: 'linux'
+    concurrency: 1
+    concurrency_group: "${BUILDKITE_PIPELINE_SLUG}/deploy-${BUILDKITE_BRANCH}-to-kaos"
+    branches: '!master'
