@@ -1,5 +1,8 @@
 service: hammertime
 
+custom:
+  enabled: ${file(./schedule.js):enabled}
+
 provider:
   name: aws
   runtime: nodejs4.3
@@ -32,10 +35,14 @@ functions:
     handler: hammertime.stop
     timeout: 180
     events:
-      - schedule: cron(30 9 * * ? *) # ADST 8:30PM, AEST 7:30PM every day
+      - schedule:
+          rate: cron(30 9 * * ? *) # ADST 8:30PM, AEST 7:30PM every day
+          enabled: ${file(./schedule.js):enabled}
 
   start-hammertime:
     handler: hammertime.start
     timeout: 180
     events:
-      - schedule: cron(30 19 * * ? *) # ADST 6:30AM, AEST 5:30AM every day
+      - schedule:
+          rate: cron(30 19 * * ? *) # ADST 6:30AM, AEST 5:30AM every day
+          enabled: ${file(./schedule.js):enabled}
