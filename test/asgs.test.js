@@ -44,6 +44,20 @@ describe('asgs', () => {
         });
     });
 
+    it('ignores asgs that are already stopped by hammertime', () => {
+      AWS.mock('AutoScaling', 'describeAutoScalingGroups', function(params, callback) {
+        callback(null, stopAlreadyRunResponse);
+      });
+
+      return asgs.listASGsToStop()
+        .then(validAsgs => {
+          assert.equal(validAsgs.length, 1);
+          assert.equal(validAsgs.some(asg => {
+            return asg.AutoScalingGroupName == 'can-touch-this-asg'
+          }), true);
+        });
+    });
+
     afterEach(() => {
       AWS.restore('AutoScaling', 'describeAutoScalingGroups');
     });
@@ -148,6 +162,43 @@ const stopOnePageResponse = {
       "DesiredCapacity": 3,
       "Tags": [],
       "AutoScalingGroupName": "can-touch-this-asg-page-2",
+      "MinSize": 3,
+      "MaxSize": 3
+    }
+  ],
+  "NextToken": ""
+};
+
+const stopAlreadyRunResponse = {
+  "AutoScalingGroups": [
+    {
+      "DesiredCapacity": 3,
+      "Tags": [
+        {
+          Key: "hammertime:canttouchthis",
+          Value: ""
+        }
+      ],
+      "AutoScalingGroupName": "cant-touch-this-asg",
+      "MinSize": 3,
+      "MaxSize": 3
+    },
+    {
+      "DesiredCapacity": 3,
+      "Tags": [
+        {
+          Key: "stop:hammertime",
+          Value: ""
+        }
+      ],
+      "AutoScalingGroupName": "already-touched-this-asg",
+      "MinSize": 3,
+      "MaxSize": 3
+    },
+    {
+      "DesiredCapacity": 3,
+      "Tags": [],
+      "AutoScalingGroupName": "can-touch-this-asg",
       "MinSize": 3,
       "MaxSize": 3
     }

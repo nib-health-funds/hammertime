@@ -85,7 +85,7 @@ function followPages(resolve, reject, allAsgs, data) {
 }
 
 function stoppableASG(asg) {
-  return !hasTag(asg, 'hammertime:canttouchthis');
+  return !hasTag(asg, 'stop:hammertime') && !hasTag(asg, 'hammertime:canttouchthis');
 }
 
 function startableASG(asg) {
