@@ -1,8 +1,5 @@
 service: hammertime
 
-custom:
-  enabled: ${file(./schedule.js):enabled}
-
 provider:
   name: aws
   runtime: nodejs4.3
