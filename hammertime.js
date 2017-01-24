@@ -41,9 +41,9 @@ function stopInstances() {
           resolve("No instances to shut down");
         }
 
-	      stoppableInstances.forEach(instance => {
+        stoppableInstances.forEach(instance => {
           console.log(instance);
-	      });
+        });
         return instances.tagInstances(stoppableInstances);
       })
       .then(taggedInstances => {
@@ -59,7 +59,7 @@ function startInstances() {
   return new Promise((resolve, reject) => {
     instances.listInstancesToStart()
       .then(startableInstances => {
-        console.log("Found the following instances to start up...");
+        console.log(`Found the following ${startableInstances.length} instances to start up...`);
         if (startableInstances.length === 0) {
           console.log("None! Moving on.");
           resolve("No instances to turn on");
@@ -67,7 +67,7 @@ function startInstances() {
 
         startableInstances.forEach(instance => {
           console.log(instance);
-	      });
+        });
         return instances.startInstances(startableInstances);
       })
       .then(startedInstances => {
@@ -83,19 +83,19 @@ function stopASGs() {
   return new Promise((resolve, reject) => {
     asgs.listASGsToStop()
       .then(stoppableASGs => {
-        console.log("Found the following ASGs to spin down...");
+        console.log(`Found the following ${stoppableASGs.length} instances to spin down...`);
         if (stoppableASGs.length === 0) {
           console.log("None! Moving on.");
           resolve("No ASGs to spin down");
         }
 
         stoppableASGs.forEach(asg => {
-	        console.log(asg.AutoScalingGroupName);
-	      });
+          console.log(asg.AutoScalingGroupName);
+        });
         return asgs.tagASGs(stoppableASGs);
       })
       .then(taggedASGs => {
-        console.log("Finished tagging ASGs. Moving on to spin them down.");
+        console.log(`Finished tagging ASGs. Moving on to spin down ${taggedASGs.length} of them.`);
         return asgs.stopASGs(taggedASGs);
       })
       .then(resolve)
@@ -107,19 +107,19 @@ function startASGs() {
   return new Promise((resolve, reject) => {
     asgs.listASGsToStart()
       .then(startableASGs => {
-        console.log("Found the following ASGs to spin up...");
+        console.log(`Found the following ${startableASGs.length} instances to start up...`);
         if (startableASGs.length === 0) {
           console.log("None! Moving on.");
           resolve("No ASGs to spin up");
         }
 
         startableASGs.forEach(asg => {
-	        console.log(asg.AutoScalingGroupName);
-	      });
+          console.log(asg.AutoScalingGroupName);
+        });
         return asgs.startASGs(startableASGs);
       })
       .then(startedASGs => {
-        console.log("Finished spinning up ASGs. Moving on to untag them.");
+        console.log(`Finished spinning up ASGs. Moving on to untag ${startedASGs.length} of them.`);
         return asgs.untagASGs(startedASGs);
       })
       .then(resolve)
