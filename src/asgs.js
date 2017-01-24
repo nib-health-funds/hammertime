@@ -63,7 +63,7 @@ function getAllASGs() {
       })
       .catch(reject);
   });
-}j
+}
 
 function followPages(resolve, reject, allAsgs, data) {
   const autoscaling = new AWS.AutoScaling();
