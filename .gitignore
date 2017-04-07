@@ -1,3 +1,8 @@
 *.zip
 node_modules
 .serverless
+.*.swo
+.*.swp
+.swo
+.swp
+.DS_Store

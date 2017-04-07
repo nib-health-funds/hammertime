@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@git.nib.com.au:nib-au/hammertime.git"
+    "url": "git@github.com:nib-health-funds/hammertime.git"
   },
   "author": "nib",
   "license": "MIT",
