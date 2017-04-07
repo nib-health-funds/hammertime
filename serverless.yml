@@ -1,0 +1,45 @@
+service: hammertime
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  memorySize: 128
+  stage: ${env:SLICE}
+  region: ap-southeast-2
+  deploymentBucket: nib-kaos-lambdas
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "ec2:CreateTags"
+        - "ec2:DeleteTags"
+        - "ec2:DescribeInstances"
+        - "ec2:StartInstances"
+        - "ec2:StopInstances"
+        - "autoscaling:CreateOrUpdateTags"
+        - "autoscaling:DeleteTags"
+        - "autoscaling:DescribeAutoScalingGroups"
+        - "autoscaling:UpdateAutoScalingGroup"
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - "logs:CreateLogGroup"
+        - "logs:CreateLogStream"
+        - "logs:PutLogEvents"
+      Resource: "arn:aws:logs:*:*:*"
+
+functions:
+  stop-hammertime:
+    handler: hammertime.stop
+    timeout: 180
+    events:
+      - schedule:
+          rate: cron(30 9 * * ? *) # ADST 8:30PM, AEST 7:30PM every day
+          enabled: ${file(./schedule.js):enabled}
+
+  start-hammertime:
+    handler: hammertime.start
+    timeout: 180
+    events:
+      - schedule:
+          rate: cron(30 19 * * ? *) # ADST 6:30AM, AEST 5:30AM every day
+          enabled: ${file(./schedule.js):enabled}
