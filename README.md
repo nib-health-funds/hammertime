@@ -72,9 +72,3 @@ See also the list of [contributors](https://github.com/nib-health-funds/hammerti
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Inspiration from Netflix [Simian Army](https://github.com/Netflix/SimianArmy)
-
-
