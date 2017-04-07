@@ -8,8 +8,9 @@ Serverless power cycling for AWS EC2 instances and Auto Scaling Groups based on 
 
 Edit [serverless.yml](serverless.yml) where you can adjust
 * scheduled run time,
+* deployment s3 bucket (can be set as `DEPLOY_BUCKET` env var),
 * AWS region,
-* stage between dev/test/production/other (can be set as env var),
+* stage between dev/test/production/other (can be set as `SLICE` env var),
 * anything else which takes your fancy.
 
 ## Usage
