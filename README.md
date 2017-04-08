@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/nib-health-funds/hammertime.svg?branch=master)](https://travis-ci.org/nib-health-funds/hammertime)
+
 # hammertime
 
 Serverless power cycling for AWS EC2 instances and Auto Scaling Groups based on a schedule.
