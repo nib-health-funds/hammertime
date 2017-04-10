@@ -5,7 +5,7 @@ const startInstances = require('./instances/startInstances');
 const listInstancesToStart = require('./instances/listInstancesToStart');
 const untagInstances = require('./instances/untagInstances');
 
-function doStartInstances() {
+function startAllInstances() {
   return listInstancesToStart()
     .then((startableInstances) => {
       console.log(`Found the following ${startableInstances.length} instances to start up...`);
@@ -48,7 +48,7 @@ function spinUpASGs() {
 module.exports = function start(event, context, callback) {
   console.log('Break it down!');
   Promise.all([
-    doStartInstances(),
+    startAllInstances(),
     spinUpASGs(),
   ]).then(() => {
     console.log('All instances and ASGs started successfully. Good morning!');

@@ -25,7 +25,7 @@ function spinDownASGs() {
     });
 }
 
-function doStopInstances() {
+function stopAllInstances() {
   return listInstancesToStop()
     .then((stoppableInstances) => {
       console.log('Found the following instances to shut down...');
@@ -48,7 +48,7 @@ function doStopInstances() {
 module.exports = function stop(event, context, callback) {
   console.log('Stop. Hammertime!');
   Promise.all([
-    doStopInstances(),
+    stopAllInstances(),
     spinDownASGs(),
   ]).then(() => {
     console.log('All instances and ASGs stopped successfully. Good night!');
