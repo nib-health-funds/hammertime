@@ -5,18 +5,18 @@ function followPages(resolve, reject, allAsgs, data) {
   const autoscaling = new AWS.AutoScaling();
   const params = {};
 
-  allAsgs.push(allAsgs, data.AutoScalingGroups);
+  const combinedAsgs = [...allAsgs, ...data.AutoScalingGroups];
 
   if (data.NextToken) {
     params.NextToken = data.NextToken;
     autoscaling.describeAutoScalingGroups(params)
       .promise()
       .then((res) => {
-        followPages(resolve, reject, allAsgs, res);
+        followPages(resolve, reject, combinedAsgs, res);
       })
       .catch(reject);
   } else {
-    resolve(allAsgs);
+    resolve(combinedAsgs);
   }
 }
 
