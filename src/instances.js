@@ -1,7 +1,15 @@
 const AWS = require('aws-sdk');
 
+function isASGroupNameTag(tag) {
+  return tag.Key === 'aws:autoscaling:groupName';
+}
+
+function isCantTouchThisTag(tag) {
+  return tag.Key === 'hammertime:canttouchthis';
+}
+
 function validInstance(instance) {
-  return !instance.Tags.some(tag => (tag.Key === 'aws:autoscaling:groupName' || tag.Key === 'hammertime:canttouchthis'));
+  return !instance.Tags.some(tag => (isASGroupNameTag(tag) || isCantTouchThisTag(tag)));
 }
 
 function filterInstances(data) {
@@ -14,13 +22,10 @@ function filterInstances(data) {
 }
 
 function listTargetInstances(params) {
-  return new Promise((resolve, reject) => {
-    const ec2 = new AWS.EC2();
-    ec2.describeInstances(params)
-      .promise()
-      .then(data => resolve(filterInstances(data)))
-      .catch(reject);
-  });
+  const ec2 = new AWS.EC2();
+  return ec2.describeInstances(params)
+    .promise()
+    .then(data => filterInstances(data));
 }
 
 function listInstancesToStop() {
@@ -37,7 +42,7 @@ function listInstancesToStop() {
 }
 
 function listInstancesToStart() {
-  const params = {
+  const options = {
     Filters: [
       {
         Name: 'instance-state-name',
@@ -50,12 +55,11 @@ function listInstancesToStart() {
     ],
   };
 
-  return listTargetInstances(params);
+  return listTargetInstances(options);
 }
 
 function tagInstances(instanceIds) {
-  const ec2 = new AWS.EC2();
-  const params = {
+  const options = {
     Resources: instanceIds,
     Tags: [
       {
@@ -64,18 +68,14 @@ function tagInstances(instanceIds) {
       },
     ],
   };
-
-  return new Promise((resolve, reject) => {
-    ec2.createTags(params)
-      .promise()
-      .then(() => resolve(instanceIds))
-      .catch(err => reject(err));
-  });
+  const ec2 = new AWS.EC2();
+  return ec2.createTags(options)
+    .promise()
+    .then(() => instanceIds);
 }
 
 function untagInstances(instanceIds) {
-  const ec2 = new AWS.EC2();
-  const params = {
+  const options = {
     Resources: instanceIds,
     Tags: [
       {
@@ -83,37 +83,24 @@ function untagInstances(instanceIds) {
       },
     ],
   };
-
-  return new Promise((resolve, reject) => {
-    ec2.deleteTags(params)
-      .promise()
-      .then(() => resolve(instanceIds))
-      .catch(reject);
-  });
+  const ec2 = new AWS.EC2();
+  return ec2.deleteTags(options)
+    .promise()
+    .then(() => instanceIds);
 }
 
 function stopInstances(instanceIds) {
   const ec2 = new AWS.EC2();
-  const params = { InstanceIds: instanceIds };
-
-  return new Promise((resolve, reject) => {
-    ec2.stopInstances(params)
-      .promise()
-      .then(() => resolve(instanceIds))
-      .catch(reject);
-  });
+  return ec2.stopInstances({ InstanceIds: instanceIds })
+    .promise()
+    .then(() => instanceIds);
 }
 
 function startInstances(instanceIds) {
-  return new Promise((resolve, reject) => {
-    const ec2 = new AWS.EC2();
-    const params = { InstanceIds: instanceIds };
-
-    ec2.startInstances(params)
-      .promise()
-      .then(() => resolve(instanceIds))
-      .catch(reject);
-  });
+  const ec2 = new AWS.EC2();
+  return ec2.startInstances({ InstanceIds: instanceIds })
+    .promise()
+    .then(() => instanceIds);
 }
 
 module.exports = {
