@@ -1,20 +1,13 @@
 const AWS = require('aws-sdk');
 const retryWhenThrottled = require('../utils/retryWhenThrottled');
+const createTag = require('../utils/createTag');
 
 function untagASG(asg) {
   const autoscaling = new AWS.AutoScaling();
   const params = {
     Tags: [
-      {
-        Key: 'hammertime:originalASGSize',
-        ResourceId: asg.AutoScalingGroupName,
-        ResourceType: 'auto-scaling-group',
-      },
-      {
-        Key: 'stop:hammertime',
-        ResourceId: asg.AutoScalingGroupName,
-        ResourceType: 'auto-scaling-group',
-      },
+      createTag('hammertime:originalASGSize', asg.AutoScalingGroupName, 'auto-scaling-group'),
+      createTag('stop:hammertime', asg.AutoScalingGroupName, 'auto-scaling-group'),
     ],
   };
 
