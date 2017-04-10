@@ -1,7 +1,9 @@
-const instances = require('./instances');
 const stopASGs = require('./asgs/stopASGs');
 const listASGsToStop = require('./asgs/listASGsToStop');
 const tagASGs = require('./asgs/tagASGs');
+const listInstancesToStop = require('./instances/listInstancesToStop');
+const tagInstances = require('./instances/tagInstances');
+const stopInstances = require('./instances/stopInstances');
 
 function spinDownASGs() {
   return listASGsToStop()
@@ -23,8 +25,8 @@ function spinDownASGs() {
     });
 }
 
-function stopInstances() {
-  return instances.listInstancesToStop()
+function doStopInstances() {
+  return listInstancesToStop()
     .then((stoppableInstances) => {
       console.log('Found the following instances to shut down...');
       if (stoppableInstances.length === 0) {
@@ -35,18 +37,18 @@ function stopInstances() {
       stoppableInstances.forEach((instance) => {
         console.log(instance);
       });
-      return instances.tagInstances(stoppableInstances);
+      return tagInstances(stoppableInstances);
     })
     .then((taggedInstances) => {
       console.log('Finished tagging instances. Moving on to stop them.');
-      return instances.stopInstances(taggedInstances);
+      return stopInstances(taggedInstances);
     });
 }
 
 module.exports = function stop(event, context, callback) {
   console.log('Stop. Hammertime!');
   Promise.all([
-    stopInstances(),
+    doStopInstances(),
     spinDownASGs(),
   ]).then(() => {
     console.log('All instances and ASGs stopped successfully. Good night!');

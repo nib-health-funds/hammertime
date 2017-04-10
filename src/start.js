@@ -1,10 +1,12 @@
-const instances = require('./instances');
 const startASGs = require('./asgs/startASGs');
 const listASGsToStart = require('./asgs/listASGsToStart');
 const untagASGs = require('./asgs/untagASGs');
+const startInstances = require('./instances/startInstances');
+const listInstancesToStart = require('./instances/listInstancesToStart');
+const untagInstances = require('./instances/untagInstances');
 
-function startInstances() {
-  return instances.listInstancesToStart()
+function doStartInstances() {
+  return listInstancesToStart()
     .then((startableInstances) => {
       console.log(`Found the following ${startableInstances.length} instances to start up...`);
       if (startableInstances.length === 0) {
@@ -15,11 +17,11 @@ function startInstances() {
       startableInstances.forEach((instance) => {
         console.log(instance);
       });
-      return instances.startInstances(startableInstances);
+      return startInstances(startableInstances);
     })
     .then((startedInstances) => {
       console.log('Finished starting instances. Moving on to untag them.');
-      return instances.untagInstances(startedInstances);
+      return untagInstances(startedInstances);
     });
 }
 
@@ -46,7 +48,7 @@ function spinUpASGs() {
 module.exports = function start(event, context, callback) {
   console.log('Break it down!');
   Promise.all([
-    startInstances(),
+    doStartInstances(),
     spinUpASGs(),
   ]).then(() => {
     console.log('All instances and ASGs started successfully. Good morning!');
