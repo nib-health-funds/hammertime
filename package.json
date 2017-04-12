@@ -6,7 +6,9 @@
   "scripts": {
     "deploy": "node_modules/serverless/bin/serverless deploy --verbose",
     "destroy": "node_modules/serverless/bin/serverless remove --verbose",
-    "test": "node_modules/mocha/bin/mocha test/*.test.js"
+    "lint": "eslint **/*.js",
+    "test": "npm run lint && npm run test.unit",
+    "test.unit": "mocha test/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,12 @@
   },
   "devDependencies": {
     "aws-sdk-mock": "^1.6.1",
+    "eslint": "^3.15.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-mocha": "^4.9.0",
+    "eslint-plugin-react": "^6.9.0",
     "mocha": "^3.2.0"
   }
 }

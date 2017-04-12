@@ -1,0 +1,12 @@
+{
+    "extends": "airbnb",
+    "rules": {
+        "no-console": "off"
+    },
+    "plugins": [
+        "mocha"
+    ],
+    "env": {
+        "mocha": true
+    }
+}

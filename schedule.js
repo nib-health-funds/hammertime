@@ -1,3 +1,1 @@
-module.exports.enabled = () => {
-  return process.env.SLICE === "master";
-}
+module.exports.enabled = () => process.env.SLICE === 'master';
