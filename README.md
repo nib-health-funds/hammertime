@@ -3,6 +3,7 @@
 Open sourced on Github [here](https://github.com/nib-health-funds/hammertime), should replace this copy at some point but currently they're separate.
 
 [![Build status](https://badge.buildkite.com/faa22b548667df904a6d6c67f2e63ed4e2e954ea6f87d4021c.svg)](https://buildkite.com/nib-health-funds-ltd/hammertime)
+[![Build Status](https://travis-ci.org/nib-health-funds/hammertime.svg?branch=master)](https://travis-ci.org/nib-health-funds/hammertime)
 
 Serverless power cycling for AWS EC2 instances and Auto Scaling Groups based on a schedule.
 
@@ -12,8 +13,9 @@ Serverless power cycling for AWS EC2 instances and Auto Scaling Groups based on 
 
 Edit [serverless.yml](serverless.yml) where you can adjust
 * scheduled run time,
+* deployment s3 bucket (can be set as `DEPLOY_BUCKET` env var),
 * AWS region,
-* stage between dev/test/production/other (can be set as env var),
+* stage between dev/test/production/other (can be set as `SLICE` env var),
 * anything else which takes your fancy.
 
 ## Usage
@@ -61,7 +63,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [releases on this repository](https://github.com/nib-health-funds/hammertime/releases).
 
 ## Authors
 
