@@ -6,7 +6,7 @@ env:
 
 steps:
   - name: ':nodejs: Test & Deploy'
-    command: 'docker run -e SLICE=$$SLICE -e DEPLOY_BUCKET=$$DEPLOY_BUCKET -v "$${PWD}":/tmp -w /tmp -t node:4.3.2 /bin/bash .buildkite/steps/deploy.sh'
+    command: 'docker run -e SLICE=$$SLICE -e DEPLOY_BUCKET=$$DEPLOY_BUCKET -v "$${PWD}":/tmp -w /tmp -t node:6.10 /bin/bash .buildkite/steps/deploy.sh'
     agents:
       os: 'linux'
     concurrency: 1
@@ -16,7 +16,7 @@ steps:
     branches: '!master'
 
   - name: ':boom: Destroy Stack'
-    command: 'docker run -e SLICE=$$SLICE -e DEPLOY_BUCKET=$$DEPLOY_BUCKET -v "$${PWD}":/tmp -w /tmp -t node:4.3.2 /bin/bash .buildkite/steps/destroy.sh'
+    command: 'docker run -e SLICE=$$SLICE -e DEPLOY_BUCKET=$$DEPLOY_BUCKET -v "$${PWD}":/tmp -w /tmp -t node:6.10 /bin/bash .buildkite/steps/destroy.sh'
     agents:
       os: 'linux'
     concurrency: 1
