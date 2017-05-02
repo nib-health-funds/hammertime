@@ -6,7 +6,4 @@ node_modules
 .swo
 .swp
 .DS_Store
-<<<<<<< HEAD
-=======
 **/npm-debug.log
->>>>>>> github/refactor
