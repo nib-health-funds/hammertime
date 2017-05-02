@@ -33,7 +33,7 @@ functions:
     events:
       - schedule:
           rate: cron(30 9 * * ? *) # ADST 8:30PM, AEST 7:30PM every day
-          enabled: ${file(./schedule.js):enabled}
+          # enabled: ${file(./schedule.js):enabled}
 
   start-hammertime:
     handler: hammertime.start
@@ -41,4 +41,4 @@ functions:
     events:
       - schedule:
           rate: cron(30 19 * * ? *) # ADST 6:30AM, AEST 5:30AM every day
-          enabled: ${file(./schedule.js):enabled}
+          # enabled: ${file(./schedule.js):enabled}
