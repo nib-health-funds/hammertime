@@ -9,7 +9,6 @@ function spinDownASG(asg) {
     MinSize: 0,
   };
 
-  console.log(`Spinning Down ASG ${asg.AutoScalingGroupName}.`);
   return retryWhenThrottled(() => autoscaling.updateAutoScalingGroup(params))
     .then(() => asg);
 }

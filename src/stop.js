@@ -31,7 +31,7 @@ function stopAllInstances() {
       console.log('Found the following instances to shut down...');
       if (stoppableInstances.length === 0) {
         console.log('None! Moving on.');
-        return 'No instances to shut down';
+        return [];
       }
 
       stoppableInstances.forEach((instance) => {
@@ -40,7 +40,7 @@ function stopAllInstances() {
       return tagInstances(stoppableInstances);
     })
     .then((taggedInstances) => {
-      console.log('Finished tagging instances. Moving on to stop them.');
+      console.log(`Finished tagging instances. Moving on to stop ${taggedInstances.length} of them.`);
       return stopInstances(taggedInstances);
     });
 }
