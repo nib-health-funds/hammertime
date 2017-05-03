@@ -40,8 +40,10 @@ function stopAllInstances() {
       return tagInstances(stoppableInstances);
     })
     .then((taggedInstances) => {
-      console.log(`Finished tagging instances. Moving on to stop ${taggedInstances.length} of them.`);
-      return stopInstances(taggedInstances);
+      if (taggedInstances.length >= 0) {
+        console.log(`Finished tagging instances. Moving on to stop ${taggedInstances.length} of them.`);
+        return stopInstances(taggedInstances);
+      }
     });
 }
 
