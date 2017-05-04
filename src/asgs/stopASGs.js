@@ -18,6 +18,4 @@ function stopASGs(asgs) {
   return Promise.all(stoppedASGs);
 }
 
-module.exports = {
-  stopASGs,
-};
+module.exports = stopASGs;
