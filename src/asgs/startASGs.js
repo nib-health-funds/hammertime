@@ -21,6 +21,4 @@ function startASGs(asgs) {
   return Promise.all(startedASGs);
 }
 
-module.exports = {
-  startASGs,
-};
+module.exports = startASGs;
