@@ -11,7 +11,7 @@ function spinDownASGs() {
       console.log(`Found the following ${stoppableASGs.length} instances to spin down...`);
       if (stoppableASGs.length === 0) {
         console.log('None! Moving on.');
-        return 'No ASGs to spin down';
+        return [];
       }
 
       stoppableASGs.forEach((asg) => {
@@ -20,8 +20,10 @@ function spinDownASGs() {
       return tagASGs(stoppableASGs);
     })
     .then((taggedASGs) => {
-      console.log(`Finished tagging ASGs. Moving on to spin down ${taggedASGs.length} of them.`);
-      return stopASGs(taggedASGs);
+      if (taggedASGs.length > 0) {
+        console.log(`Finished tagging ASGs. Moving on to spin down ${taggedASGs.length} of them.`);
+        return stopASGs(taggedASGs);
+      }
     });
 }
 
@@ -31,7 +33,7 @@ function stopAllInstances() {
       console.log('Found the following instances to shut down...');
       if (stoppableInstances.length === 0) {
         console.log('None! Moving on.');
-        return 'No instances to shut down';
+        return [];
       }
 
       stoppableInstances.forEach((instance) => {
@@ -40,8 +42,10 @@ function stopAllInstances() {
       return tagInstances(stoppableInstances);
     })
     .then((taggedInstances) => {
-      console.log('Finished tagging instances. Moving on to stop them.');
-      return stopInstances(taggedInstances);
+      if (taggedInstances.length > 0) {
+        console.log('Finished tagging instances. Moving on to stop them.');
+        return stopInstances(taggedInstances);
+      }
     });
 }
 
