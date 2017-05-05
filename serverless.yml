@@ -26,6 +26,10 @@ provider:
         - "logs:CreateLogStream"
         - "logs:PutLogEvents"
       Resource: "arn:aws:logs:*:*:*"
+    environment:
+      dryRun: ${!file(./isDryRun.js):isDryRun}
+  custom:
+    enabled: ${file(./isMaster.js):isMaster}
 
 functions:
   stop-hammertime:
@@ -34,7 +38,7 @@ functions:
     events:
       - schedule:
           rate: cron(30 9 * * ? *) # ADST 8:30PM, AEST 7:30PM every day
-          enabled: ${file(./schedule.js):enabled}
+          enabled: ${self:custom:enabled}
 
   start-hammertime:
     handler: hammertime.start
@@ -42,4 +46,4 @@ functions:
     events:
       - schedule:
           rate: cron(30 19 * * ? *) # ADST 6:30AM, AEST 5:30AM every day
-          enabled: ${file(./schedule.js):enabled}
+          enabled: ${self:custom:enabled}
