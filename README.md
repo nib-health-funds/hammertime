@@ -32,6 +32,10 @@ Hammertime is intended to be run in response to a Lambda scheduled event, e.g
 
 Note when constructing schedule events in AWS, that times are in UTC.
 
+### Enabling/Disabling
+
+You can enable/disable hammertime using the environment variable `HAMMERTIME_ENABLED` at the time of deployment. 'true' enables hammertime.
+
 ## Deployment
 
 Refer to the [serverless framework](!https://serverless.com/) for detailed instructions, but should be as simple as
