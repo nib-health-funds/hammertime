@@ -9,7 +9,7 @@ function isCantTouchThisTag(tag) {
 }
 
 function validInstance(instance) {
-  return instance.Tags.some(tag => !(isASGroupNameTag(tag) || isCantTouchThisTag(tag)));
+  return !instance.Tags.some(tag => (isASGroupNameTag(tag) || isCantTouchThisTag(tag)));
 }
 
 function filterInstances(data) {
