@@ -21,7 +21,13 @@ To stop hammertime
 * killing your EC2 instance tag with `hammertime:canttouchthis`
 * spinning your ASG down to 0 tag the ASG with `hammertime:canttouchthis`
 
-`stop-hammertime` will stop all EC2 instances that are not tagged with `hammertime:canttouchthis` and are not in an ASG. It will also set the desired instance count of all ASGs not tagged likewise to 0.
+`stop-hammertime` will stop all EC2 instances that are not in an ASG, it will also set the desired instance count of all ASGs to 0; unless the mentioned assets are tagged with one of the following supported hammertime tags:
+
+- `hammertime:canttouchthis`: This tag will prevent hammertime from starting or stopping this asset.
+- `hammertime:canttouchthisbetween`: This tag will prevent hammertime from starting or stopping the asset between a given UTC date range specified in the value of the tag. The expected format for the value is `yyyy-MM-dd and yyyy-MM-dd` For example: A value of `2017-05-06 and 2017-06-06` prevents hammertime from affecting this instance between the mentioned dates.
+- `hammertime:canttouchthisbefore`: This tag will prevent hammertime from affecting the asset before a specific UTC date represented in the value field of the tag. The expected date format is: `yyyy-MM-dd`. For example: A value of `2017-05-06` will ensure the given asset is not touched before the given date.
+- `hammertime:canttouchthisbefore`: This tag will prevent hammertime from affecting the asset before a specific UTC date represented in the value field of the tag. The expected date format is: `yyyy-MM-dd`. For example: A value of `2017-05-06` will ensure the given asset is not touched before the given date.
+
 
 `start-hammertime` will query the tags left by `stop-hammertime` and return the instances and ASGs to their previous status.
 
