@@ -29,7 +29,7 @@ provider:
     environment:
       dryRun: ${!file(./isDryRun.js):isDryRun}
   custom:
-    enabled: ${file(./isMaster.js):isMaster}
+    enabled: ${file(./isEnabled.js):isEnabled}
 
 functions:
   stop-hammertime:
