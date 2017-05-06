@@ -1,4 +1,5 @@
 const moment = require('moment');
+const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals');
 
 const CANT_TOUCH_THIS_BETWEEN_REGEX = /^(\d{4}-\d{2}-\d{2}) and (\d{4}-\d{2}-\d{2})$/;
 
@@ -9,7 +10,7 @@ const CANT_TOUCH_THIS_BETWEEN_REGEX = /^(\d{4}-\d{2}-\d{2}) and (\d{4}-\d{2}-\d{
  * @returns {Boolean}
  */
 module.exports = (tag) => {
-  if (tag.Key !== 'hammertime:cantTouchThisBetween') {
+  if (!caseInvariantStringEquals(tag.Key, 'hammertime:cantTouchThisBetween')) {
     return false;
   }
 

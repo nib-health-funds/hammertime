@@ -13,7 +13,7 @@ describe('cantTouchThisBefore()', () => {
   });
 
   it('should return true when tag is cantTouchThisBefore and UTC now is before specified date', () => {
-    expect(cantTouchThisBefore({ Key: 'hammertime:cantTouchThisBefore', Value: moment().utc().add(1, 'days').format('YYYY-MM-DD') })).to.be.true;
+    expect(cantTouchThisBefore({ Key: 'hammertime:cantTouchThisBefore', Value: moment().utc().add(5, 'days').format('YYYY-MM-DD') })).to.be.true;
   });
 
   it('should return false when tag is cantTouchThisBefore and UTC now is not before specified date', () => {

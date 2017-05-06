@@ -1,5 +1,5 @@
-const HAMMERTIME_TAG_PREFIX = 'hammertime';
-const HAMMERTIME_TAG_REGEX = new RegExp(`^${HAMMERTIME_TAG_PREFIX}:[\\w]+$`);
+const TAG_PREFIX = 'hammertime';
+const HAMMERTIME_TAG_REGEX = new RegExp(`^${TAG_PREFIX}:[\\w]+$`);
 
 /**
  * Returns all the hammertime tags.

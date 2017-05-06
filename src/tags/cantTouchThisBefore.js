@@ -1,4 +1,5 @@
 const moment = require('moment');
+const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals');
 
 const CANT_TOUCH_THIS_BEFORE_REGEX = /^(\d{4}-\d{2}-\d{2})$/;
 
@@ -9,7 +10,7 @@ const CANT_TOUCH_THIS_BEFORE_REGEX = /^(\d{4}-\d{2}-\d{2})$/;
  * @returns {Boolean}
  */
 module.exports = (tag) => {
-  if (tag.Key !== 'hammertime:cantTouchThisBefore') {
+  if (!caseInvariantStringEquals(tag.Key, 'hammertime:cantTouchThisBefore')) {
     return false;
   }
 

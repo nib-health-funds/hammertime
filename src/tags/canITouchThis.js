@@ -1,5 +1,6 @@
 const cantTouchThisBetween = require('./cantTouchThisBetween');
 const cantTouchThisBefore = require('./cantTouchThisBefore');
+const getHammerTimeTags = require('./getHammerTimeTags');
 
 const tagTests = [
   cantTouchThisBetween,
@@ -11,4 +12,4 @@ const tagTests = [
  * @param {Array<{Key: string, Value: string}>} tags
  * @returns {Boolean}
  */
-module.exports = tags => tags.some(tag => tagTests.reduce((accum, curr) => accum || curr(tag)));
+module.exports = tags => getHammerTimeTags(tags).some(tag => tagTests.reduce((accum, curr) => accum || curr(tag)));
