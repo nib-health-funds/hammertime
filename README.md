@@ -17,10 +17,6 @@ Edit [serverless.yml](serverless.yml) where you can adjust
 
 ## Usage
 
-To stop hammertime
-* killing your EC2 instance tag with `hammertime:canttouchthis`
-* spinning your ASG down to 0 tag the ASG with `hammertime:canttouchthis`
-
 `stop-hammertime` will stop all EC2 instances that are not in an ASG, it will also set the desired instance count of all ASGs to 0; unless the mentioned assets are tagged with one of the following supported hammertime tags:
 
 - `hammertime:canttouchthis`: Will prevent hammertime from starting or stopping this asset in all cases.
