@@ -1,10 +1,12 @@
 const cantTouchThisBetween = require('./cantTouchThisBetween');
 const cantTouchThisBefore = require('./cantTouchThisBefore');
+const cantTouchThis = require('./cantTouchThis');
 const getHammerTimeTags = require('./getHammerTimeTags');
 
 const tagTests = [
   cantTouchThisBetween,
   cantTouchThisBefore,
+  cantTouchThis,
 ];
 
 /**
@@ -12,4 +14,5 @@ const tagTests = [
  * @param {Array<{Key: string, Value: string}>} tags
  * @returns {Boolean}
  */
-module.exports = tags => getHammerTimeTags(tags).some(tag => tagTests.reduce((accum, curr) => accum || curr(tag)));
+// eslint-disable-next-line max-len
+module.exports = tags => getHammerTimeTags(tags).every(tag => tagTests.reduce((prev, curr) => prev && !curr(tag), true));
