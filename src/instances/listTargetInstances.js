@@ -1,12 +1,9 @@
 const AWS = require('aws-sdk');
 const canITouchThis = require('../tags/canITouchThis');
-
-function isASGroupNameTag(tag) {
-  return tag.Key === 'aws:autoscaling:groupName';
-}
+const hasTag = require('../tags/hasTag');
 
 function validInstance(instance) {
-  return canITouchThis(instance.Tags) && !instance.Tags.some(isASGroupNameTag);
+  return canITouchThis(instance.Tags) && !hasTag(instance.Tags, 'aws:autoscaling:groupName');
 }
 
 function filterInstances(data) {
