@@ -27,7 +27,7 @@ provider:
         - "logs:PutLogEvents"
       Resource: "arn:aws:logs:*:*:*"
     environment:
-      dryRun: ${!file(./isDryRun.js):isDryRun}
+      hammerTimeDryRun: ${file(./isDryRun.js):isDryRun}
   custom:
     enabled: ${file(./isEnabled.js):isEnabled}
 
