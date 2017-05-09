@@ -5,57 +5,74 @@ const listInstancesToStop = require('./instances/listInstancesToStop');
 const tagInstances = require('./instances/tagInstances');
 const stopInstances = require('./instances/stopInstances');
 
-function spinDownASGs() {
-  return listASGsToStop()
-    .then((stoppableASGs) => {
-      console.log(`Found the following ${stoppableASGs.length} instances to spin down...`);
-      if (stoppableASGs.length === 0) {
-        console.log('None! Moving on.');
-        return [];
-      }
-
-      stoppableASGs.forEach((asg) => {
-        console.log(asg.AutoScalingGroupName);
-      });
-      return tagASGs(stoppableASGs);
-    })
-    .then((taggedASGs) => {
-      if (taggedASGs.length > 0) {
-        console.log(`Finished tagging ASGs. Moving on to spin down ${taggedASGs.length} of them.`);
-        return stopASGs(taggedASGs);
-      }
-    });
-}
-
-function stopAllInstances() {
+function stopAllInstances(dryRun) {
   return listInstancesToStop()
     .then((stoppableInstances) => {
-      console.log('Found the following instances to shut down...');
-      if (stoppableInstances.length === 0) {
-        console.log('None! Moving on.');
+      if (dryRun) {
+        console.log('Dry run is enabled, will not stop or tag any instances.');
         return [];
       }
 
+      if (stoppableInstances.length === 0) {
+        console.log('No instances found to stop, moving on...');
+        return [];
+      }
+
+      console.log('Found the following instances to shut down...');
       stoppableInstances.forEach((instance) => {
         console.log(instance);
       });
-      return tagInstances(stoppableInstances);
-    })
-    .then((taggedInstances) => {
-      if (taggedInstances.length > 0) {
-        console.log('Finished tagging instances. Moving on to stop them.');
-        return stopInstances(taggedInstances);
-      }
+
+      return tagInstances(stoppableInstances).then((taggedInstances) => {
+        if (taggedInstances.length > 0) {
+          console.log('Finished tagging instances. Moving on to stop them.');
+          return stopInstances(taggedInstances);
+        }
+
+        return [];
+      });
     });
 }
 
-module.exports = function stop(event, context, callback) {
+function spinDownASGs(dryRun) {
+  return listASGsToStop()
+    .then((stoppableASGs) => {
+      if (dryRun) {
+        console.log('Dry run is enabled, will not stop or tag any ASGs.');
+        return [];
+      }
+
+      if (stoppableASGs.length === 0) {
+        console.log('No ASGs to spin down, moving on...');
+        return [];
+      }
+
+      console.log(`Found the following ${stoppableASGs.length} instances to spin down...`);
+      stoppableASGs.forEach((asg) => {
+        console.log(asg.AutoScalingGroupName);
+      });
+
+      return tagASGs(stoppableASGs).then((taggedASGs) => {
+        if (taggedASGs.length > 0) {
+          console.log(`Finished tagging ASGs. Moving on to spin down ${taggedASGs.length} of them.`);
+          return stopASGs(taggedASGs);
+        }
+
+        return [];
+      });
+    });
+}
+
+module.exports = function stop(options) {
+  const { event, callback, dryRun } = options;
   console.log('Stop. Hammertime!');
   Promise.all([
-    stopAllInstances(),
-    spinDownASGs(),
+    stopAllInstances(dryRun),
+    spinDownASGs(dryRun),
   ]).then(() => {
-    console.log('All instances and ASGs stopped successfully. Good night!');
+    if (!dryRun) {
+      console.log('All instances and ASGs stopped successfully. Good night!');
+    }
     callback(null, { message: 'Stop: Hammertime successfully completed.' }, event);
   }).catch((err) => {
     console.error(err);
