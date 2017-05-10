@@ -17,4 +17,4 @@ export AWS_ACCESS_KEY_ID=$(echo $CREDENTIALS | jq -r ".Credentials.AccessKeyId")
 export AWS_SECRET_ACCESS_KEY=$(echo $CREDENTIALS | jq -r ".Credentials.SecretAccessKey")
 export AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r ".Credentials.SessionToken")
 npm prune --production
-npm run deploy
+HAMMERTIME_DRY_RUN=true npm run deploy
