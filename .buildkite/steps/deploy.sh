@@ -17,4 +17,9 @@ export AWS_ACCESS_KEY_ID=$(echo $CREDENTIALS | jq -r ".Credentials.AccessKeyId")
 export AWS_SECRET_ACCESS_KEY=$(echo $CREDENTIALS | jq -r ".Credentials.SecretAccessKey")
 export AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r ".Credentials.SessionToken")
 npm prune --production
-npm run deploy
+DRY_RUN=true
+if [[ "$SLICE" == "master" ]]; then
+  DRY_RUN=false
+fi
+
+HAMMERTIME_DRY_RUN=$DRY_RUN npm run deploy

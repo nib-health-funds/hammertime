@@ -35,6 +35,15 @@ Hammertime is intended to be run in response to a Lambda scheduled event, e.g
 
 Note when constructing schedule events in AWS, that times are in UTC.
 
+### Enabling/Disabling
+
+You can enable/disable hammertime using the environment variable `HAMMERTIME_ENABLED` at the time of deployment. 'true' enables hammertime.
+
+### Dry run
+
+Hammertime has a dry-run feature for when you are not quite ready to unleash the [hammer pants](https://en.wikipedia.org/wiki/Hammer_pants) on your entire fleet of EC2s just yet.
+By setting `HAMMERTIME_DRY_RUN` to 'true', you enable dry-run in which hammertime does not touch your EC2s but will still log what it _would_ have touched.
+
 ## Deployment
 
 Refer to the [serverless framework](!https://serverless.com/) for detailed instructions, but should be as simple as
