@@ -8,7 +8,7 @@
     "destroy": "node_modules/serverless/bin/serverless remove --verbose",
     "lint": "eslint *.js",
     "test": "npm run lint && npm run test.unit",
-    "test.unit": "mocha test/**/*.test.js"
+    "test.unit": "istanbul cover node_modules/mocha/bin/_mocha -- test/**/*.test.js && istanbul check"
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.7.19",
+    "istanbul": "^0.4.5",
     "promise-retry": "^1.1.1",
     "serverless": "^1.4.0"
   },
