@@ -18,11 +18,11 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.7.19",
-    "istanbul": "^0.4.5",
     "promise-retry": "^1.1.1",
     "serverless": "^1.4.0"
   },
   "devDependencies": {
+    "istanbul": "^0.4.5",
     "aws-sdk-mock": "^1.6.1",
     "eslint": "^3.15.0",
     "eslint-config-airbnb": "^14.1.0",
