@@ -4,3 +4,9 @@ jspm_packages
 
 # Serverless directories
 .serverless
+
+# coverage reports
+coverage
+
+# tests
+test
