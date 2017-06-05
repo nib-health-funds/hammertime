@@ -7,9 +7,3 @@ check:
         branches: 21
         functions: 40
         excludes: []
-    # each:
-    #     statements: 23
-    #     lines: 23
-    #     branches: 21
-    #     functions: 40
-    #     excludes: []
