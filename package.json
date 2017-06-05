@@ -8,7 +8,7 @@
     "destroy": "node_modules/serverless/bin/serverless remove --verbose",
     "lint": "eslint *.js",
     "test": "npm run lint && npm run test.unit",
-    "test.unit": "mocha --require test/global.js test/**/*.test.js"
+    "test.unit": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec && codecov"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   "devDependencies": {
     "aws-sdk-mock": "^1.6.1",
     "chai": "^3.5.0",
+    "codecov": "^2.2.0",
     "eslint": "^3.15.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-chai-expect": "^1.1.1",
@@ -33,6 +34,7 @@
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-mocha": "^4.9.0",
     "eslint-plugin-react": "^6.9.0",
+    "istanbul": "^0.4.5",
     "mocha": "^3.2.0"
   }
 }
