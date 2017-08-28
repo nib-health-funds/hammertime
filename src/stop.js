@@ -4,6 +4,10 @@ const tagASGs = require('./asgs/tagASGs');
 const listInstancesToStop = require('./instances/listInstancesToStop');
 const tagInstances = require('./instances/tagInstances');
 const stopInstances = require('./instances/stopInstances');
+const listDBInstancesToStop = require('./rds/listDBInstancesToStop');
+const stopDBInstances = require('./rds/stopDBInstances');
+const tagDBInstances = require('./rds/tagDBInstances');
+
 
 function stopAllInstances(dryRun) {
   return listInstancesToStop()
@@ -63,17 +67,48 @@ function spinDownASGs(dryRun) {
     });
 }
 
+function stopAllDBInstances(dryRun) {
+  return listDBInstancesToStop()
+    .then((arns) => {
+      if (dryRun) {
+        console.log('Dry run is enabled, will not stop or tag any RDS instances.');
+        return [];
+      } else {
+        return arns;
+      };
+    })
+    .then((arns) => {
+      if (arns.length == 0) {
+        console.log('There are no RDS instances to stop today. See you the next time.')
+        return [];
+      } else {
+        return stopDBInstances(arns)
+          .then((arns) => {
+            console.log('Finished stopping RDS instances. Moving on to tag them.');
+            return tagDBInstances(arns);
+          });
+      }
+    });
+}
+
 module.exports = function stop(options) {
-  const { event, callback, dryRun } = options;
+  const {
+    event,
+    callback,
+    dryRun
+  } = options;
   console.log('Stop. Hammertime!');
   Promise.all([
+    stopAllDBInstances(dryRun),
     stopAllInstances(dryRun),
     spinDownASGs(dryRun),
   ]).then(() => {
     if (!dryRun) {
-      console.log('All instances and ASGs stopped successfully. Good night!');
+      console.log('All EC2, RDS instances and ASGs stopped successfully. Good night!');
     }
-    callback(null, { message: 'Stop: Hammertime successfully completed.' }, event);
+    callback(null, {
+      message: 'Stop: Hammertime successfully completed.'
+    }, event);
   }).catch((err) => {
     console.error(err);
     callback(err);

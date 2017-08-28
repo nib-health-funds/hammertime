@@ -4,6 +4,9 @@ const untagASGs = require('./asgs/untagASGs');
 const startInstances = require('./instances/startInstances');
 const listInstancesToStart = require('./instances/listInstancesToStart');
 const untagInstances = require('./instances/untagInstances');
+const listDBInstancesToStart = require('./rds/listDBInstancesToStart');
+const startDBInstances = require('./rds/startDBInstances');
+const untagDBInstances = require('./rds/untagDBInstances')
 
 function startAllInstances(dryRun) {
   return listInstancesToStart()
@@ -28,7 +31,7 @@ function startAllInstances(dryRun) {
         return untagInstances(startedInstanceIds);
       });
     });
-}
+};
 
 function spinUpASGs(dryRun) {
   return listASGsToStart()
@@ -54,19 +57,50 @@ function spinUpASGs(dryRun) {
         return untagASGs(startedASGs);
       });
     });
-}
+};
+
+function startAllDBInstances(dryRun) {
+  return listDBInstancesToStart()
+    .then((arns) => {
+      if (dryRun) {
+        console.log('Dry run is enabled, will not start or untag any RDS instances.');
+        return [];
+      } else {
+        return arns;
+      };
+    })
+    .then((arns) => {
+      if (arns.length == 0) {
+        console.log('There are no RDS instances to start today. See you the next time.')
+        return [];
+      } else {
+        return startDBInstances(arns)
+          .then(arns => {
+            console.log('Finished starting RDS instances. Moving on to untag them.');
+            return untagDBInstances(arns);
+          });
+      }
+    });
+};
 
 module.exports = function start(options) {
-  const { event, callback, dryRun } = options;
+  const {
+    event,
+    callback,
+    dryRun
+  } = options;
   console.log('Break it down!');
   Promise.all([
+    startAllDBInstances(dryRun),
     startAllInstances(dryRun),
     spinUpASGs(dryRun),
   ]).then(() => {
     if (!dryRun) {
-      console.log('All instances and ASGs started successfully. Good morning!');
+      console.log('All EC2, RDS instances and ASGs started successfully. Good morning!');
     }
-    callback(null, { message: 'Start: Hammertime successfully completed.' }, event);
+    callback(null, {
+      message: 'Start: Hammertime successfully completed.'
+    }, event);
   }).catch((err) => {
     console.error(err);
     callback(err);

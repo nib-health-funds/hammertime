@@ -1,10 +1,10 @@
-[![Build Status](https://travis-ci.org/nib-health-funds/hammertime.svg?branch=master)](https://travis-ci.org/nib-health-funds/hammertime)
+[![Build status](https://badge.buildkite.com/bfed4f290ad431552f29235b2350f922c1dad6e4ce37eae83d.svg)](https://buildkite.com/irexchange/hammertime)
 
 [![codecov](https://codecov.io/gh/nib-health-funds/hammertime/branch/master/graph/badge.svg)](https://codecov.io/gh/nib-health-funds/hammertime)
 
 # hammertime
 
-Serverless power cycling for AWS EC2 instances and Auto Scaling Groups based on a schedule.
+Serverless power cycling for AWS EC2, RDS instances and Auto Scaling Groups based on a schedule.
 
 ![Stop! Hammer Time!](hammertime.gif)
 
