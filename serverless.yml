@@ -1,5 +1,4 @@
 service: hammertime
-
 provider:
   name: aws
   runtime: nodejs6.10
@@ -26,8 +25,8 @@ provider:
         - "logs:CreateLogStream"
         - "logs:PutLogEvents"
       Resource: "arn:aws:logs:*:*:*"
-    environment:
-      hammerTimeDryRun: ${file(./isDryRun.js):isDryRun}
+  environment:
+    hammerTimeDryRun: ${file(./isDryRun.js):isDryRun}
   custom:
     enabled: ${file(./isEnabled.js):isEnabled}
 
