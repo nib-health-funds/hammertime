@@ -1,11 +1,9 @@
-const filterStartableDBInstances = require('./filterStartableDBInstances');
+const filterDBInstances = require('./filterDBInstances');
 const filterDBInstancesTaggedToStart = require('./filterDBInstancesTaggedToStart');
 
 module.exports = function listDBInstancesToStart() {
-  return new Promise((resolve, reject) => {
-    filterStartableDBInstances()
-      .then(arns => filterDBInstancesTaggedToStart(arns))
-      .then(arns => resolve(arns))
-      .catch(reject);
-  });
+  return filterDBInstances('stopped')
+    .then(arns => {
+      return filterDBInstancesTaggedToStart(arns);
+    });
 };
