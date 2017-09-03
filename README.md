@@ -8,6 +8,15 @@ Serverless power cycling for AWS EC2, RDS instances and Auto Scaling Groups base
 
 ![Stop! Hammer Time!](hammertime.gif)
 
+## RDS Limitations
+According to [AWS RDS User Guide](http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_StopInstance.html) the following are the limitations to stopping and starting RDS instances:
+
+One can't stop a DB instance that has a Read Replica, or that is a Read Replica.
+One can't stop a DB instance that is in a Multi-AZ deployment.
+One can't stop a DB instance that uses Microsoft SQL Server Mirroring.
+
+Hammertime will automatically filter out RDS instances with the above conditions.
+
 ## Getting Started
 
 Edit [serverless.yml](serverless.yml) where you can adjust
