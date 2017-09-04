@@ -4,7 +4,6 @@ const allValidDBInstances = require('./allValidDBInstances');
 module.exports = function filterDBInstances(status) {
   return listAllDBInstances()
     .then(data => {
-      console.log(data);
       return data
         .DBInstances
         .filter(allValidDBInstances, status)

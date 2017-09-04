@@ -8,11 +8,8 @@ module.exports = function tagOneDBInstance(arn) {
       Value: new Date().toISOString()
     }]
   };
-  return new Promise((resolve, reject) => {
-    const rds = new AWS.RDS();
-    rds.addTagsToResource(params)
-      .promise()
-      .then(() => resolve(arn))
-      .catch(reject);
-  });
+  const rds = new AWS.RDS();
+  return rds.addTagsToResource(params)
+    .promise()
+    .then(() => arn);
 };
