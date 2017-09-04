@@ -5,10 +5,11 @@ module.exports = function untagOneDBInstance(arn) {
     ResourceName: arn,
     TagKeys: ['hammertime:stop']
   };
-  const rds = new AWS.RDS();
-  return rds.removeTagsFromResource(params)
-    .promise()
-    .then(() => {
-      return arn;
-    });
+  return new Promise((resolve, reject) => {
+    const rds = new AWS.RDS();
+    rds.removeTagsFromResource(params)
+      .promise()
+      .then(() => resolve(arn))
+      .catch(reject);
+  });
 };

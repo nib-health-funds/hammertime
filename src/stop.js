@@ -88,6 +88,11 @@ function stopAllDBInstances(dryRun) {
             return tagDBInstances(arns);
           });
       }
+    })
+    .then((arns) => {
+      if (arns.length > 0) {
+        console.log('Finished tagging RDS instances.')
+      }
     });
 }
 

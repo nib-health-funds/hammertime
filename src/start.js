@@ -75,10 +75,15 @@ function startAllDBInstances(dryRun) {
         return [];
       } else {
         return startDBInstances(arns)
-          .then(arns => {
+          .then((arns) => {
             console.log('Finished starting RDS instances. Moving on to untag them.');
             return untagDBInstances(arns);
           });
+      }
+    })
+    .then((arns) => {
+      if (arns.length > 0) {
+        console.log('Finished tagging RDS instances.')
       }
     });
 };
