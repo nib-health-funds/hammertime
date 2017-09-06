@@ -1,6 +1,6 @@
 {
   "name": "hammertime",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "U Can't Touch This",
   "main": "handler.js",
   "scripts": {

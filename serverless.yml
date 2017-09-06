@@ -28,8 +28,8 @@ provider:
       Resource: "arn:aws:logs:*:*:*"
     environment:
       hammerTimeDryRun: ${file(./isDryRun.js):isDryRun}
-  custom:
-    enabled: ${file(./isEnabled.js):isEnabled}
+    custom:
+      enabled: ${file(./isEnabled.js):isEnabled}
 
 functions:
   stop-hammertime:
