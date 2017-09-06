@@ -32,10 +32,10 @@ provider:
         - "logs:CreateLogStream"
         - "logs:PutLogEvents"
       Resource: "arn:aws:logs:*:*:*"
-  environment:
-    hammerTimeDryRun: ${file(./isDryRun.js):isDryRun}
-custom:
-  enabled: ${file(./isEnabled.js):isEnabled}
+    environment:
+      hammerTimeDryRun: ${file(./isDryRun.js):isDryRun}
+    custom:
+      enabled: ${file(./isEnabled.js):isEnabled}
 
 functions:
   stop-hammertime:
