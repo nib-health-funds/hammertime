@@ -8,6 +8,6 @@ module.exports = function stopDBInstances(arns) {
     return Promise.all(arnsMap);
   } else {
     console.log("No RDS instances to stop... See you the next time...");
-    return [];
+    return Promise.resolve([]);
   }
 };
