@@ -4,8 +4,7 @@ provider:
   name: aws
   runtime: nodejs6.10
   memorySize: 128
-#  stage: ${env:SLICE}
-  profile: ire-bi-nonprod
+  stage: ${env:SLICE}
   region: ${env:AWS_REGION}
   deploymentBucket: ${env:DEPLOY_BUCKET}
   iamRoleStatements:
