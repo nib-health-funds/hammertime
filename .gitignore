@@ -8,3 +8,6 @@ node_modules
 .DS_Store
 **/npm-debug.log
 coverage
+Makefile
+.buildkite
+scripts
