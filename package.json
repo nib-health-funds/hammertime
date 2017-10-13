@@ -1,8 +1,8 @@
 {
   "name": "hammertime",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "U Can't Touch This",
-  "main": "handler.js",
+  "main": "hammertime.js",
   "scripts": {
     "deploy": "node_modules/serverless/bin/serverless deploy --verbose",
     "destroy": "node_modules/serverless/bin/serverless remove --verbose",
