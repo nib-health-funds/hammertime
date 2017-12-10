@@ -5,8 +5,8 @@ const startInstances = require('./instances/startInstances');
 const listInstancesToStart = require('./instances/listInstancesToStart');
 const untagInstances = require('./instances/untagInstances');
 
-function startAllInstances(dryRun) {
-  return listInstancesToStart()
+function startAllInstances({dryRun, currentOperatingTimezone}) {
+  return listInstancesToStart(currentOperatingTimezone)
     .then((startableInstances) => {
       if (dryRun) {
         console.log('Dry run is enabled, will not start or untag any instances.');
@@ -58,9 +58,10 @@ function spinUpASGs(dryRun) {
 
 module.exports = function start(options) {
   const { event, callback, dryRun } = options;
+  const currentOperatingTimezone = 10; // Source this from event/context (from CRON event)
   console.log('Break it down!');
   Promise.all([
-    startAllInstances(dryRun),
+    startAllInstances({dryRun, currentOperatingTimezone}),
     spinUpASGs(dryRun),
   ]).then(() => {
     if (!dryRun) {

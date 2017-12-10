@@ -5,8 +5,8 @@ const listInstancesToStop = require('./instances/listInstancesToStop');
 const tagInstances = require('./instances/tagInstances');
 const stopInstances = require('./instances/stopInstances');
 
-function stopAllInstances(dryRun) {
-  return listInstancesToStop()
+function stopAllInstances({dryRun, currentOperatingTimezone}) {
+  return listInstancesToStop(currentOperatingTimezone)
     .then((stoppableInstances) => {
       if (dryRun) {
         console.log('Dry run is enabled, will not stop or tag any instances.');
@@ -65,9 +65,10 @@ function spinDownASGs(dryRun) {
 
 module.exports = function stop(options) {
   const { event, callback, dryRun } = options;
+  const currentOperatingTimezone = 10; // Source this from event/context (from CRON event)
   console.log('Stop. Hammertime!');
   Promise.all([
-    stopAllInstances(dryRun),
+    stopAllInstances({dryRun, currentOperatingTimezone}),
     spinDownASGs(dryRun),
   ]).then(() => {
     if (!dryRun) {
