@@ -7,7 +7,7 @@ function startableASG(asg) {
   return hasTag(asg.Tags, 'stop:hammertime') && canITouchThis(asg.Tags);
 }
 
-function listASGsToStart() {
+function listASGsToStart(currentOperatingTimezone) {
   return listTargetASGs(startableASG);
 }
 

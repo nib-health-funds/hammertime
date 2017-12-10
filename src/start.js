@@ -30,8 +30,8 @@ function startAllInstances({dryRun, currentOperatingTimezone}) {
     });
 }
 
-function spinUpASGs(dryRun) {
-  return listASGsToStart()
+function spinUpASGs({dryRun, currentOperatingTimezone}) {
+  return listASGsToStart(currentOperatingTimezone)
     .then((startableASGs) => {
       if (dryRun) {
         console.log('Dry run is enabled, will not start or untag any ASGs.');
@@ -62,7 +62,7 @@ module.exports = function start(options) {
   console.log('Break it down!');
   Promise.all([
     startAllInstances({dryRun, currentOperatingTimezone}),
-    spinUpASGs(dryRun),
+    spinUpASGs({dryRun, currentOperatingTimezone}),
   ]).then(() => {
     if (!dryRun) {
       console.log('All instances and ASGs started successfully. Good morning!');
