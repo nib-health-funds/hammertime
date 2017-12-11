@@ -7,8 +7,8 @@ function stoppableASG(asg) {
   return !hasTag(asg.Tags, 'stop:hammertime') && canITouchThis(asg.Tags);
 }
 
-function listASGsToStop() {
-  return listTargetASGs(stoppableASG);
+function listASGsToStop(currentOperatingTimezone) {
+  return listTargetASGs({filter: stoppableASG, currentOperatingTimezone});
 }
 
 module.exports = listASGsToStop;

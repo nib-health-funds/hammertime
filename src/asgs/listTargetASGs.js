@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone');
 
 function getAllASGs() {
   const autoscaling = new AWS.AutoScaling();
@@ -22,6 +23,6 @@ function getAllASGs() {
     .then(data => followASGPages([], data));
 }
 
-module.exports = function listTargetASGs(filter) {
-  return getAllASGs().then(allASGs => allASGs.filter(filter));
+module.exports = function listTargetASGs({filter, currentOperatingTimezone}) {
+  return getAllASGs().then(allASGs => allASGs.filter(filter).filter(asg => isInOperatingTimezone(currentOperatingTimezone)(Tags)));
 };

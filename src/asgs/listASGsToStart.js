@@ -8,7 +8,7 @@ function startableASG(asg) {
 }
 
 function listASGsToStart(currentOperatingTimezone) {
-  return listTargetASGs(startableASG);
+  return listTargetASGs({filter: startableASG, currentOperatingTimezone});
 }
 
 module.exports = listASGsToStart;
