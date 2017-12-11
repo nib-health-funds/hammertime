@@ -23,10 +23,18 @@ function getAllASGs() {
     .then(data => followASGPages([], data));
 }
 
+function isInCurrentOperatingTimezone(currentOperatingTimezone) {
+  return (asg) => {
+    const inOperatingTimezone = isInOperatingTimezone(currentOperatingTimezone)(asg.Tags);
+    if (inOperatingTimezone) {
+      console.log('Found asg in current operating timezone: ', asg);
+    }
+    return inOperatingTimezone;
+  };
+}
+
 module.exports = function listTargetASGs({ filter, currentOperatingTimezone }) {
   return getAllASGs()
-    .then(allASGs =>
-        allASGs.filter(filter)
-          .filter(asg => isInOperatingTimezone(currentOperatingTimezone)(asg.Tags))
-        );
+          .then(allASGs => allASGs.filter(filter)
+                                  .filter(isInCurrentOperatingTimezone(currentOperatingTimezone));
 };
