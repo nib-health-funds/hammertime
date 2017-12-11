@@ -5,7 +5,7 @@ const startInstances = require('./instances/startInstances');
 const listInstancesToStart = require('./instances/listInstancesToStart');
 const untagInstances = require('./instances/untagInstances');
 
-function startAllInstances({dryRun, currentOperatingTimezone}) {
+function startAllInstances({ dryRun, currentOperatingTimezone }) {
   return listInstancesToStart(currentOperatingTimezone)
     .then((startableInstances) => {
       if (dryRun) {
@@ -30,7 +30,7 @@ function startAllInstances({dryRun, currentOperatingTimezone}) {
     });
 }
 
-function spinUpASGs({dryRun, currentOperatingTimezone}) {
+function spinUpASGs({ dryRun, currentOperatingTimezone }) {
   return listASGsToStart(currentOperatingTimezone)
     .then((startableASGs) => {
       if (dryRun) {
@@ -58,11 +58,11 @@ function spinUpASGs({dryRun, currentOperatingTimezone}) {
 
 module.exports = function start(options) {
   const { event, callback, dryRun } = options;
-  const currentOperatingTimezone = 10; // Source this from event/context (from CRON event)
+  const currentOperatingTimezone= event.currentOperatingTimezone;
   console.log('Break it down!');
   Promise.all([
-    startAllInstances({dryRun, currentOperatingTimezone}),
-    spinUpASGs({dryRun, currentOperatingTimezone}),
+    startAllInstances({ dryRun, currentOperatingTimezone }),
+    spinUpASGs({ dryRun, currentOperatingTimezone }),
   ]).then(() => {
     if (!dryRun) {
       console.log('All instances and ASGs started successfully. Good morning!');

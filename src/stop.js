@@ -65,10 +65,10 @@ function spinDownASGs(dryRun) {
 
 module.exports = function stop(options) {
   const { event, callback, dryRun } = options;
-  const currentOperatingTimezone = 10; // Source this from event/context (from CRON event)
+  const currentOperatingTimezone = event.currentOperatingTimezone;
   console.log('Stop. Hammertime!');
   Promise.all([
-    stopAllInstances({dryRun, currentOperatingTimezone}),
+    stopAllInstances({ dryRun, currentOperatingTimezone }),
     spinDownASGs(dryRun),
   ]).then(() => {
     if (!dryRun) {

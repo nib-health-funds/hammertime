@@ -22,6 +22,9 @@ function stop() {
   const stopCrons = operatingTimezones.map(timezone => ({
     rate: `cron(30 ${offsetUTCHour(UTC_STOP_HOUR, timezone)} * * ? *)`,
     enabled: isEnabled(),
+    input: {
+      currentOperatingTimezone: timezone,
+    },
   }));
   return {
     schedule: stopCrons, // CRONS for stopping
@@ -32,6 +35,9 @@ function start() {
   const startCrons = operatingTimezones.map(timezone => ({
     rate: `cron(30 ${offsetUTCHour(UTC_START_HOUR, timezone)} * * ? *)`,
     enabled: isEnabled(),
+    input: {
+      currentOperatingTimezone: timezone,
+    },
   }));
   return {
     schedule: startCrons, // CRONS for starting
