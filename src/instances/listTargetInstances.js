@@ -10,7 +10,7 @@ function validInstance(instance) {
 function isInCurrentOperatingTimezone(currentOperatingTimezone) {
   return function (instance) {
     return isInOperatingTimezone(currentOperatingTimezone)(instance.Tags);
-  }
+  };
 }
 
 function filterInstances(data, currentOperatingTimezone) {
@@ -24,7 +24,7 @@ function filterInstances(data, currentOperatingTimezone) {
 }
 
 function listTargetInstances(options) {
-  const {params, currentOperatingTimezone} = options;
+  const { params, currentOperatingTimezone } = options;
   const ec2 = new AWS.EC2();
   return ec2.describeInstances(params)
     .promise()

@@ -14,7 +14,7 @@ function listInstancesToStart(currentOperatingTimezone) {
     ],
   };
 
-  return listTargetInstances({params, currentOperatingTimezone});
+  return listTargetInstances({ params, currentOperatingTimezone });
 }
 
 module.exports = listInstancesToStart;
