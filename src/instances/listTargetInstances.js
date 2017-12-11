@@ -8,8 +8,12 @@ function validInstance(instance) {
 }
 
 function isInCurrentOperatingTimezone(currentOperatingTimezone) {
-  return function (instance) {
-    return isInOperatingTimezone(currentOperatingTimezone)(instance.Tags);
+  return (instance) => {
+    const inOperatingTimezone = isInOperatingTimezone(currentOperatingTimezone)(instance.Tags);
+    if (inOperatingTimezone) {
+      console.log('Found instance in current operating timezone: ', instance);
+    }
+    return inOperatingTimezone;
   };
 }
 
