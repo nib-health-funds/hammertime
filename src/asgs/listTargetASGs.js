@@ -23,6 +23,10 @@ function getAllASGs() {
     .then(data => followASGPages([], data));
 }
 
-module.exports = function listTargetASGs({filter, currentOperatingTimezone}) {
-  return getAllASGs().then(allASGs => allASGs.filter(filter).filter(asg => isInOperatingTimezone(currentOperatingTimezone)(Tags)));
+module.exports = function listTargetASGs({ filter, currentOperatingTimezone }) {
+  return getAllASGs()
+    .then(allASGs =>
+        allASGs.filter(filter)
+          .filter(asg => isInOperatingTimezone(currentOperatingTimezone)(asg.Tags))
+        );
 };

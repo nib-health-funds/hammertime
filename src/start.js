@@ -58,7 +58,7 @@ function spinUpASGs({ dryRun, currentOperatingTimezone }) {
 
 module.exports = function start(options) {
   const { event, callback, dryRun } = options;
-  const currentOperatingTimezone= event.currentOperatingTimezone;
+  const currentOperatingTimezone = event.currentOperatingTimezone;
   console.log('Break it down!');
   Promise.all([
     startAllInstances({ dryRun, currentOperatingTimezone }),

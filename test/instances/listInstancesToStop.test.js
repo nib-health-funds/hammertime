@@ -43,7 +43,7 @@ describe('listInstancesToStop()', () => {
       ],
     };
     AWS.mock('EC2', 'describeInstances', mockInstances);
-    return listInstancesToStop()
+    return listInstancesToStop(10)
       .then((instanceIds) => {
         assert.deepEqual(instanceIds, ['i-validinstance']);
       });

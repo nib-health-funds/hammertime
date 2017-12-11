@@ -10,7 +10,7 @@ function listInstancesToStop(currentOperatingTimezone) {
     ],
   };
 
-  return listTargetInstances({params, currentOperatingTimezone});
+  return listTargetInstances({ params, currentOperatingTimezone });
 }
 
 module.exports = listInstancesToStop;

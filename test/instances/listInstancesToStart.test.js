@@ -39,7 +39,7 @@ describe('listInstancesToStart()', () => {
       ],
     };
     AWS.mock('EC2', 'describeInstances', mockInstances);
-    return listInstancesToStart()
+    return listInstancesToStart(10)
       .then((instanceIds) => {
         console.log(instanceIds);
         assert.deepEqual(instanceIds, ['i-validinstance']);

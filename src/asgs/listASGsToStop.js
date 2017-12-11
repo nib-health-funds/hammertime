@@ -8,7 +8,7 @@ function stoppableASG(asg) {
 }
 
 function listASGsToStop(currentOperatingTimezone) {
-  return listTargetASGs({filter: stoppableASG, currentOperatingTimezone});
+  return listTargetASGs({ filter: stoppableASG, currentOperatingTimezone });
 }
 
 module.exports = listASGsToStop;
