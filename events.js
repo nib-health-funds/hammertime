@@ -8,6 +8,10 @@ function offsetUTCHour(utcHour, utcTimezoneOffset) {
     return convertedHour - 23; // wrapped to next day
   }
 
+  if (convertedHour < 0) {
+    return convertedHour + 23; // wrapped to previous day
+  }
+
   return convertedHour;
 }
 
