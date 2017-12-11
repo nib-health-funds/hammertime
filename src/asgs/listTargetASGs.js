@@ -36,5 +36,5 @@ function isInCurrentOperatingTimezone(currentOperatingTimezone) {
 module.exports = function listTargetASGs({ filter, currentOperatingTimezone }) {
   return getAllASGs()
           .then(allASGs => allASGs.filter(filter)
-                                  .filter(isInCurrentOperatingTimezone(currentOperatingTimezone));
+                                  .filter(isInCurrentOperatingTimezone(currentOperatingTimezone)));
 };
