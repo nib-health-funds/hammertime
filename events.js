@@ -1,6 +1,9 @@
 const operatingTimezones = require('./operatingTimezones');
 const isEnabled = require('./isEnabled').isEnabled;
 
+const UTC_START_HOUR = 9;
+const UTC_STOP_HOUR = 22;
+
 function offsetUTCHour(utcHour, utcTimezoneOffset) {
   const convertedHour = utcHour + utcTimezoneOffset;
 
@@ -17,7 +20,7 @@ function offsetUTCHour(utcHour, utcTimezoneOffset) {
 
 function stop() {
   const stopCrons = operatingTimezones.map(timezone => ({
-    rate: `cron(30 ${offsetUTCHour(22, timezone)} * * ? *)`,
+    rate: `cron(30 ${offsetUTCHour(UTC_STOP_HOUR, timezone)} * * ? *)`,
     enabled: isEnabled(),
   }));
   return {
@@ -27,7 +30,7 @@ function stop() {
 
 function start() {
   const startCrons = operatingTimezones.map(timezone => ({
-    rate: `cron(30 ${offsetUTCHour(9, timezone)} * * ? *)`,
+    rate: `cron(30 ${offsetUTCHour(UTC_START_HOUR, timezone)} * * ? *)`,
     enabled: isEnabled(),
   }));
   return {
