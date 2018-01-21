@@ -4,7 +4,7 @@ provider:
   runtime: nodejs6.10
   memorySize: 128
   stage: ${env:SLICE}
-  region: ap-southeast-2
+  region: ${env:AWS_REGION}
   deploymentBucket: ${env:DEPLOY_BUCKET}
   iamRoleStatements:
     - Effect: "Allow"
@@ -14,6 +14,12 @@ provider:
         - "ec2:DescribeInstances"
         - "ec2:StartInstances"
         - "ec2:StopInstances"
+        - "rds:DescribeDBInstances"
+        - "rds:ListTagsForResource"
+        - "rds:AddTagsToResource"
+        - "rds:RemoveTagsFromResource"
+        - "rds:StartDBInstance"
+        - "rds:StopDBInstance"
         - "autoscaling:CreateOrUpdateTags"
         - "autoscaling:DeleteTags"
         - "autoscaling:DescribeAutoScalingGroups"

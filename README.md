@@ -4,14 +4,27 @@
 
 # hammertime
 
+<<<<<<< HEAD
 Open sourced on Github [here](https://github.com/nib-health-funds/hammertime), should replace this copy at some point but currently they're separate.
 
 [![Build status](https://badge.buildkite.com/faa22b548667df904a6d6c67f2e63ed4e2e954ea6f87d4021c.svg)](https://buildkite.com/nib-health-funds-ltd/hammertime)
 [![Build Status](https://travis-ci.org/nib-health-funds/hammertime.svg?branch=master)](https://travis-ci.org/nib-health-funds/hammertime)
 
 Serverless power cycling for AWS EC2 instances and Auto Scaling Groups based on a schedule.
+=======
+Serverless power cycling for AWS EC2, RDS instances and Auto Scaling Groups based on a schedule.
+>>>>>>> remotes/github/new-tags
 
 ![Stop! Hammer Time!](hammertime.gif)
+
+## RDS Limitations
+According to [AWS RDS User Guide](http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_StopInstance.html) the following are the limitations to stopping and starting RDS instances:
+
+One can't stop a DB instance that has a Read Replica, or that is a Read Replica.
+One can't stop a DB instance that is in a Multi-AZ deployment.
+One can't stop a DB instance that uses Microsoft SQL Server Mirroring.
+
+Hammertime will automatically filter out RDS instances with the above conditions.
 
 ## Getting Started
 
