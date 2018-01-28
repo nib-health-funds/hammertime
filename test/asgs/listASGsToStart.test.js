@@ -4,12 +4,13 @@ const listASGsToStart = require('../../src/asgs/listASGsToStart');
 const startOnePageResponse = require('./responses/startOnePageResponse');
 const emptyResponse = require('./responses/emptyResponse');
 const paginatedStart = require('./responses/paginatedStart');
+const defaultOperatingTimezone = require('../../src/config').defaultOperatingTimezone;
 
 describe('listASGsToStart()', () => {
   it('returns list of asgs spun down by hammertime', () => {
     AWS.mock('AutoScaling', 'describeAutoScalingGroups', startOnePageResponse);
 
-    return listASGsToStart(10)
+    return listASGsToStart(defaultOperatingTimezone)
       .then((validAsgs) => {
         assert.equal(validAsgs.length, 1);
         assert.equal(validAsgs[0].AutoScalingGroupName, 'can-touch-this-asg-page-2');
@@ -18,7 +19,7 @@ describe('listASGsToStart()', () => {
 
   it('returns an empty list if no asgs found', () => {
     AWS.mock('AutoScaling', 'describeAutoScalingGroups', emptyResponse);
-    return listASGsToStart(10)
+    return listASGsToStart(defaultOperatingTimezone)
       .then((validAsgs) => {
         assert.deepEqual(validAsgs, []);
       });
@@ -29,7 +30,7 @@ describe('listASGsToStart()', () => {
       callback(null, paginatedStart(params.NextToken));
     });
 
-    return listASGsToStart(10)
+    return listASGsToStart(defaultOperatingTimezone)
       .then((validAsgs) => {
         assert.equal(validAsgs.length, 2);
         assert.equal(validAsgs.some(asg => asg.AutoScalingGroupName === 'can-touch-this-asg-page-1'), true);
