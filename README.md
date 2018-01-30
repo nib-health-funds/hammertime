@@ -4,6 +4,11 @@
 
 # hammertime
 
+Open sourced on Github [here](https://github.com/nib-health-funds/hammertime), should replace this copy at some point but currently they're separate.
+
+[![Build status](https://badge.buildkite.com/faa22b548667df904a6d6c67f2e63ed4e2e954ea6f87d4021c.svg)](https://buildkite.com/nib-health-funds-ltd/hammertime)
+[![Build Status](https://travis-ci.org/nib-health-funds/hammertime.svg?branch=master)](https://travis-ci.org/nib-health-funds/hammertime)
+
 Serverless power cycling for AWS EC2, RDS instances and Auto Scaling Groups based on a schedule.
 
 ![Stop! Hammer Time!](hammertime.gif)
@@ -28,11 +33,11 @@ Edit [serverless.yml](serverless.yml) where you can adjust
 
 ## Usage
 
-To stop hammertime
-* killing your EC2 instance tag with `hammertime:canttouchthis`
-* spinning your ASG down to 0 tag the ASG with `hammertime:canttouchthis`
+`stop-hammertime` will stop all EC2 instances that are not in an ASG, it will also set the desired instance count of all ASGs to 0; unless the mentioned assets are tagged with one of the following supported hammertime tags:
 
-`stop-hammertime` will stop all EC2 instances that are not tagged with `hammertime:canttouchthis` and are not in an ASG. It will also set the desired instance count of all ASGs not tagged likewise to 0.
+- `hammertime:canttouchthis`: Will prevent hammertime from starting or stopping this asset in all cases.
+- `hammertime:canttouchthisbetween`: Will prevent hammertime from starting or stopping the asset between a given UTC date range specified in the value of the tag. The expected format for the value is `YYYY-MM-DD and YYYY-MM-DD` For example: A value of `2017-05-06 and 2017-06-06` prevents hammertime from affecting this asset between the mentioned dates.
+- `hammertime:canttouchthisbefore`: Will prevent hammertime from affecting the asset before a specific UTC date represented in the value field of the tag. The expected date format is: `YYYY-MM-DD`. For example: A value of `2017-05-06` will ensure the given asset is not touched before the given date.
 
 `start-hammertime` will query the tags left by `stop-hammertime` and return the instances and ASGs to their previous status.
 
