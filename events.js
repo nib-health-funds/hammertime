@@ -28,7 +28,7 @@ function stop() {
   }));
   console.log('Stop Crons: ');
   console.log(JSON.stringify(stopCrons));
-  return stopCrons; // CRONS for stopping
+  return stopCrons.map(schedule => ({ schedule })); // CRONS for stopping
 }
 
 function start() {
@@ -41,7 +41,7 @@ function start() {
   }));
   console.log('Start Crons: ');
   console.log(JSON.stringify(startCrons));
-  return startCrons; // CRONS for starting
+  return startCrons.map(schedule => ({ schedule })); // CRONS for starting
 }
 
 module.exports.stop = stop;
