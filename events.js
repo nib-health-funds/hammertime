@@ -21,7 +21,7 @@ function offsetUTCHour(utcHour, utcTimezoneOffset) {
 function stop() {
   const stopCrons = operatingTimezones.map(timezone => ({
     rate: `cron(30 ${offsetUTCHour(UTC_STOP_HOUR, timezone)} * * ? *)`,
-    enabled: isEnabled(),
+    enabled: true, // isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
     },
@@ -34,7 +34,7 @@ function stop() {
 function start() {
   const startCrons = operatingTimezones.map(timezone => ({
     rate: `cron(30 ${offsetUTCHour(UTC_START_HOUR, timezone)} * * ? *)`,
-    enabled: isEnabled(),
+    enabled: true, // isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
     },
