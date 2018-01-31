@@ -26,9 +26,7 @@ function stop() {
       currentOperatingTimezone: timezone,
     },
   }));
-  return {
-    schedule: stopCrons, // CRONS for stopping
-  };
+  return stopCrons; // CRONS for stopping
 }
 
 function start() {
@@ -39,9 +37,7 @@ function start() {
       currentOperatingTimezone: timezone,
     },
   }));
-  return {
-    schedule: startCrons, // CRONS for starting
-  };
+  return startCrons; // CRONS for starting
 }
 
 module.exports.stop = stop;
