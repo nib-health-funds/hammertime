@@ -26,6 +26,8 @@ function stop() {
       currentOperatingTimezone: timezone,
     },
   }));
+  console.log('Stop Crons: ');
+  console.log(JSON.stringify(stopCrons));
   return stopCrons; // CRONS for stopping
 }
 
@@ -37,6 +39,8 @@ function start() {
       currentOperatingTimezone: timezone,
     },
   }));
+  console.log('Start Crons: ');
+  console.log(JSON.stringify(startCrons));
   return startCrons; // CRONS for starting
 }
 
