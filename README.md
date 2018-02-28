@@ -4,8 +4,6 @@
 
 # hammertime
 
-Open sourced on Github [here](https://github.com/nib-health-funds/hammertime), should replace this copy at some point but currently they're separate.
-
 [![Build status](https://badge.buildkite.com/faa22b548667df904a6d6c67f2e63ed4e2e954ea6f87d4021c.svg)](https://buildkite.com/nib-health-funds-ltd/hammertime)
 [![Build Status](https://travis-ci.org/nib-health-funds/hammertime.svg?branch=master)](https://travis-ci.org/nib-health-funds/hammertime)
 
