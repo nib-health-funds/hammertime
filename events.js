@@ -1,11 +1,13 @@
+const moment = require('moment-timezone');
 const operatingTimezones = require('./operatingTimezones');
 // const isEnabled = require('./isEnabled').isEnabled;
 
 const UTC_START_HOUR = 9;
 const UTC_STOP_HOUR = 22;
 
-function offsetUTCHour(utcHour, utcTimezoneOffset) {
-  const convertedHour = utcHour + utcTimezoneOffset;
+function offsetUTCHour(utcHour, timezone) {
+  // Use moment-timezone to convert the IANA timezone name to an offset value
+  const convertedHour = utcHour + (moment().tz(timezone).isUtcOffset() / 60);
 
   if (convertedHour > 23) {
     return convertedHour - 23; // wrapped to next day
