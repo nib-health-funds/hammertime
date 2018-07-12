@@ -8,13 +8,13 @@ const defaultOperatingTimezone = require('../config').defaultOperatingTimezone;
  * @param {Array<{Key: string, Value: string}>} tags
  * @returns {number}
  */
-module.exports = tags => {
+module.exports = (tags) => {
   const timezoneTags = getHammertimeTags(tags).filter(tag => caseInvariantStringEquals(tag.Key, 'hammertime:operatingTimezone'));
 
   if (timezoneTags.length === 0 || timezoneTags.length > 1) {
-    console.log(`No timezone tag found or multiple timezone tags found. Defaulting to ${defaultOperatingTimezone >= 0 ? '+' : '-'}${defaultOperatingTimezone}`);
+    console.log(`No timezone tag found or multiple timezone tags found. Defaulting to ${defaultOperatingTimezone}`);
     return defaultOperatingTimezone;
   }
 
-  return parseInt(timezoneTags[0].Value, 10);
+  return timezoneTags[0].Value;
 };
