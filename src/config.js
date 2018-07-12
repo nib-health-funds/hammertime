@@ -1,1 +1,1 @@
-module.exports.defaultOperatingTimezone = 10;
+module.exports.defaultOperatingTimezone = 'Australia/Sydney';
