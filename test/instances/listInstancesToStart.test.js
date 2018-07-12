@@ -1,6 +1,7 @@
 const assert = require('assert');
 const AWS = require('aws-sdk-mock');
 const listInstancesToStart = require('../../src/instances/listInstancesToStart');
+const defaultOperatingTimezone = require('../../src/config').defaultOperatingTimezone;
 
 describe('listInstancesToStart()', () => {
   it('returns list of valid instances stopped by hammertime', () => {
@@ -39,7 +40,7 @@ describe('listInstancesToStart()', () => {
       ],
     };
     AWS.mock('EC2', 'describeInstances', mockInstances);
-    return listInstancesToStart(10)
+    return listInstancesToStart(defaultOperatingTimezone)
       .then((instanceIds) => {
         console.log(instanceIds);
         assert.deepEqual(instanceIds, ['i-validinstance']);
