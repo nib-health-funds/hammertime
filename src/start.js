@@ -31,7 +31,7 @@ function startAllInstances({ dryRun, currentOperatingTimezone }) {
         return untagInstances(startedInstanceIds);
       });
     });
-};
+}
 
 function spinUpASGs({ dryRun, currentOperatingTimezone }) {
   return listASGsToStart(currentOperatingTimezone)
@@ -57,7 +57,7 @@ function spinUpASGs({ dryRun, currentOperatingTimezone }) {
         return untagASGs(startedASGs);
       });
     });
-};
+}
 
 function startAllDBInstances(dryRun) {
   return listDBInstancesToStart()
@@ -65,25 +65,24 @@ function startAllDBInstances(dryRun) {
       if (dryRun) {
         console.log('Dry run is enabled, will not start or untag any RDS instances.');
         return [];
-      } else {
-        return arns;
-      };
+      }
+      return arns;
     })
     .then((arns) => {
-      if (arns.length == 0) {
+      if (arns.length === 0) {
         console.log('There are no RDS instances to start today. See you the next time.')
         return [];
-      } else {
-        return startDBInstances(arns)
-          .then((arns) => {
-            console.log('Finished starting RDS instances. Moving on to untag them.');
-            return untagDBInstances(arns);
-          });
       }
+
+      return startDBInstances(arns)
+        .then((startedDBInstanceARNs) => {
+          console.log('Finished starting RDS instances. Moving on to untag them.');
+          return untagDBInstances(startedDBInstanceARNs);
+        });
     })
     .then((arns) => {
       if (arns.length > 0) {
-        console.log('Finished tagging RDS instances.')
+        console.log('Finished tagging RDS instances.');
       }
     });
 };
