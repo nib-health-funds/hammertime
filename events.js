@@ -6,8 +6,10 @@ const UTC_START_HOUR = 9;
 const UTC_STOP_HOUR = 22;
 
 function offsetUTCHour(utcHour, timezone) {
+  const utcOffetInMinutes = moment().tz(timezone).utcOffset();
+  const utcOffsetHours = Math.floor(utcOffetInMinutes / 60);
   // Use moment-timezone to convert the IANA timezone name to an offset value
-  const convertedHour = utcHour + Math.floor(moment().tz(timezone).utcOffset() / 60);
+  const convertedHour = utcHour + utcOffsetHours;
 
   if (convertedHour > 23) {
     return convertedHour - 23; // wrapped to next day
