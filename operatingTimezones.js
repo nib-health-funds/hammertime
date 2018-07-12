@@ -1,7 +1,7 @@
-const timezones = process.env.HAMMERTIME_OPERATING_TIMEZONES || '["Australia/Sydney"]';
+const timezoneString = process.env.HAMMERTIME_OPERATING_TIMEZONES || 'Australia/Sydney';
 
-console.log('Timezones to operate in: ', timezones);
+console.log('Timezones to operate in: ', timezoneString);
 
-const parsed = JSON.parse(timezones);
+const timezones = timezoneString.split(',');
 
-module.exports = parsed;
+module.exports = timezones;
