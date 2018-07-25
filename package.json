@@ -17,24 +17,24 @@
   "author": "nib",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.7.19",
-    "moment": "^2.22.1",
+    "aws-sdk": "^2.280.1",
+    "moment": "^2.22.2",
     "promise-retry": "^1.1.1",
-    "serverless": "^1.4.0"
+    "serverless": "^1.28.0"
   },
   "devDependencies": {
     "aws-sdk-mock": "^1.6.1",
     "chai": "^3.5.0",
-    "codecov": "^2.2.0",
+    "codecov": "^3.0.4",
     "eslint": "^3.15.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-chai-expect": "^1.1.1",
     "eslint-plugin-chai-friendly": "^0.3.6",
-    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-mocha": "^4.9.0",
     "eslint-plugin-react": "^6.9.0",
     "istanbul": "^0.4.5",
-    "mocha": "^3.2.0"
+    "mocha": "^5.2.0"
   }
 }
