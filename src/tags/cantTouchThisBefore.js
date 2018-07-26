@@ -1,4 +1,4 @@
-const moment = require('moment');
+const luxon = require('luxon');
 const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals');
 
 const CANT_TOUCH_THIS_BEFORE_REGEX = /^(\d{4}-\d{2}-\d{2})$/;
@@ -16,7 +16,7 @@ module.exports = (tag) => {
 
   if (CANT_TOUCH_THIS_BEFORE_REGEX.test(tag.Value)) {
     const matches = CANT_TOUCH_THIS_BEFORE_REGEX.exec(tag.Value);
-    return moment.utc().isBefore(moment(matches[1], 'YYYY-MM-DD'));
+    return luxon.DateTime.local() < luxon.DateTime.fromISO(matches[1]);
   }
 
   return false;
