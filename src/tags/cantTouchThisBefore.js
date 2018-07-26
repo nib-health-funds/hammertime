@@ -23,7 +23,7 @@ module.exports = (tag) => {
       return false;
     }
 
-    return luxon.DateTime.local() < end;
+    return luxon.DateTime.utc() < end;
   }
 
   return false;
