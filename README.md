@@ -35,8 +35,8 @@ Edit [serverless.yml](serverless.yml) where you can adjust
 `stop-hammertime` will stop all EC2 instances that are not in an ASG, it will also set the desired instance count of all ASGs to 0; unless the mentioned assets are tagged with one of the following supported hammertime tags:
 
 - `hammertime:canttouchthis`: Will prevent hammertime from starting or stopping this asset in all cases.
-- `hammertime:canttouchthisbetween`: Will prevent hammertime from starting or stopping the asset between a given date range specified in the value of the tag. The expected format for the value is `{date-time} and {date-time}` For example: A value of `2017-05-06 and 2017-06-06` prevents hammertime from affecting this asset between the mentioned dates. The date-times should be a valid ISO-8601 date-time.
-- `hammertime:canttouchthisbefore`: Will prevent hammertime from affecting the asset before a specific date-time represented in the value field of the tag. The date-time should be a valid ISO-8601 string. For example: A value of `2017-05-06` will ensure the given asset is not touched before the given date.
+- `hammertime:canttouchthisbetween`: Will prevent hammertime from starting or stopping the asset between a given time range specified in the value of the tag. The expected format for the value is `{datetime} and {datetime}` For example: A value of `2017-05-06 and 2017-06-06` prevents hammertime from affecting this asset between the mentioned dates. The datetimes should be a valid ISO-8601 string.
+- `hammertime:canttouchthisbefore`: Will prevent hammertime from affecting the asset before a specific date-time represented in the value field of the tag. The datetime should be a valid ISO-8601 string. For example: A value of `2017-05-06` will ensure the given asset is not touched before the given date.
 
 `start-hammertime` will query the tags left by `stop-hammertime` and return the instances and ASGs to their previous status.
 
