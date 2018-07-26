@@ -42,8 +42,9 @@ Edit [serverless.yml](serverless.yml) where you can adjust
 
 Hammertime is intended to be run in response to a Lambda scheduled event, e.g
 
-`stop-hammertime`: run Monday-Friday at 6PM
-`start-hammertime`: run Monday-Friday at 6AM
+`stop-hammertime`: run Monday-Friday at 6PM (In the `Australia/Sydney` timezone by default see [here](#Changing-the-default-timezone) on how to customise this)
+
+`start-hammertime`: run Monday-Friday at 6AM (In the `Australia/Sydney` timezone by default see [here](#Changing-the-default-timezone) on how to customise this)
 
 Note when constructing schedule events in AWS, that times are in UTC.
 
@@ -57,12 +58,13 @@ Hammertime has a dry-run feature for when you are not quite ready to unleash the
 By setting `HAMMERTIME_DRY_RUN` to 'true', you enable dry-run in which hammertime does not touch your EC2s but will still log what it _would_ have touched.
 
 ### Timezones
+Hammertime can run against assets that require a different uptime schedule due to the timezone that they might operate in. Have teams that work in different timezones on their owns assets, then this festure is for you!
+When deploying hammertime, set the environment variable `HAMMERTIME_OPERATING_TIMEZONES`, list any amount of valid [IANA](https://www.iana.org/time-zones) timezones, deliminated by a `,` that you would like hammertime to support, for example `Australia/Sydney,Pacific/Auckland`. A list of these can be found on [wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). Hammertime will now deploy with `START` and `STOP` crons in each of the listed timezones.
 
-When some applications need to be started/stopped at different times due to operating in different timezones, hammertime supports running multiple CRONS for start/stop as well as tagging resources with their 'operating timezone'.
+Once you have hammertime configured to run with multiple CRONS, tag your assets with `hammertime:operatingtimezone`, with a value that is one of the IANA timezone strings, for the example above that would either be `Australia/Sydney` or `Pacific/Auckland`.
 
-Simply deploy hammertime with the `HAMMERTIME_OPERATING_TIMEZONES` environment variable, with a list of IANA timezone names for the start/stop CRONS to be scheduled. (e.g `export HAMMERTIME_OPERATING_TIMEZONES=['America/New_York']`)
-
-Once you have hammertime configured to run with multiple CRONS, tag your assets with `hammertime:operatingtimezone` with a value that is a valid IANA timezone name for the asset to be started/stopped from the correct CRON.
+#### Changing the default timezone
+By default, hammertime deploys with the default operating timezone `Australia/Sydney`, this can be overidden by setting the `HAMMERTIME_DEFAULT_OPERATING_TIMEZONE` environment variable when deploying.
 
 ## Deployment
 
