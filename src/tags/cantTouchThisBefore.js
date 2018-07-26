@@ -16,7 +16,14 @@ module.exports = (tag) => {
 
   if (CANT_TOUCH_THIS_BEFORE_REGEX.test(tag.Value)) {
     const matches = CANT_TOUCH_THIS_BEFORE_REGEX.exec(tag.Value);
-    return luxon.DateTime.local() < luxon.DateTime.fromISO(matches[1]);
+    const end = luxon.DateTime.fromISO(matches[1]);
+
+    if (!end.isValid) {
+      console.log('End date was not in the correct format');
+      return false;
+    }
+
+    return luxon.DateTime.local() < end;
   }
 
   return false;
