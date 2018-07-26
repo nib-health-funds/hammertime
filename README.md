@@ -42,11 +42,9 @@ Edit [serverless.yml](serverless.yml) where you can adjust
 
 Hammertime is intended to be run in response to a Lambda scheduled event, e.g
 
-`stop-hammertime`: run Monday-Friday at 6PM (In the `Australia/Sydney` timezone by default see [here](#Changing-the-default-timezone) on how to customise this)
+`stop-hammertime`: run Monday-Sunday at 6PM (UTC timezone by default, see [here](#Changing-the-defaults) on how to customise this)
 
-`start-hammertime`: run Monday-Friday at 6AM (In the `Australia/Sydney` timezone by default see [here](#Changing-the-default-timezone) on how to customise this)
-
-Note when constructing schedule events in AWS, that times are in UTC.
+`start-hammertime`: run Monday-Sunday at 6AM (UTC timezone by default, see [here](#Changing-the-defaults) on how to customise this)
 
 ### Enabling/Disabling
 
@@ -63,8 +61,17 @@ When deploying hammertime, set the environment variable `HAMMERTIME_OPERATING_TI
 
 Once you have hammertime configured to run with multiple CRONS, tag your assets with `hammertime:operatingtimezone`, with a value that is one of the IANA timezone strings, for the example above that would either be `Australia/Sydney` or `Pacific/Auckland`.
 
+## Changing the defaults
+
+#### Changing the default start and stop hour
+By default, hammertime deploys with the default the start hour and stop hour set to `6` and `19` respectively to start and stop instances at `6am` and stop at `6pm`.
+To change these, set the environment variables `HAMMERTIME_START_HOUR` and `HAMMERTIME_STOP_HOUR` when deploying to change the hours that hammertime will start/stop assets.
+
 #### Changing the default timezone
-By default, hammertime deploys with the default operating timezone `Australia/Sydney`, this can be overidden by setting the `HAMMERTIME_DEFAULT_OPERATING_TIMEZONE` environment variable when deploying.
+By default, hammertime deploys with the default operating timezone `UTC`, this can be overidden by setting the `HAMMERTIME_DEFAULT_OPERATING_TIMEZONE` environment variable when deploying. Set this to a valid [IANA](https://www.iana.org/time-zones) timezone, for example `Australia/Sydney`;
+
+## Limitations
+Due to scheduling hammertime using AWS crons, we are unable to dynamically adjust the cron to take into account timezones that shift offsets, for example timezones that implement daylight savings time (DST). To remedy this, re-deploy hammertime when your timezone offset shifts to recreate the crons to have the updated shift in offset.
 
 ## Deployment
 
