@@ -1,31 +1,18 @@
-const moment = require('moment-timezone');
+const luxon = require('luxon');
 const operatingTimezones = require('./operatingTimezones');
-// const isEnabled = require('./isEnabled').isEnabled;
+const isEnabled = require('./isEnabled').isEnabled;
 
-const UTC_START_HOUR = 9;
-const UTC_STOP_HOUR = 22;
+const START_HOUR = parseInt(process.env.HAMMERTIME_START_HOUR || '6', 10);
+const STOP_HOUR = parseInt(process.env.HAMMERTIME_STOP_HOUR || '19', 10);
 
-function offsetUTCHour(utcHour, timezone) {
-  const utcOffetInMinutes = moment().tz(timezone).utcOffset();
-  const utcOffsetHours = Math.floor(utcOffetInMinutes / 60);
-  // Use moment-timezone to convert the IANA timezone name to an offset value
-  const convertedHour = utcHour + utcOffsetHours;
-
-  if (convertedHour > 23) {
-    return convertedHour - 23; // wrapped to next day
-  }
-
-  if (convertedHour < 0) {
-    return convertedHour + 23; // wrapped to previous day
-  }
-
-  return convertedHour;
+function getCronHour(hour, zone) {
+  return luxon.DateTime.fromObject({ hour, zone }).setZone('UTC').hour;
 }
 
 function stop() {
   const stopCrons = operatingTimezones.map(timezone => ({
-    rate: `cron(30 ${offsetUTCHour(UTC_STOP_HOUR, timezone)} * * ? *)`,
-    enabled: true, // isEnabled(),
+    rate: `cron(0 ${getCronHour(STOP_HOUR, timezone)} * * ? *)`,
+    enabled: isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
     },
@@ -37,8 +24,8 @@ function stop() {
 
 function start() {
   const startCrons = operatingTimezones.map(timezone => ({
-    rate: `cron(30 ${offsetUTCHour(UTC_START_HOUR, timezone)} * * ? *)`,
-    enabled: true, // isEnabled(),
+    rate: `cron(0 ${getCronHour(START_HOUR, timezone)} * * ? *)`,
+    enabled: isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
     },
