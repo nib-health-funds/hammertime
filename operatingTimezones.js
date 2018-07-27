@@ -5,4 +5,4 @@ console.log('Timezones to operate in: ', timezoneString);
 const timezones = timezoneString.split(',');
 
 module.exports.defaultOperatingTimezone = () => defaultOperatingTimezone;
-module.exports = timezones;
+module.exports.timezones = () => timezones;
