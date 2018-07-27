@@ -1,5 +1,5 @@
 const luxon = require('luxon');
-const operatingTimezones = require('./operatingTimezones').timezones;
+const operatingTimezones = require('./operatingTimezones').timezones();
 const isEnabled = require('./isEnabled').isEnabled;
 
 const START_HOUR = parseInt(process.env.HAMMERTIME_START_HOUR || '6', 10);
