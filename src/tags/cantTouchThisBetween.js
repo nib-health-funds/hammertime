@@ -1,7 +1,7 @@
 const luxon = require('luxon');
 const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals');
 
-const CANT_TOUCH_THIS_BETWEEN_REGEX = /^(\d{4}-\d{2}-\d{2}) and (\d{4}-\d{2}-\d{2})$/;
+const CANT_TOUCH_THIS_BETWEEN_REGEX = /^(.*) and (.*)$/;
 
 /**
  * Returns true when the tag is a 'cantTouchThisBetween' tag and has a value
