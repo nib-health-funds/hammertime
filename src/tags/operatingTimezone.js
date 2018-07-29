@@ -3,8 +3,7 @@ const getHammertimeTags = require('./getHammerTimeTags');
 const defaultOperatingTimezone = require('../config').defaultOperatingTimezone;
 
 /**
- * Returns true when the tag is a 'operatingTimezone' tag and has a value
- * specified where in that the current UTC date is between the specified dates.
+ * Returns the operating timezone
  * @param {Array<{Key: string, Value: string}>} tags
  * @returns {number}
  */
