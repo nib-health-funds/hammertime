@@ -7,11 +7,12 @@ function validInstance(instance) {
   return canITouchThis(instance.Tags) && !hasTag(instance.Tags, 'aws:autoscaling:groupName');
 }
 
-function isInCurrentOperatingTimezone(currentOperatingTimezone) {
+function isInstanceInCurrentOperatingTimezone(currentOperatingTimezone) {
+  const isInCurrentOperatingTimezone = isInOperatingTimezone(currentOperatingTimezone);
   return (instance) => {
-    const inOperatingTimezone = isInOperatingTimezone(currentOperatingTimezone)(instance.Tags);
+    const inOperatingTimezone = isInCurrentOperatingTimezone(instance.Tags);
     if (inOperatingTimezone) {
-      console.log('Found instance in current operating timezone: ', instance);
+      console.log(`Found instance "${instance.InstanceId}" in current operating timezone "${currentOperatingTimezone}"`);
     }
     return inOperatingTimezone;
   };
@@ -23,7 +24,7 @@ function filterInstances(data, currentOperatingTimezone) {
     .map(reservation => reservation.Instances)
     .reduce((prev, curr) => prev.concat(curr), [])
     .filter(validInstance)
-    .filter(isInCurrentOperatingTimezone(currentOperatingTimezone))
+    .filter(isInstanceInCurrentOperatingTimezone(currentOperatingTimezone))
     .map(instance => instance.InstanceId);
 }
 
