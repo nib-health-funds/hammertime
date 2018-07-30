@@ -1,7 +1,7 @@
 const operatingTimezone = require('../../src/tags/operatingTimezone');
 const config = require('../../src/config');
 
-describe.only('operatingTimezone()', () => {
+describe('operatingTimezone()', () => {
 
   process.env.defaultOperatingTimezone = 'UTC';
 
