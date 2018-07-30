@@ -5,7 +5,7 @@ const defaultOperatingTimezone = require('../config').defaultOperatingTimezone;
 /**
  * Returns the operating timezone
  * @param {Array<{Key: string, Value: string}>} tags
- * @returns {number}
+ * @returns {string}
  */
 module.exports = (tags) => {
   const timezoneTags = getHammertimeTags(tags).filter(tag => caseInvariantStringEquals(tag.Key, 'hammertime:operatingTimezone'));
