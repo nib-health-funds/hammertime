@@ -23,11 +23,12 @@ function getAllASGs() {
     .then(data => followASGPages([], data));
 }
 
-function isInCurrentOperatingTimezone(currentOperatingTimezone) {
+function isASGInCurrentOperatingTimezone(currentOperatingTimezone) {
+  const isInCurrentOperatingTimezone = isInOperatingTimezone(currentOperatingTimezone);
   return (asg) => {
-    const inOperatingTimezone = isInOperatingTimezone(currentOperatingTimezone)(asg.Tags);
+    const inOperatingTimezone = isInCurrentOperatingTimezone(asg.Tags);
     if (inOperatingTimezone) {
-      console.log('Found asg in current operating timezone: ', asg);
+      console.log(`Found asg "${asg.AutoScalingGroupName}" in current operating timezone "${currentOperatingTimezone}"`);
     }
     return inOperatingTimezone;
   };
@@ -36,5 +37,5 @@ function isInCurrentOperatingTimezone(currentOperatingTimezone) {
 module.exports = function listTargetASGs({ filter, currentOperatingTimezone }) {
   return getAllASGs()
           .then(allASGs => allASGs.filter(filter)
-                                  .filter(isInCurrentOperatingTimezone(currentOperatingTimezone)));
+                                  .filter(isASGInCurrentOperatingTimezone(currentOperatingTimezone)));
 };
