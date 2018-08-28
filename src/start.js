@@ -90,7 +90,7 @@ function startAllDBInstances(dryRun) {
 module.exports = function start(options) {
   const { event, callback, dryRun } = options;
   const currentOperatingTimezone = event.currentOperatingTimezone;
-  console.log('Break it down!');
+  console.log(`Hammertime start for ${currentOperatingTimezone}`);
   Promise.all([
     startAllDBInstances(dryRun),
     startAllInstances({ dryRun, currentOperatingTimezone }),

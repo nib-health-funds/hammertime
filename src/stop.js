@@ -97,7 +97,7 @@ function stopAllDBInstances(dryRun) {
 module.exports = function stop(options) {
   const { event, callback, dryRun } = options;
   const currentOperatingTimezone = event.currentOperatingTimezone;
-  console.log('Stop. Hammertime!');
+  console.log(`Hammertime stop for ${currentOperatingTimezone}`);
   Promise.all([
     stopAllDBInstances(dryRun),
     stopAllInstances({ dryRun, currentOperatingTimezone }),
