@@ -9,13 +9,7 @@ function validInstance(instance) {
 
 function isInstanceInCurrentOperatingTimezone(currentOperatingTimezone) {
   const isInCurrentOperatingTimezone = isInOperatingTimezone(currentOperatingTimezone);
-  return (instance) => {
-    const inOperatingTimezone = isInCurrentOperatingTimezone(instance.Tags);
-    if (inOperatingTimezone) {
-      console.log(`Found instance "${instance.InstanceId}" in current operating timezone "${currentOperatingTimezone}"`);
-    }
-    return inOperatingTimezone;
-  };
+  return instance => isInCurrentOperatingTimezone(instance.Tags);
 }
 
 function filterInstances(data, currentOperatingTimezone) {

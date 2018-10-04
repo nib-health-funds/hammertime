@@ -78,7 +78,7 @@ function stopAllDBInstances(dryRun) {
     })
     .then((arns) => {
       if (arns.length === 0) {
-        console.log('There are no RDS instances to stop today. See you the next time.')
+        console.log('There are no RDS instances to stop today. See you the next time.');
         return [];
       }
       return stopDBInstances(arns)
@@ -89,7 +89,7 @@ function stopAllDBInstances(dryRun) {
     })
     .then((arns) => {
       if (arns.length > 0) {
-        console.log('Finished tagging RDS instances.')
+        console.log('Finished tagging RDS instances.');
       }
     });
 }

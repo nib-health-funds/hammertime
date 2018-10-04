@@ -21,7 +21,7 @@ function startAllInstances({ dryRun, currentOperatingTimezone }) {
         return [];
       }
 
-      console.log(`Found the following ${startableInstances.length} instances to start up...`);
+      console.log(`Found the following ${startableInstances.length} instances to start ...`);
       startableInstances.forEach((instance) => {
         console.log(instance);
       });
@@ -33,9 +33,19 @@ function startAllInstances({ dryRun, currentOperatingTimezone }) {
     });
 }
 
+function logStartableASG(asg) {
+  console.log(`ASG named ${asg.AutoScalingGroupName} has been found to be startable!`);
+  const tags = asg.Tags.map(tag => `name=${tag.Name},value=${tag.Value}`).join(', ');
+  console.log(`${asg.AutoScalingGroupName} has the following tags ${tags}`);
+}
+
 function spinUpASGs({ dryRun, currentOperatingTimezone }) {
   return listASGsToStart(currentOperatingTimezone)
     .then((startableASGs) => {
+      console.log(`Found the following ${startableASGs.length} instances to start up...`);
+      // Log startableASGs for debugging
+      startableASGs.forEach(logStartableASG);
+
       if (dryRun) {
         console.log('Dry run is enabled, will not start or untag any ASGs.');
         return [];
@@ -45,12 +55,6 @@ function spinUpASGs({ dryRun, currentOperatingTimezone }) {
         console.log('No ASGs found to spin up, moving on...');
         return [];
       }
-
-      console.log(`Found the following ${startableASGs.length} instances to start up...`);
-      // Log startableASGs for easy debugging
-      startableASGs.forEach((asg) => {
-        console.log(asg.AutoScalingGroupName);
-      });
 
       return startASGs(startableASGs).then((startedASGs) => {
         console.log(`Finished spinning up ASGs. Moving on to untag ${startedASGs.length} of them.`);
@@ -70,7 +74,7 @@ function startAllDBInstances(dryRun) {
     })
     .then((arns) => {
       if (arns.length === 0) {
-        console.log('There are no RDS instances to start today. See you the next time.')
+        console.log('There are no RDS instances to start today. See you the next time.');
         return [];
       }
 
@@ -85,7 +89,7 @@ function startAllDBInstances(dryRun) {
         console.log('Finished tagging RDS instances.');
       }
     });
-};
+}
 
 module.exports = function start(options) {
   const { event, callback, dryRun } = options;
@@ -100,7 +104,7 @@ module.exports = function start(options) {
       console.log('All EC2, RDS instances and ASGs started successfully. Good morning!');
     }
     callback(null, {
-      message: 'Start: Hammertime successfully completed.'
+      message: 'Start: Hammertime successfully completed.',
     }, event);
   }).catch((err) => {
     console.error(err);
