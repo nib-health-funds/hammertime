@@ -11,6 +11,7 @@ module.exports = (tags) => {
   const timezoneTags = getHammertimeTags(tags).filter(tag => caseInvariantStringEquals(tag.Key, 'hammertime:operatingTimezone'));
 
   if (timezoneTags.length === 0 || timezoneTags.length > 1) {
+    console.log('No operating timezone tag found. Using default: ', defaultOperatingTimezone);
     return defaultOperatingTimezone;
   }
 
