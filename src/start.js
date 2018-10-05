@@ -11,6 +11,12 @@ const untagDBInstances = require('./rds/untagDBInstances');
 function startAllInstances({ dryRun, currentOperatingTimezone }) {
   return listInstancesToStart(currentOperatingTimezone)
     .then((startableInstances) => {
+
+      console.log(`Found the following ${startableInstances.length} instances to start ...`);
+      startableInstances.forEach((instance) => {
+        console.log(instance);
+      });
+
       if (dryRun) {
         console.log('Dry run is enabled, will not start or untag any instances.');
         return [];
@@ -20,11 +26,6 @@ function startAllInstances({ dryRun, currentOperatingTimezone }) {
         console.log('No instances found to start, moving on...');
         return [];
       }
-
-      console.log(`Found the following ${startableInstances.length} instances to start ...`);
-      startableInstances.forEach((instance) => {
-        console.log(instance);
-      });
 
       return startInstances(startableInstances).then((startedInstanceIds) => {
         console.log('Finished starting instances. Moving on to untag them.');
@@ -42,6 +43,7 @@ function logStartableASG(asg) {
 function spinUpASGs({ dryRun, currentOperatingTimezone }) {
   return listASGsToStart(currentOperatingTimezone)
     .then((startableASGs) => {
+
       console.log(`Found the following ${startableASGs.length} instances to start up...`);
       // Log startableASGs for debugging
       startableASGs.forEach(logStartableASG);

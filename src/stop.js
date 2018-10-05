@@ -12,6 +12,12 @@ const tagDBInstances = require('./rds/tagDBInstances');
 function stopAllInstances({ dryRun, currentOperatingTimezone }) {
   return listInstancesToStop(currentOperatingTimezone)
     .then((stoppableInstances) => {
+
+      console.log('Found the following instances to shut down...');
+      stoppableInstances.forEach((instance) => {
+        console.log(instance);
+      });
+
       if (dryRun) {
         console.log('Dry run is enabled, will not stop or tag any instances.');
         return [];
@@ -21,11 +27,6 @@ function stopAllInstances({ dryRun, currentOperatingTimezone }) {
         console.log('No instances found to stop, moving on...');
         return [];
       }
-
-      console.log('Found the following instances to shut down...');
-      stoppableInstances.forEach((instance) => {
-        console.log(instance);
-      });
 
       return tagInstances(stoppableInstances).then((taggedInstances) => {
         if (taggedInstances.length > 0) {
@@ -41,6 +42,12 @@ function stopAllInstances({ dryRun, currentOperatingTimezone }) {
 function spinDownASGs(dryRun) {
   return listASGsToStop()
     .then((stoppableASGs) => {
+
+      console.log(`Found the following ${stoppableASGs.length} instances to spin down...`);
+      stoppableASGs.forEach((asg) => {
+        console.log(asg.AutoScalingGroupName);
+      });
+
       if (dryRun) {
         console.log('Dry run is enabled, will not stop or tag any ASGs.');
         return [];
@@ -51,10 +58,6 @@ function spinDownASGs(dryRun) {
         return [];
       }
 
-      console.log(`Found the following ${stoppableASGs.length} instances to spin down...`);
-      stoppableASGs.forEach((asg) => {
-        console.log(asg.AutoScalingGroupName);
-      });
 
       return tagASGs(stoppableASGs).then((taggedASGs) => {
         if (taggedASGs.length > 0) {
