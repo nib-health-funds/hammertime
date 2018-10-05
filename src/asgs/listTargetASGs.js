@@ -25,7 +25,10 @@ function getAllASGs() {
 
 function isASGInCurrentOperatingTimezone(currentOperatingTimezone) {
   const isInCurrentOperatingTimezone = isInOperatingTimezone(currentOperatingTimezone);
-  return asg => isInCurrentOperatingTimezone(asg.Tags);
+  return asg => {
+    console.log('Is in operating timezone: ', isInCurrentOperatingTimezone(asg.Tags));
+    return isInCurrentOperatingTimezone(asg.Tags);
+  };
 }
 
 module.exports = function listTargetASGs({ filter, currentOperatingTimezone }) {
