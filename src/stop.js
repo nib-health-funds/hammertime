@@ -39,8 +39,8 @@ function stopAllInstances({ dryRun, currentOperatingTimezone }) {
     });
 }
 
-function spinDownASGs(dryRun) {
-  return listASGsToStop()
+function spinDownASGs({ dryRun, currentOperatingTimezone }) {
+  return listASGsToStop(currentOperatingTimezone)
     .then((stoppableASGs) => {
 
       console.log(`Found the following ${stoppableASGs.length} instances to spin down...`);
@@ -104,7 +104,7 @@ module.exports = function stop(options) {
   Promise.all([
     stopAllDBInstances(dryRun),
     stopAllInstances({ dryRun, currentOperatingTimezone }),
-    spinDownASGs(dryRun),
+    spinDownASGs({dryRun, currentOperatingTimezone }),
   ]).then(() => {
     if (!dryRun) {
       console.log('All EC2, RDS instances and ASGs stopped successfully. Good night!');
