@@ -12,7 +12,6 @@ const tagDBInstances = require('./rds/tagDBInstances');
 function stopAllInstances({ dryRun, currentOperatingTimezone }) {
   return listInstancesToStop(currentOperatingTimezone)
     .then((stoppableInstances) => {
-
       console.log('Found the following instances to shut down...');
       stoppableInstances.forEach((instance) => {
         console.log(instance);
@@ -42,7 +41,6 @@ function stopAllInstances({ dryRun, currentOperatingTimezone }) {
 function spinDownASGs({ dryRun, currentOperatingTimezone }) {
   return listASGsToStop(currentOperatingTimezone)
     .then((stoppableASGs) => {
-
       console.log(`Found the following ${stoppableASGs.length} instances to spin down...`);
       stoppableASGs.forEach((asg) => {
         console.log(asg.AutoScalingGroupName);
@@ -104,7 +102,7 @@ module.exports = function stop(options) {
   Promise.all([
     stopAllDBInstances(dryRun),
     stopAllInstances({ dryRun, currentOperatingTimezone }),
-    spinDownASGs({dryRun, currentOperatingTimezone }),
+    spinDownASGs({ dryRun, currentOperatingTimezone }),
   ]).then(() => {
     if (!dryRun) {
       console.log('All EC2, RDS instances and ASGs stopped successfully. Good night!');

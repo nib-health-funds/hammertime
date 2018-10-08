@@ -11,7 +11,6 @@ const untagDBInstances = require('./rds/untagDBInstances');
 function startAllInstances({ dryRun, currentOperatingTimezone }) {
   return listInstancesToStart(currentOperatingTimezone)
     .then((startableInstances) => {
-
       console.log(`Found the following ${startableInstances.length} instances to start ...`);
       startableInstances.forEach((instance) => {
         console.log(instance);
@@ -43,7 +42,6 @@ function logStartableASG(asg) {
 function spinUpASGs({ dryRun, currentOperatingTimezone }) {
   return listASGsToStart(currentOperatingTimezone)
     .then((startableASGs) => {
-
       console.log(`Found the following ${startableASGs.length} instances to start up...`);
       // Log startableASGs for debugging
       startableASGs.forEach(logStartableASG);
