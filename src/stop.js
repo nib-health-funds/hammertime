@@ -12,13 +12,12 @@ const tagDBInstances = require('./rds/tagDBInstances');
 function stopAllInstances({ dryRun, currentOperatingTimezone }) {
   return listInstancesToStop(currentOperatingTimezone)
     .then((stoppableInstances) => {
-      console.log('Found the following instances to shut down...');
-      stoppableInstances.forEach((instance) => {
-        console.log(instance);
-      });
-
       if (dryRun) {
         console.log('Dry run is enabled, will not stop or tag any instances.');
+        console.log('Found the following instances that would have been shut down...');
+        stoppableInstances.forEach((instance) => {
+          console.log(instance);
+        });
         return [];
       }
 
@@ -26,6 +25,11 @@ function stopAllInstances({ dryRun, currentOperatingTimezone }) {
         console.log('No instances found to stop, moving on...');
         return [];
       }
+
+      console.log('Found the following instances to shut down...');
+      stoppableInstances.forEach((instance) => {
+        console.log(instance);
+      });
 
       return tagInstances(stoppableInstances).then((taggedInstances) => {
         if (taggedInstances.length > 0) {
@@ -41,13 +45,12 @@ function stopAllInstances({ dryRun, currentOperatingTimezone }) {
 function spinDownASGs({ dryRun, currentOperatingTimezone }) {
   return listASGsToStop(currentOperatingTimezone)
     .then((stoppableASGs) => {
-      console.log(`Found the following ${stoppableASGs.length} instances to spin down...`);
-      stoppableASGs.forEach((asg) => {
-        console.log(asg.AutoScalingGroupName);
-      });
-
       if (dryRun) {
         console.log('Dry run is enabled, will not stop or tag any ASGs.');
+        console.log(`Found the following ${stoppableASGs.length} auto scaling groups that would have been spun down...`);
+        stoppableASGs.forEach((asg) => {
+          console.log(asg.AutoScalingGroupName);
+        });
         return [];
       }
 
@@ -56,6 +59,10 @@ function spinDownASGs({ dryRun, currentOperatingTimezone }) {
         return [];
       }
 
+      console.log(`Found the following ${stoppableASGs.length} auto scaling groups to spin down...`);
+      stoppableASGs.forEach((asg) => {
+        console.log(asg.AutoScalingGroupName);
+      });
 
       return tagASGs(stoppableASGs).then((taggedASGs) => {
         if (taggedASGs.length > 0) {

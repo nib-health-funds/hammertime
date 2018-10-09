@@ -11,13 +11,13 @@ const untagDBInstances = require('./rds/untagDBInstances');
 function startAllInstances({ dryRun, currentOperatingTimezone }) {
   return listInstancesToStart(currentOperatingTimezone)
     .then((startableInstances) => {
-      console.log(`Found the following ${startableInstances.length} instances to start ...`);
-      startableInstances.forEach((instance) => {
-        console.log(instance);
-      });
-
       if (dryRun) {
         console.log('Dry run is enabled, will not start or untag any instances.');
+        console.log(`Found the following ${startableInstances.length} instances that would have been to started`);
+        startableInstances.forEach((instance) => {
+          console.log(instance);
+        });
+
         return [];
       }
 
@@ -25,6 +25,11 @@ function startAllInstances({ dryRun, currentOperatingTimezone }) {
         console.log('No instances found to start, moving on...');
         return [];
       }
+
+      console.log(`Found the following ${startableInstances.length} instances to start ...`);
+      startableInstances.forEach((instance) => {
+        console.log(instance);
+      });
 
       return startInstances(startableInstances).then((startedInstanceIds) => {
         console.log('Finished starting instances. Moving on to untag them.');
@@ -42,19 +47,24 @@ function logStartableASG(asg) {
 function spinUpASGs({ dryRun, currentOperatingTimezone }) {
   return listASGsToStart(currentOperatingTimezone)
     .then((startableASGs) => {
-      console.log(`Found the following ${startableASGs.length} instances to start up...`);
-      // Log startableASGs for debugging
-      startableASGs.forEach(logStartableASG);
-
       if (dryRun) {
         console.log('Dry run is enabled, will not start or untag any ASGs.');
+        console.log(`Found the following ${startableASGs.length} auto scaling groups that would have been spun up`);
+        startableASGs.forEach((asg) => {
+          console.log(asg.AutoScalingGroupName);
+        });
         return [];
       }
 
       if (startableASGs.length === 0) {
-        console.log('No ASGs found to spin up, moving on...');
+        console.log('No ASGs to spin up, moving on...');
         return [];
       }
+
+      console.log(`Found the following ${startableASGs.length} auto scaling groups to spin up...`);
+      startableASGs.forEach((asg) => {
+        console.log(asg.AutoScalingGroupName);
+      });
 
       return startASGs(startableASGs).then((startedASGs) => {
         console.log(`Finished spinning up ASGs. Moving on to untag ${startedASGs.length} of them.`);
