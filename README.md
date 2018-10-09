@@ -88,7 +88,7 @@ npm i
 * then deploy
 
 ```
-npm deploy
+npm run deploy
 ```
 
 ## Built With
