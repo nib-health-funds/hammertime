@@ -38,12 +38,6 @@ function startAllInstances({ dryRun, currentOperatingTimezone }) {
     });
 }
 
-function logStartableASG(asg) {
-  console.log(`ASG named ${asg.AutoScalingGroupName} has been found to be startable!`);
-  const tags = asg.Tags.map(tag => `name=${tag.Name},value=${tag.Value}`).join(', ');
-  console.log(`${asg.AutoScalingGroupName} has the following tags ${tags}`);
-}
-
 function spinUpASGs({ dryRun, currentOperatingTimezone }) {
   return listASGsToStart(currentOperatingTimezone)
     .then((startableASGs) => {
