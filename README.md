@@ -108,6 +108,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 * **Ian Donaldson** - *Initial work* - [Ian Donaldson](https://github.com/exidy)
 * **Hailey Martin** - *Made it work* - [Hailey Martin](https://github.com/hlmartin)
 * **Kurt Gardiner** - *Busy work* - [Kurt Gardiner](https://github.com/krutisfood)
+* **Matthew Turner** - *Timezone support* - [Matthew Turner](https://github.com/ramesius)
 
 See also the list of [contributors](https://github.com/nib-health-funds/hammertime/contributors) who participated in this project.
 
