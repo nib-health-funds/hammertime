@@ -68,7 +68,7 @@ By default, hammertime deploys with the default the start hour and stop hour set
 To change these, set the environment variables `HAMMERTIME_START_HOUR` and `HAMMERTIME_STOP_HOUR` when deploying to change the hours that hammertime will start/stop assets.
 
 #### Changing the default timezone
-By default, hammertime deploys with the default operating timezone `UTC`, this can be overidden by setting the `HAMMERTIME_DEFAULT_OPERATING_TIMEZONE` environment variable when deploying. Set this to a valid [IANA](https://www.iana.org/time-zones) timezone, for example `Australia/Sydney`;
+By default, hammertime deploys with the default operating timezone `UTC`, this can be overidden by setting the `HAMMERTIME_DEFAULT_OPERATING_TIMEZONE` environment variable when deploying. Set this to a valid [IANA](https://www.iana.org/time-zones) timezone, for example `Australia/Sydney`.
 
 ## Limitations
 Due to scheduling hammertime using AWS crons, we are unable to dynamically adjust the cron to take into account timezones that shift offsets, for example timezones that implement daylight savings time (DST). To remedy this, re-deploy hammertime when your timezone offset shifts to recreate the crons to have the updated shift in offset.
