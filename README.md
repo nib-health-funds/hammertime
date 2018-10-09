@@ -59,12 +59,12 @@ By setting `HAMMERTIME_DRY_RUN` to 'true', you enable dry-run in which hammertim
 Hammertime can run against assets that require a different uptime schedule due to the timezone that they might operate in. Have teams that work in different timezones on their owns assets, then this festure is for you!
 When deploying hammertime, set the environment variable `HAMMERTIME_OPERATING_TIMEZONES`, list any amount of valid [IANA](https://www.iana.org/time-zones) timezones, deliminated by a `,` that you would like hammertime to support, for example `Australia/Sydney,Pacific/Auckland`. A list of these can be found on [wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). Hammertime will now deploy with `START` and `STOP` crons in each of the listed timezones.
 
-Once you have hammertime configured to run with multiple CRONS, tag your assets with `hammertime:operatingtimezone`, with a value that is one of the IANA timezone strings, for the example above that would either be `Australia/Sydney` or `Pacific/Auckland`.
+Once you have hammertime configured to run with multiple CRONS, tag your assets with `hammertime:operatingtimezone`, with a value that is one of the IANA timezone strings, for the example above that would either be `Australia/Sydney` or `Pacific/Auckland`. For untagged assets, hammertime will use a default operating timezone (UTC by default, see )
 
 ## Changing the defaults
 
 #### Changing the default start and stop hour
-By default, hammertime deploys with the default the start hour and stop hour set to `6` and `19` respectively to start and stop instances at `6am` and stop at `6pm`.
+By default, hammertime deploys with the default start hour and stop hour set to `6` and `19` respectively to start and stop instances at `6am` and stop at `6pm`.
 To change these, set the environment variables `HAMMERTIME_START_HOUR` and `HAMMERTIME_STOP_HOUR` when deploying to change the hours that hammertime will start/stop assets.
 
 #### Changing the default timezone
