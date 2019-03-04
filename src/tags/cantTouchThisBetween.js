@@ -1,7 +1,7 @@
-const moment = require('moment');
+const luxon = require('luxon');
 const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals');
 
-const CANT_TOUCH_THIS_BETWEEN_REGEX = /^(\d{4}-\d{2}-\d{2}) and (\d{4}-\d{2}-\d{2})$/;
+const CANT_TOUCH_THIS_BETWEEN_REGEX = /^(.*) and (.*)$/;
 
 /**
  * Returns true when the tag is a 'cantTouchThisBetween' tag and has a value
@@ -16,7 +16,21 @@ module.exports = (tag) => {
 
   if (CANT_TOUCH_THIS_BETWEEN_REGEX.test(tag.Value)) {
     const matches = CANT_TOUCH_THIS_BETWEEN_REGEX.exec(tag.Value);
-    return moment.utc().isBetween(moment(matches[1], 'YYYY-MM-DD'), moment(matches[2], 'YYYY-MM-DD'));
+    const now = luxon.DateTime.utc();
+    const start = luxon.DateTime.fromISO(matches[1]);
+    const end = luxon.DateTime.fromISO(matches[2]);
+
+    if (!start.isValid) {
+      console.log('Start date was not in the correct format');
+      return false;
+    }
+
+    if (!end.isValid) {
+      console.log('End date was not in the correct format');
+      return false;
+    }
+
+    return now <= end && now >= start;
   }
 
   return false;
