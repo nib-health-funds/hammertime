@@ -1,6 +1,7 @@
 const assert = require('assert');
 const AWS = require('aws-sdk-mock');
 const listInstancesToStop = require('../../src/instances/listInstancesToStop');
+const defaultOperatingTimezone = require('../../src/config').defaultOperatingTimezone;
 
 describe('listInstancesToStop()', () => {
   it('returns list of valid running instances', () => {
@@ -43,7 +44,7 @@ describe('listInstancesToStop()', () => {
       ],
     };
     AWS.mock('EC2', 'describeInstances', mockInstances);
-    return listInstancesToStop()
+    return listInstancesToStop(defaultOperatingTimezone)
       .then((instanceIds) => {
         assert.deepEqual(instanceIds, ['i-validinstance']);
       });
@@ -55,7 +56,7 @@ describe('listInstancesToStop()', () => {
     };
     AWS.mock('EC2', 'describeInstances', mockInstances);
 
-    return listInstancesToStop()
+    return listInstancesToStop(defaultOperatingTimezone)
       .then((instanceIds) => {
         assert.deepEqual(instanceIds, []);
       });

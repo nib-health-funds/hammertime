@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/nib-health-funds/hammertime.svg?branch=master)](https://travis-ci.org/nib-health-funds/hammertime)
-
 [![codecov](https://codecov.io/gh/nib-health-funds/hammertime/branch/master/graph/badge.svg)](https://codecov.io/gh/nib-health-funds/hammertime)
 
 # hammertime
@@ -33,17 +32,16 @@ Edit [serverless.yml](serverless.yml) where you can adjust
 `stop-hammertime` will stop all EC2 instances that are not in an ASG, it will also set the desired instance count of all ASGs to 0; unless the mentioned assets are tagged with one of the following supported hammertime tags:
 
 - `hammertime:canttouchthis`: Will prevent hammertime from starting or stopping this asset in all cases.
-- `hammertime:canttouchthisbetween`: Will prevent hammertime from starting or stopping the asset between a given UTC date range specified in the value of the tag. The expected format for the value is `YYYY-MM-DD and YYYY-MM-DD` For example: A value of `2017-05-06 and 2017-06-06` prevents hammertime from affecting this asset between the mentioned dates.
-- `hammertime:canttouchthisbefore`: Will prevent hammertime from affecting the asset before a specific UTC date represented in the value field of the tag. The expected date format is: `YYYY-MM-DD`. For example: A value of `2017-05-06` will ensure the given asset is not touched before the given date.
+- `hammertime:canttouchthisbetween`: Will prevent hammertime from starting or stopping the asset between a given time range specified in the value of the tag. The expected format for the value is `{datetime} and {datetime}` For example: A value of `2017-05-06 and 2017-06-06` prevents hammertime from affecting this asset between the mentioned dates. The datetimes should be a valid ISO-8601 string.
+- `hammertime:canttouchthisbefore`: Will prevent hammertime from affecting the asset before a specific datetime represented in the value field of the tag. The datetime should be a valid ISO-8601 string. For example: A value of `2017-05-06` will ensure the given asset is not touched before the given date.
 
 `start-hammertime` will query the tags left by `stop-hammertime` and return the instances and ASGs to their previous status.
 
 Hammertime is intended to be run in response to a Lambda scheduled event, e.g
 
-`stop-hammertime`: run Monday-Friday at 6PM
-`start-hammertime`: run Monday-Friday at 6AM
+`stop-hammertime`: run Monday-Sunday at 6PM (UTC timezone by default, see [here](#Changing-the-defaults) on how to customise this)
 
-Note when constructing schedule events in AWS, that times are in UTC.
+`start-hammertime`: run Monday-Sunday at 6AM (UTC timezone by default, see [here](#Changing-the-defaults) on how to customise this)
 
 ### Enabling/Disabling
 
@@ -53,6 +51,24 @@ You can enable/disable hammertime using the environment variable `HAMMERTIME_ENA
 
 Hammertime has a dry-run feature for when you are not quite ready to unleash the [hammer pants](https://en.wikipedia.org/wiki/Hammer_pants) on your entire fleet of EC2s just yet.
 By setting `HAMMERTIME_DRY_RUN` to 'true', you enable dry-run in which hammertime does not touch your EC2s but will still log what it _would_ have touched.
+
+### Timezones
+Hammertime can run against assets that require a different uptime schedule due to the timezone that they might operate in. Have teams that work in different timezones on their owns assets, then this festure is for you!
+When deploying hammertime, set the environment variable `HAMMERTIME_OPERATING_TIMEZONES`, list any amount of valid [IANA](https://www.iana.org/time-zones) timezones, deliminated by a `,` that you would like hammertime to support, for example `Australia/Sydney,Pacific/Auckland`. A list of these can be found on [wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). Hammertime will now deploy with `START` and `STOP` crons in each of the listed timezones.
+
+Once you have hammertime configured to run with multiple CRONS, tag your assets with `hammertime:operatingtimezone`, with a value that is one of the IANA timezone strings, for the example above that would either be `Australia/Sydney` or `Pacific/Auckland`. For untagged assets, hammertime will use a default operating timezone (UTC by default, see )
+
+## Changing the defaults
+
+#### Changing the default start and stop hour
+By default, hammertime deploys with the default start hour and stop hour set to `6` and `19` respectively to start and stop instances at `6am` and stop at `6pm`.
+To change these, set the environment variables `HAMMERTIME_START_HOUR` and `HAMMERTIME_STOP_HOUR` when deploying to change the hours that hammertime will start/stop assets.
+
+#### Changing the default timezone
+By default, hammertime deploys with the default operating timezone `UTC`, this can be overidden by setting the `HAMMERTIME_DEFAULT_OPERATING_TIMEZONE` environment variable when deploying. Set this to a valid [IANA](https://www.iana.org/time-zones) timezone, for example `Australia/Sydney`.
+
+## Limitations
+Due to scheduling hammertime using AWS crons, we are unable to dynamically adjust the cron to take into account timezones that shift offsets, for example timezones that implement daylight savings time (DST). To remedy this, re-deploy hammertime when your timezone offset shifts to recreate the crons to have the updated shift in offset.
 
 ## Deployment
 
@@ -69,7 +85,7 @@ npm i
 * then deploy
 
 ```
-npm deploy
+npm run deploy
 ```
 
 ## Built With
@@ -89,6 +105,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 * **Ian Donaldson** - *Initial work* - [Ian Donaldson](https://github.com/exidy)
 * **Hailey Martin** - *Made it work* - [Hailey Martin](https://github.com/hlmartin)
 * **Kurt Gardiner** - *Busy work* - [Kurt Gardiner](https://github.com/krutisfood)
+* **Matthew Turner** - *Timezone support* - [Matthew Turner](https://github.com/ramesius)
 
 See also the list of [contributors](https://github.com/nib-health-funds/hammertime/contributors) who participated in this project.
 

@@ -9,11 +9,15 @@ const stopDBInstances = require('./rds/stopDBInstances');
 const tagDBInstances = require('./rds/tagDBInstances');
 
 
-function stopAllInstances(dryRun) {
-  return listInstancesToStop()
+function stopAllInstances({ dryRun, currentOperatingTimezone }) {
+  return listInstancesToStop(currentOperatingTimezone)
     .then((stoppableInstances) => {
       if (dryRun) {
         console.log('Dry run is enabled, will not stop or tag any instances.');
+        console.log('Found the following instances that would have been shut down...');
+        stoppableInstances.forEach((instance) => {
+          console.log(instance);
+        });
         return [];
       }
 
@@ -38,11 +42,15 @@ function stopAllInstances(dryRun) {
     });
 }
 
-function spinDownASGs(dryRun) {
-  return listASGsToStop()
+function spinDownASGs({ dryRun, currentOperatingTimezone }) {
+  return listASGsToStop(currentOperatingTimezone)
     .then((stoppableASGs) => {
       if (dryRun) {
         console.log('Dry run is enabled, will not stop or tag any ASGs.');
+        console.log(`Found the following ${stoppableASGs.length} auto scaling groups that would have been spun down...`);
+        stoppableASGs.forEach((asg) => {
+          console.log(asg.AutoScalingGroupName);
+        });
         return [];
       }
 
@@ -51,7 +59,7 @@ function spinDownASGs(dryRun) {
         return [];
       }
 
-      console.log(`Found the following ${stoppableASGs.length} instances to spin down...`);
+      console.log(`Found the following ${stoppableASGs.length} auto scaling groups to spin down...`);
       stoppableASGs.forEach((asg) => {
         console.log(asg.AutoScalingGroupName);
       });
@@ -73,46 +81,41 @@ function stopAllDBInstances(dryRun) {
       if (dryRun) {
         console.log('Dry run is enabled, will not stop or tag any RDS instances.');
         return [];
-      } else {
-        return arns;
-      };
+      }
+      return arns;
     })
     .then((arns) => {
-      if (arns.length == 0) {
-        console.log('There are no RDS instances to stop today. See you the next time.')
+      if (arns.length === 0) {
+        console.log('There are no RDS instances to stop today. See you the next time.');
         return [];
-      } else {
-        return stopDBInstances(arns)
-          .then((arns) => {
-            console.log('Finished stopping RDS instances. Moving on to tag them.');
-            return tagDBInstances(arns);
-          });
       }
+      return stopDBInstances(arns)
+        .then((stoppedDBInstanceARNs) => {
+          console.log('Finished stopping RDS instances. Moving on to tag them.');
+          return tagDBInstances(stoppedDBInstanceARNs);
+        });
     })
     .then((arns) => {
       if (arns.length > 0) {
-        console.log('Finished tagging RDS instances.')
+        console.log('Finished tagging RDS instances.');
       }
     });
 }
 
 module.exports = function stop(options) {
-  const {
-    event,
-    callback,
-    dryRun
-  } = options;
-  console.log('Stop. Hammertime!');
+  const { event, callback, dryRun } = options;
+  const currentOperatingTimezone = event.currentOperatingTimezone;
+  console.log(`Hammertime stop for ${currentOperatingTimezone}`);
   Promise.all([
     stopAllDBInstances(dryRun),
-    stopAllInstances(dryRun),
-    spinDownASGs(dryRun),
+    stopAllInstances({ dryRun, currentOperatingTimezone }),
+    spinDownASGs({ dryRun, currentOperatingTimezone }),
   ]).then(() => {
     if (!dryRun) {
       console.log('All EC2, RDS instances and ASGs stopped successfully. Good night!');
     }
     callback(null, {
-      message: 'Stop: Hammertime successfully completed.'
+      message: 'Stop: Hammertime successfully completed.',
     }, event);
   }).catch((err) => {
     console.error(err);

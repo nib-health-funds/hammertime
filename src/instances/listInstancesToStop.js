@@ -1,6 +1,6 @@
 const listTargetInstances = require('./listTargetInstances');
 
-function listInstancesToStop() {
+function listInstancesToStop(currentOperatingTimezone) {
   const params = {
     Filters: [
       {
@@ -10,7 +10,7 @@ function listInstancesToStop() {
     ],
   };
 
-  return listTargetInstances(params);
+  return listTargetInstances({ params, currentOperatingTimezone });
 }
 
 module.exports = listInstancesToStop;
