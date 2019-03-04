@@ -34,6 +34,8 @@ provider:
   environment:
     hammerTimeDryRun: '${file(./isDryRun.js):isDryRun}'
     defaultOperatingTimezone: '${file(./operatingTimezones.js):defaultOperatingTimezone}'
+  custom:
+    enabled: '${file(./isEnabled.js):isEnabled}'
 functions:
   stop-hammertime:
     handler: hammertime.stop
