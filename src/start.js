@@ -95,6 +95,35 @@ function startAllDBInstances(dryRun) {
     });
 }
 
+function spinUpServices(dryRun, currentOperatingTimezone){
+  return listServicesToStart(currentOperatingTimezone)
+  .then((startableServices) => {
+      if (dryRun) {
+        console.log('Dry run is enabled, will not start or untag any services.');
+        console.log(`Found the following ${startableServices.length} service[s] that would have been spun up`);
+        startableServices.forEach((service) => {
+            console.log(service.serviceName);
+        })
+        return [];
+      }
+
+      if (startableServices.length === 0) {
+        console.log('No instances found to start, moving on...');
+        return [];
+      }
+
+      console.log(`Found the following ${startableServices.length} services[s] to start...`);
+      startableServices.forEach((service) => {
+        console.log(service.serviceName);
+      })
+
+      return startServices(startableServices).then((startedServiceIds) => {
+        console.log('Finished starting services. Moving on to untag them.');
+        return untagServices(startedServiceIds);
+      })
+    });
+}
+
 module.exports = function start(options) {
   const { event, callback, dryRun } = options;
   const currentOperatingTimezone = event.currentOperatingTimezone;
