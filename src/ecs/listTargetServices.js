@@ -38,7 +38,6 @@ const getService = (clusterArn) => {
 }
 
 const buildListOfServices = (serviceArns) => {
-    console.log(serviceArns);
     let cleanedServiceArns = [];
     serviceArns.map((service) => {
         cleanedServiceArns = cleanedServiceArns.concat(service);

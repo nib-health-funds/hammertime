@@ -132,6 +132,7 @@ module.exports = function start(options) {
     startAllDBInstances(dryRun),
     startAllInstances({ dryRun, currentOperatingTimezone }),
     spinUpASGs({ dryRun, currentOperatingTimezone }),
+    spinUpServices({ dryRun, currentOperatingTimezone })
   ]).then(() => {
     if (!dryRun) {
       console.log('All EC2, RDS instances and ASGs started successfully. Good morning!');
