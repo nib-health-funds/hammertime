@@ -7,6 +7,8 @@ const stopInstances = require('./instances/stopInstances');
 const listDBInstancesToStop = require('./rds/listDBInstancesToStop');
 const stopDBInstances = require('./rds/stopDBInstances');
 const tagDBInstances = require('./rds/tagDBInstances');
+const listServicesToStop = require('./ecs/listServicesToStop');
+const tagServices = require('./ecs/tagServices');
 
 
 function stopAllInstances({ dryRun, currentOperatingTimezone }) {
