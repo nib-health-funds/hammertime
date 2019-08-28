@@ -26,6 +26,7 @@ provider:
         - 'autoscaling:UpdateAutoScalingGroup'
         - 'ecs:ListClusters'
         - 'ecs:ListServices'
+        - 'ecs:DescribeServices'
         - 'ecs:ListTagsForResource'
         - 'ecs:UntagResource'
         - 'ecs:UpdateService'
