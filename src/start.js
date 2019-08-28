@@ -7,6 +7,9 @@ const untagInstances = require('./instances/untagInstances');
 const listDBInstancesToStart = require('./rds/listDBInstancesToStart');
 const startDBInstances = require('./rds/startDBInstances');
 const untagDBInstances = require('./rds/untagDBInstances');
+const listServicesToStart = require('./ecs/listServicesToStart');
+const startServices = require('./ecs/startServices');
+const untagServices = require('./ecs/untagServices');
 
 function startAllInstances({ dryRun, currentOperatingTimezone }) {
   return listInstancesToStart(currentOperatingTimezone)
