@@ -59,7 +59,7 @@ const describeService = (service) => {
     const params = { 
         services: service.services,
         cluster: service.cluster,
-        // include: [ 'TAGS' ]
+        include: [ 'TAGS' ]
     };
     return retryWhenThrottled(() => ECS.describeServices(params))
 }
