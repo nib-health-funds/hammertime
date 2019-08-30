@@ -20,11 +20,11 @@
   "author": "nib",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.7.19",
-    "luxon": "^1.11.4",
-    "moment": "^2.22.1",
+    "aws-sdk": "^2.520.0",
+    "luxon": "^1.17.2",
+    "moment": "^2.24.0",
     "promise-retry": "^1.1.1",
-    "serverless": "^1.50.1"
+    "serverless": "^1.51.0"
   },
   "devDependencies": {
     "aws-sdk-mock": "^1.6.1",
@@ -32,11 +32,11 @@
     "codecov": "^2.2.0",
     "eslint": "^3.15.0",
     "eslint-config-airbnb": "^14.1.0",
-    "eslint-plugin-chai-expect": "^1.1.1",
+    "eslint-plugin-chai-expect": "^1.2.0",
     "eslint-plugin-chai-friendly": "^0.3.6",
-    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^3.0.2",
-    "eslint-plugin-mocha": "^4.9.0",
+    "eslint-plugin-mocha": "^4.12.1",
     "eslint-plugin-react": "^6.9.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0"
