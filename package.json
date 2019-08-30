@@ -11,7 +11,6 @@
     "codecov": "codecov",
     "test": "npm run lint && npm run test.unit",
     "test.unit": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec && codecov",
-    "test.unit2": "node_modules/mocha/bin/_mocha test/ecs/*.test.js"
   },
   "repository": {
     "type": "git",
