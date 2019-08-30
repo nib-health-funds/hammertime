@@ -1,55 +1,29 @@
-// const assert = require('assert');
-// const AWS = require('aws-sdk-mock');
-// const listServicesToStart = require('../../src/ecs/listServicesToStart');
-// const defaultOperatingTimezone = require('../../src/config').defaultOperatingTimezone;
+const assert = require('assert');
+const AWS = require('aws-sdk-mock');
+const listServicesToStop = require('../../src/ecs/listServicesToStop');
+const defaultOperatingTimezone = require('../../src/config').defaultOperatingTimezone;
+const data = require('./mockData');
 
-// describe('listServicesToStart()', () => {
-//     it ('returns list of valid services stopped by hammertime', () => {
-//         console.log("HELLO!");
-//         const mockServices = [
-//             {
-//                 serviceArn: 'arn:aws:service:ABC123',
-//                 serviceName: 'stopped by hammertime',
-//                 clusterArn: 'arn:aws:cluster:ABC123',
-//                 desiredCount: 2,
-//                 launchType: 'FARGATE',
-//                 tags: [
-//                     {
-//                         Key: 'stop:hammertime',
-//                         Value: '',
-//                     }
-//                 ]
-//             },
-//             {
-//                 serviceArn: 'arn:aws:service:ABC1234',
-//                 serviceName: 'stopped by hammertime',
-//                 clusterArn: 'arn:aws:cluster:ABC1234',
-//                 desiredCount: 2,
-//                 launchType: 'FARGATE',
-//                 tags: [
+describe('listServicesToStop()', () => {
+    beforeEach(() => {
+        AWS.mock('ECS', 'describeServices', (params, callback) => callback(null, data.describeServices(params)));
+        AWS.mock('ECS', 'describeClusters', (params, callback) => callback(null, data.listClusters));
+        AWS.mock('ECS', 'listClusters', (params, callback) => callback(null, data.listClusters));
+        AWS.mock('ECS', 'listServices', (params, callback) => callback(null, data.listServices(params)));
+    })
 
-//                 ]
-//             },
-//         ]
-//         const mockClusters = {
-//             clusterArns: [
-//                 'arn:aws:cluster:ABC123',
-//                 'arn:aws:cluster:ABC1234'
-//             ]
-//         }
+    it('returns list of services spun down by hammertime', () => {
+        return listServicesToStop(defaultOperatingTimezone).then((hammertimeableServices) => {
+            const valid = ["arn:aws:ecs:service:1-R-unhammertimed", "arn:aws:ecs:service:2-R-unhammertimed"]
+            assert.equal(hammertimeableServices.length, 2);
+            assert.equal(hammertimeableServices.filter(service => valid.some(validService => validService === service.serviceArn)).length, 2);
+        })
+    })
 
-//         const mockListServices = [
-
-//         ]
-
-//         AWS.mock('ECS', 'listClusters', mockClusters);
-//         AWS.mock('ECS', 'listServices', mockListServices);
-//         AWS.mock('ECS', 'describeServices', mockServices);
-
-//         return listServicesToStart(defaultOperatingTimezone)
-//             .then((serviceIds) => {
-//                 console.log(serviceIds);
-//             })
-
-//     })
-// })
+    afterEach(() => {
+        AWS.restore('ECS', 'describeServices');
+        AWS.restore('ECS', 'describeClusters');
+        AWS.restore('ECS', 'listClusters');
+        AWS.restore('ECS', 'listServices');
+    });
+})
