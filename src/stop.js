@@ -104,7 +104,7 @@ function suspendASGInstances({ dryRun, currentOperatingTimezone }) {
 
       return tagSuspendedASGs(suspendableASG).then((taggedASGs) => {
         if (taggedASGs.length > 0) {
-          console.log(`Finished tagging ASGs. Moving on to suspending processes for ${taggedASGs.length} ASGs.`);
+          console.log(`Finished tagging ASGs. Moving on to suspend processes for ${taggedASGs.length} ASGs.`);
           return suspendASGs(taggedASGs)
           .then(() => {
             suspendableASG.forEach((asg) => {
@@ -150,12 +150,11 @@ function stopAllDBInstances(dryRun) {
 module.exports = function stop(options) {
   const { event, callback, dryRun } = options;
   const currentOperatingTimezone = event.currentOperatingTimezone;
-  const tmpDry = true;
   console.log(`Hammertime stop for ${currentOperatingTimezone}`);
   Promise.all([
-    stopAllDBInstances(tmpDry),
-    stopAllInstances({ tmpDry, currentOperatingTimezone }),
-    spinDownASGs({ tmpDry, currentOperatingTimezone }),
+    stopAllDBInstances(dryRun),
+    stopAllInstances({ dryRun, currentOperatingTimezone }),
+    spinDownASGs({ dryRun, currentOperatingTimezone }),
     suspendASGInstances({ dryRun, currentOperatingTimezone }),
   ]).then(() => {
     if (!dryRun) {

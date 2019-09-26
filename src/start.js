@@ -137,12 +137,11 @@ function startAllDBInstances(dryRun) {
 module.exports = function start(options) {
   const { event, callback, dryRun } = options;
   const currentOperatingTimezone = event.currentOperatingTimezone;
-  const tmpDry = true;
   console.log(`Hammertime start for ${currentOperatingTimezone}`);
   Promise.all([
-    startAllDBInstances(tmpDry),
-    startAllInstances({ tmpDry, currentOperatingTimezone }),
-    spinUpASGs({ tmpDry, currentOperatingTimezone }),
+    startAllDBInstances(dryRun),
+    startAllInstances({ dryRun, currentOperatingTimezone }),
+    spinUpASGs({ dryRun, currentOperatingTimezone }),
     resumeASGInstances({ dryRun, currentOperatingTimezone }),
   ]).then(() => {
     if (!dryRun) {
