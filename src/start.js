@@ -70,7 +70,7 @@ function spinUpASGs({ dryRun, currentOperatingTimezone }) {
     });
 }
 
-function resumeASGs({ dryRun, currentOperatingTimezone }) {
+function resumeASGInstances({ dryRun, currentOperatingTimezone }) {
   return listASGsToResume(currentOperatingTimezone)
     .then((resumeableASGs) => {
       if (dryRun) {
@@ -103,11 +103,6 @@ function resumeASGs({ dryRun, currentOperatingTimezone }) {
           return untagResumedASGs(resumedASGs);
         })
       );
-
-      return resumeASGs(resumeableASGs).then((startedASGs) => {
-        console.log(`Finished resuming ASGs. Moving on to untag ${startedASGs.length} of them.`);
-        return untagResumedASGs(startedASGs);
-      });
     });
 }
 
@@ -148,7 +143,7 @@ module.exports = function start(options) {
     startAllDBInstances(tmpDry),
     startAllInstances({ tmpDry, currentOperatingTimezone }),
     spinUpASGs({ tmpDry, currentOperatingTimezone }),
-    resumeASGs({ dryRun, currentOperatingTimezone }),
+    resumeASGInstances({ dryRun, currentOperatingTimezone }),
   ]).then(() => {
     if (!dryRun) {
       console.log('All EC2, RDS instances and ASGs started successfully. Good morning!');
