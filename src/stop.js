@@ -1,6 +1,9 @@
 const stopASGs = require('./asgs/stopASGs');
 const listASGsToStop = require('./asgs/listASGsToStop');
 const tagASGs = require('./asgs/tagASGs');
+const suspendASGs = require('./asgs/suspendASGs');
+const listASGsToSuspend = require('./asgs/listASGsToSuspend');
+const tagSuspendedASGs = require('./asgs/tagSuspendedASGs');
 const listInstancesToStop = require('./instances/listInstancesToStop');
 const tagInstances = require('./instances/tagInstances');
 const stopInstances = require('./instances/stopInstances');
@@ -75,6 +78,44 @@ function spinDownASGs({ dryRun, currentOperatingTimezone }) {
     });
 }
 
+function suspendASGInstances({ dryRun, currentOperatingTimezone }) {
+  return listASGsToSuspend(currentOperatingTimezone)
+    .then((suspendableASG) => {
+      if (dryRun) {
+        console.log('Dry run is enabled, will not stop or tag any ASGs.');
+        console.log(`Found the following ${suspendableASG.length} auto scaling groups that would have been suspened and ec2 instances stopped...`);
+        suspendableASG.forEach((asg) => {
+          console.log(asg.AutoScalingGroupName);
+        });
+        return [];
+      }
+
+      if (suspendableASG.length === 0) {
+        console.log('No ASGs to suspend, moving on...');
+        return [];
+      }
+
+      console.log(`Found the following ${suspendableASG.length} auto scaling groups to suspend...`);
+      suspendableASG.forEach((asg) => {
+        console.log(asg.AutoScalingGroupName);
+      });
+
+      return tagSuspendedASGs(suspendableASG).then((taggedASGs) => {
+        if (taggedASGs.length > 0) {
+          console.log(`Finished tagging ASGs. Moving on to suspending processes for ${taggedASGs.length} ASGs.`);
+          return suspendASGs(taggedASGs)
+          .then(() => {
+            suspendableASG.forEach((instance) => {
+              console.log(instance);
+            });
+          });
+        }
+
+        return [];
+      });
+    });
+}
+
 function stopAllDBInstances(dryRun) {
   return listDBInstancesToStop()
     .then((arns) => {
@@ -110,6 +151,7 @@ module.exports = function stop(options) {
     stopAllDBInstances(dryRun),
     stopAllInstances({ dryRun, currentOperatingTimezone }),
     spinDownASGs({ dryRun, currentOperatingTimezone }),
+    suspendASGInstances({ dryRun, currentOperatingTimezone }),
   ]).then(() => {
     if (!dryRun) {
       console.log('All EC2, RDS instances and ASGs stopped successfully. Good night!');
