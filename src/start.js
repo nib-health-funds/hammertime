@@ -78,9 +78,8 @@ function resumeASGs({ dryRun, currentOperatingTimezone }) {
         console.log(`Found the following ${resumeableASGs.length} auto scaling groups that would have been resumed and ec2 instances started...`);
         resumeableASGs.forEach((asg) => {
           console.log(asg.AutoScalingGroupName);
-          asg.Instances.forEach((inst) => {
-            console.log(inst.InstanceId);
-          });
+          const startedInstances = asg.Instances.map(insts => console.log(insts.InstanceId));
+          return Promise.all(startedInstances);
         });
         return [];
       }
@@ -93,17 +92,17 @@ function resumeASGs({ dryRun, currentOperatingTimezone }) {
       console.log(`Found the following ${resumeableASGs.length} auto scaling groups to resume...`);
       resumeableASGs.forEach((asg) => {
         console.log(asg.AutoScalingGroupName);
-        asg.Instances.forEach((inst) => {
-          console.log(inst.InstanceId);
-        });
       });
 
-      resumeableASGs.forEach((asg) => {
-        asg.Instances.forEach((inst) => {
-          startInstances(inst.InstanceId);
-        });
-      });      
-      console.log(`Finished starting EC2 instances. Moving on to resuming ASGs.`);
+      console.log(`Starting EC2 instances and resuming ASGs.`);
+      return resumeableASGs.forEach((asg) => {
+        const startedInstances = asg.Instances.map(insts => console.log(insts.InstanceId));
+        return Promise.all(startedInstances);
+      }).then(resumeASGs(resumeableASGs).then((resumedASGs) => {
+          console.log(`Finished resuming ASGs. Moving on to untag ${resumedASGs.length} of them.`);
+          return untagResumedASGs(resumedASGs);
+        })
+      );
 
       return resumeASGs(resumeableASGs).then((startedASGs) => {
         console.log(`Finished resuming ASGs. Moving on to untag ${startedASGs.length} of them.`);

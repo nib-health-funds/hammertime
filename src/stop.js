@@ -86,9 +86,8 @@ function suspendASGInstances({ dryRun, currentOperatingTimezone }) {
         console.log(`Found the following ${suspendableASG.length} auto scaling groups that would have been suspened and ec2 instances stopped...`);
         suspendableASG.forEach((asg) => {
           console.log(asg.AutoScalingGroupName);
-          asg.Instances.forEach((inst) => {
-            console.log(inst.InstanceId);
-          });
+          const stoppedInstances = asg.Instances.map(insts => console.log(insts.InstanceId));
+          return Promise.all(stoppedInstances);
         });
         return [];
       }
@@ -105,14 +104,13 @@ function suspendASGInstances({ dryRun, currentOperatingTimezone }) {
 
       return tagSuspendedASGs(suspendableASG).then((taggedASGs) => {
         if (taggedASGs.length > 0) {
-          console.log(`Finished tagging ASGs. Moving on to suspending processes for ${taggedASGs.length} ASGs and stopping ec2 instances.`);
+          console.log(`Finished tagging ASGs. Moving on to suspending processes for ${taggedASGs.length} ASGs.`);
           return suspendASGs(taggedASGs)
           .then(() => {
             suspendableASG.forEach((asg) => {
               console.log('Finished suspending ASGs. Moving on to stopping instances.');
-              asg.Instances.forEach((insts) => {
-                return stopInstances(insts.InstanceId);
-              });
+              const stoppedInstances = asg.Instances.map(insts => stopInstances(insts.InstanceId));
+              return Promise.all(stoppedInstances);
             });
           });
         }
