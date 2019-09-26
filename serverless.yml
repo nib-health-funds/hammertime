@@ -24,6 +24,8 @@ provider:
         - 'autoscaling:DeleteTags'
         - 'autoscaling:DescribeAutoScalingGroups'
         - 'autoscaling:UpdateAutoScalingGroup'
+        - 'autoscaling:SuspendProcesses'
+        - 'autoscaling:ResumeProcesses'
       Resource: '*'
     - Effect: Allow
       Action:
