@@ -83,13 +83,13 @@ function suspendASGInstances({ dryRun, currentOperatingTimezone }) {
     .then((suspendableASG) => {
       if (dryRun) {
         console.log('Dry run is enabled, will not stop or tag any ASGs.');
-        console.log(`Found the following ${suspendableASG.length} auto scaling groups that would have been suspened and ec2 instances stopped...`);
-        suspendableASG.forEach((asg) => {
-          console.log(asg.AutoScalingGroupName);
-          const stoppedInstances = asg.Instances.map(insts => console.log(insts.InstanceId));
-          return Promise.all(stoppedInstances);
-        });
-        return [];
+        // console.log(`Found the following ${suspendableASG.length} auto scaling groups that would have been suspened and ec2 instances stopped...`);
+        // suspendableASG.forEach((asg) => {
+        //   console.log(asg.AutoScalingGroupName);
+        //   const stoppedInstances = asg.Instances.map(insts => console.log(insts.InstanceId));
+        //   return Promise.all(stoppedInstances);
+        // });
+        // return [];
       }
 
       if (suspendableASG.length === 0) {
