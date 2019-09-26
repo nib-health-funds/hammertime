@@ -86,6 +86,9 @@ function suspendASGInstances({ dryRun, currentOperatingTimezone }) {
         console.log(`Found the following ${suspendableASG.length} auto scaling groups that would have been suspened and ec2 instances stopped...`);
         suspendableASG.forEach((asg) => {
           console.log(asg.AutoScalingGroupName);
+          asg.Instances.forEach((inst) => {
+            console.log(inst.InstanceId);
+          });
         });
         return [];
       }
@@ -102,11 +105,14 @@ function suspendASGInstances({ dryRun, currentOperatingTimezone }) {
 
       return tagSuspendedASGs(suspendableASG).then((taggedASGs) => {
         if (taggedASGs.length > 0) {
-          console.log(`Finished tagging ASGs. Moving on to suspending processes for ${taggedASGs.length} ASGs.`);
+          console.log(`Finished tagging ASGs. Moving on to suspending processes for ${taggedASGs.length} ASGs and stopping ec2 instances.`);
           return suspendASGs(taggedASGs)
           .then(() => {
-            suspendableASG.forEach((instance) => {
-              console.log(instance);
+            suspendableASG.forEach((asg) => {
+              console.log('Finished suspending ASGs. Moving on to stopping instances.');
+              asg.Instances.forEach((insts) => {
+                return stopInstances(insts.InstanceId);
+              });
             });
           });
         }
@@ -146,11 +152,12 @@ function stopAllDBInstances(dryRun) {
 module.exports = function stop(options) {
   const { event, callback, dryRun } = options;
   const currentOperatingTimezone = event.currentOperatingTimezone;
+  const tmpDry = true;
   console.log(`Hammertime stop for ${currentOperatingTimezone}`);
   Promise.all([
-    stopAllDBInstances(dryRun),
-    stopAllInstances({ dryRun, currentOperatingTimezone }),
-    spinDownASGs({ dryRun, currentOperatingTimezone }),
+    stopAllDBInstances(tmpDry),
+    stopAllInstances({ tmpDry, currentOperatingTimezone }),
+    spinDownASGs({ tmpDry, currentOperatingTimezone }),
     suspendASGInstances({ dryRun, currentOperatingTimezone }),
   ]).then(() => {
     if (!dryRun) {
