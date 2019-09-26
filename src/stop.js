@@ -109,7 +109,7 @@ function suspendASGInstances({ dryRun, currentOperatingTimezone }) {
           .then(() => {
             suspendableASG.forEach((asg) => {
               console.log('Finished suspending ASGs. Moving on to stopping instances.');
-              const stoppedInstances = asg.Instances.map(insts => stopInstances(insts.InstanceId));
+              const stoppedInstances = asg.Instances.map(insts => stopInstances([insts.InstanceId]));
               return Promise.all(stoppedInstances);
             });
           });
