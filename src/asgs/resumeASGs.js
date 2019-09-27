@@ -8,7 +8,7 @@ function resumeASGProcesses(asg) {
     ScalingProcesses: []
   };
 
-  return retryWhenThrottled(() => autoscaling.suspendProcesses(params))
+  return retryWhenThrottled(() => autoscaling.resumeProcesses(params))
     .then(() => asg);
 }
 
