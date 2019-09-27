@@ -98,11 +98,13 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone }) {
       return resumeableASGs.forEach((asg) => {
         const startedInstances = asg.Instances.map(insts => startInstances([insts.InstanceId]));
         return Promise.all(startedInstances);
-      }).then(resumeASGs(resumeableASGs).then((resumedASGs) => {
+      })
+      .then(() => {
+        return resumeASGs(resumeableASGs).then((resumedASGs) => {
           console.log(`Finished resuming ASGs. Moving on to untag ${resumedASGs.length} of them.`);
           return untagResumedASGs(resumedASGs);
         })
-      );
+      })
     });
 }
 
