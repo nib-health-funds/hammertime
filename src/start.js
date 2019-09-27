@@ -94,21 +94,24 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone }) {
         console.log(asg.AutoScalingGroupName);
       });
 
-      console.log(`Resuming ASGs.`);
-      return resumeASGs(resumeableASGs)
-      .then((resumedASGs) => {
-        resumeableASGs.forEach((asg) => {
-          const startedInstances = asg.Instances.map(insts => {
-            console.log(`Finished resuming ASGs. Starting instance with id: ${insts.InstanceId}`)
-            startInstances([insts.InstanceId])
-          });
-          return Promise.all(startedInstances)
-          .then(() => {
-            console.log(`Finished starting ASG instances. Moving on to untag ${resumedASGs.length} ASGs.`);
-            return untagResumedASGs(resumedASGs);
-          })
+      console.log(`Starting EC2 instances and resuming ASGs.`);
+      return resumeableASGs.forEach((asg) => {
+        const startedInstances = asg.Instances.map(insts => {
+          console.log(`Starting instance with id: ${insts.InstanceId}`)
+          startInstances([insts.InstanceId])
         });
-      });
+        return Promise.all(startedInstances)
+        .then((started) => {
+          console.log(`Started: ${started}`)
+          if (started.length > 0) {
+            return resumeASGs(resumeableASGs).then((resumedASGs) => {
+              console.log(`Finished resuming ASGs and starting instances. Moving on to untag ${resumedASGs.length} of them.`);
+              return untagResumedASGs(resumedASGs);
+            })
+          }
+          return [];
+        })
+      })
     });
 }
 
