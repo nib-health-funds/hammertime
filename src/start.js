@@ -101,15 +101,11 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone }) {
           startInstances([insts.InstanceId])
         });
         return Promise.all(startedInstances)
-        .then((started) => {
-          console.log(`Started: ${started}`)
-          if (started.length > 0) {
-            return resumeASGs(resumeableASGs).then((resumedASGs) => {
-              console.log(`Finished resuming ASGs and starting instances. Moving on to untag ${resumedASGs.length} of them.`);
-              return untagResumedASGs(resumedASGs);
-            })
-          }
-          return [];
+        .then(() => {
+          return resumeASGs(resumeableASGs).then((resumedASGs) => {
+            console.log(`Finished resuming ASGs and starting instances. Moving on to untag ${resumedASGs.length} of them.`);
+            return untagResumedASGs(resumedASGs);
+          })
         })
       })
     });
