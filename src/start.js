@@ -97,12 +97,12 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone }) {
       console.log(`Starting EC2 instances and resuming ASGs.`);
       return resumeableASGs.forEach((asg) => {
         const startedInstances = asg.Instances.map(insts => startInstances([insts.InstanceId]));
-        return Promise.all(startedInstances);
-      })
-      .then(() => {
-        return resumeASGs(resumeableASGs).then((resumedASGs) => {
-          console.log(`Finished resuming ASGs. Moving on to untag ${resumedASGs.length} of them.`);
-          return untagResumedASGs(resumedASGs);
+        return Promise.all(startedInstances)
+        .then(() => {
+          return resumeASGs(resumeableASGs).then((resumedASGs) => {
+            console.log(`Finished resuming ASGs. Moving on to untag ${resumedASGs.length} of them.`);
+            return untagResumedASGs(resumedASGs);
+          })
         })
       })
     });
