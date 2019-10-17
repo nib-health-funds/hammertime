@@ -3,14 +3,7 @@ const retryWhenThrottled = require('../utils/retryWhenThrottled');
 
 function suspendASGProcesses(asg) {
   const autoscaling = new AWS.AutoScaling();
-  const params = {
-    AutoScalingGroupName: asg.AutoScalingGroupName,
-    ScalingProcesses: [
-      "Launch",
-      "Terminate",
-      "HealthCheck"
-    ]
-  };
+  const params = { AutoScalingGroupName: asg.AutoScalingGroupName };
 
   return retryWhenThrottled(() => autoscaling.suspendProcesses(params))
     .then(() => asg);
