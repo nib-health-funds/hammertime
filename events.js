@@ -10,10 +10,10 @@ function getCronHour(hour, zone) {
   return luxon.DateTime.fromObject({ hour, zone }).setZone('UTC').hour;
 }
 
+// TODO: Update to something better.
 function getStartCronDays(isWeekendsOff) {
   return (isWeekendsOff ? '? * SUN-THUR *' : '* * ? *');
 }
-
 function getStopCronDays(isWeekendsOff) {
   return (isWeekendsOff ? '? * MON-FRI *' : '* * ? *');
 }
