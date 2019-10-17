@@ -10,17 +10,14 @@ function getCronHour(hour, zone) {
   return luxon.DateTime.fromObject({ hour, zone }).setZone('UTC').hour;
 }
 
-// TODO: Update to something better.
-function getStartCronDays(isWeekendsOff) {
-  return (isWeekendsOff ? '? * SUN-THUR *' : '* * ? *');
-}
-function getStopCronDays(isWeekendsOff) {
-  return (isWeekendsOff ? '? * MON-FRI *' : '* * ? *');
+// TODO: Update to something better, timezone sensitive.
+function getCronDays(isWeekendsOff, cycle) {
+  return (!isWeekendsOff ?  '* * ? *' : cycle === 'start' ? '? * SUN-THUR *' : '? * MON-FRI *');
 }
 
 function stop() {
   const stopCrons = operatingTimezones.map(timezone => ({
-    rate: `cron(0 ${getCronHour(STOP_HOUR, timezone)} ${getStopCronDays(isWeekendsOff)})`,
+    rate: `cron(0 ${getCronHour(STOP_HOUR, timezone)} ${getCronDays(isWeekendsOff,'stop')})`,
     enabled: isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
@@ -33,7 +30,7 @@ function stop() {
 
 function start() {
   const startCrons = operatingTimezones.map(timezone => ({
-    rate: `cron(0 ${getCronHour(START_HOUR, timezone)} ${getStartCronDays(isWeekendsOff)})`,
+    rate: `cron(0 ${getCronHour(START_HOUR, timezone)} ${getCronDays(isWeekendsOff,'start')})`,
     enabled: isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
