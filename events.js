@@ -11,11 +11,11 @@ function getCronHour(hour, zone) {
 }
 
 function getStartCronDays(isWeekendsOff) {
-  return (isWeekendsOff ? '? * 0-4 *' : '* * ? *');
+  return (isWeekendsOff ? '? * SUN-THUR *' : '* * ? *');
 }
 
 function getStopCronDays(isWeekendsOff) {
-  return (isWeekendsOff ? '? * 1-5 *' : '* * ? *');
+  return (isWeekendsOff ? '? * MON-FRI *' : '* * ? *');
 }
 
 function stop() {
