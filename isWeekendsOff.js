@@ -2,5 +2,5 @@
 module.exports.isEnabled = () => {
   return process.env.HAMMERTIME_WEEKENDS_OFF
     ? process.env.HAMMERTIME_WEEKENDS_OFF === 'true'
-    : 'false';
+    : 'true';
 };
