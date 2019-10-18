@@ -20,15 +20,16 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.7.19",
+    "handlebars": "^4.4.3",
     "luxon": "^1.11.4",
     "moment": "^2.22.1",
     "promise-retry": "^1.1.1",
-    "serverless": "^1.4.0"
+    "serverless": "^1.54.0"
   },
   "devDependencies": {
     "aws-sdk-mock": "^1.6.1",
     "chai": "^3.5.0",
-    "codecov": "^2.2.0",
+    "codecov": "^3.6.1",
     "eslint": "^3.15.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-chai-expect": "^1.1.1",
@@ -38,6 +39,6 @@
     "eslint-plugin-mocha": "^4.9.0",
     "eslint-plugin-react": "^6.9.0",
     "istanbul": "^0.4.5",
-    "mocha": "^3.2.0"
+    "mocha": "^6.2.1"
   }
 }

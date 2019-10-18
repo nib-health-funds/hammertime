@@ -11,13 +11,16 @@ function getCronHour(hour, zone) {
 }
 
 // TODO: Update to something better, timezone sensitive.
-function getCronDays(isWeekendsOff, cycle) {
-  return (!isWeekendsOff ?  '* * ? *' : cycle === 'start' ? '? * SUN-THUR *' : '? * MON-FRI *');
+function getStartCronDays(weekendsOff) {
+  return (weekendsOff ? '? * SUN-THUR *' : '* * ? *');
+}
+function getStopCronDays(weekendsOff) {
+  return (weekendsOff ? '? * MON-FRI *' : '* * ? *');
 }
 
 function stop() {
   const stopCrons = operatingTimezones.map(timezone => ({
-    rate: `cron(0 ${getCronHour(STOP_HOUR, timezone)} ${getCronDays(isWeekendsOff,'stop')})`,
+    rate: `cron(0 ${getCronHour(STOP_HOUR, timezone)} ${getStopCronDays(isWeekendsOff)})`,
     enabled: isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
@@ -30,7 +33,7 @@ function stop() {
 
 function start() {
   const startCrons = operatingTimezones.map(timezone => ({
-    rate: `cron(0 ${getCronHour(START_HOUR, timezone)} ${getCronDays(isWeekendsOff,'start')})`,
+    rate: `cron(0 ${getCronHour(START_HOUR, timezone)} ${getStartCronDays(isWeekendsOff)})`,
     enabled: isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
