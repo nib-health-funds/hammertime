@@ -7,11 +7,10 @@
     "deploy": "node_modules/serverless/bin/serverless deploy --verbose",
     "destroy": "node_modules/serverless/bin/serverless remove --verbose",
     "lint": "eslint *.js",
-    "test:unit": "istanbul cover ./node_modules/mocha/bin/mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec",
+    "test:unit": "nyc mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec",
     "codecov": "codecov",
     "test": "npm run lint && npm run test.unit",
-    "test.unit": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec && codecov",
-    "nyct": "nyc mocha  --report lcovonly -- test/**/*.test.js --require test/global.js -R spec && codecov"
+    "test.unit": "nyc mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec && codecov"
   },
   "repository": {
     "type": "git",
@@ -48,7 +47,6 @@
     "eslint-plugin-mocha": "^4.9.0",
     "eslint-plugin-react": "^6.9.0",
     "install": "^0.13.0",
-    "istanbul": "^0.4.5",
     "mocha": "^6.2.1",
     "npm": "^6.12.0"
   }
