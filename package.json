@@ -10,7 +10,8 @@
     "test:unit": "istanbul cover ./node_modules/mocha/bin/mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec",
     "codecov": "codecov",
     "test": "npm run lint && npm run test.unit",
-    "test.unit": "istanbul cover ./node_modules/mocha/bin/mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec && codecov"
+    "test.unit": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec && codecov",
+    "nyct": "nyc mocha  --report lcovonly -- test/**/*.test.js --require test/global.js -R spec && codecov"
   },
   "repository": {
     "type": "git",
@@ -19,14 +20,23 @@
   "author": "nib",
   "license": "MIT",
   "dependencies": {
+    "@babel/register": "^7.6.2",
     "aws-sdk": "^2.7.19",
     "luxon": "^1.11.4",
     "moment": "^2.22.1",
+    "nyc": "^14.1.1",
     "promise-retry": "^1.1.1",
     "serverless": "^1.54.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/polyfill": "^7.6.0",
+    "@babel/preset-env": "^7.6.3",
+    "@istanbuljs/nyc-config-babel": "^2.1.1",
     "aws-sdk-mock": "^1.6.1",
+    "babel-plugin-istanbul": "^5.2.0",
+    "babel-register": "^6.26.0",
     "chai": "^3.5.0",
     "codecov": "^3.6.1",
     "eslint": "^3.15.0",
@@ -37,7 +47,9 @@
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-mocha": "^4.9.0",
     "eslint-plugin-react": "^6.9.0",
+    "install": "^0.13.0",
     "istanbul": "^0.4.5",
-    "mocha": "^6.2.1"
+    "mocha": "^6.2.1",
+    "npm": "^6.12.0"
   }
 }
