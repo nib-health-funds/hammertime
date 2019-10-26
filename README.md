@@ -80,6 +80,12 @@ Refer to the [serverless framework](!https://serverless.com/) for detailed instr
 npm i
 ```
 
+* Transpile the code
+
+```
+npm run build
+```
+
 * Authenticate with AWS via your favourite CLI
 
 * then deploy

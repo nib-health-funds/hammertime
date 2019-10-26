@@ -12,3 +12,4 @@ Makefile
 .buildkite
 scripts
 .nyc_output
+dist

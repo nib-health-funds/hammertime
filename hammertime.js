@@ -1,5 +1,5 @@
-const start = require('./src/start');
-const stop = require('./src/stop');
+const start = require('./dist/start');
+const stop = require('./dist/stop');
 
 // Try and use env var, otherwise default to false.
 const dryRun = process.env.hammerTimeDryRun === 'true' || false;
