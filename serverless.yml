@@ -32,16 +32,16 @@ provider:
         - 'logs:PutLogEvents'
       Resource: 'arn:aws:logs:*:*:*'
   environment:
-    hammerTimeDryRun: '${file(./isDryRun.js):isDryRun}'
-    defaultOperatingTimezone: '${file(./operatingTimezones.js):defaultOperatingTimezone}'
+    hammerTimeDryRun: '${file(./dist/isDryRun.js):isDryRun}'
+    defaultOperatingTimezone: '${file(./dist/operatingTimezones.js):defaultOperatingTimezone}'
   custom:
-    enabled: '${file(./isEnabled.js):isEnabled}'
+    enabled: '${file(./dist/isEnabled.js):isEnabled}'
 functions:
   stop-hammertime:
     handler: hammertime.stop
     timeout: 180
-    events: ${file(./events.js):stop}
+    events: ${file(./dist/events.js):stop}
   start-hammertime:
     handler: hammertime.start
     timeout: 180
-    events: ${file(./events.js):start}
+    events: ${file(./dist/events.js):start}
