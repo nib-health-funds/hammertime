@@ -6,21 +6,23 @@ const isWeekendsOff = require('./isWeekendsOff').isEnabled;
 const START_HOUR = parseInt(process.env.HAMMERTIME_START_HOUR || '6', 10);
 const STOP_HOUR = parseInt(process.env.HAMMERTIME_STOP_HOUR || '19', 10);
 
-function getCronHour(hour, zone) {
-  return luxon.DateTime.fromObject({ hour, zone }).setZone('UTC').hour;
+function getCronDayHour(day, hour, zone) {
+  return {
+    day: luxon.DateTime.fromObject({ weekday: day, hour: hour, zone: zone }).setZone('UTC').weekdayShort,
+    hour: luxon.DateTime.fromObject({ weekday: day, hour: hour, zone: zone }).setZone('UTC').hour
+  }
 }
 
-// TODO: Update to something better, timezone sensitive.
-function getStartCronDays(weekendsOff) {
-  return (weekendsOff ? '? * SUN-THUR *' : '* * ? *');
-}
-function getStopCronDays(weekendsOff) {
-  return (weekendsOff ? '? * MON-FRI *' : '* * ? *');
+function getCron(hour, timezone) {
+  start = getCronDayHour('1', hour, timezone);
+  end = getCronDayHour('5', hour, timezone);
+  cronHour = start.hour
+  return (isWeekendsOff ? `cron(0 ${cronHour} ? * ${start.day}-${end.day} *)` : `cron(0 ${cronHour} * * ? *)`);
 }
 
 function stop() {
   const stopCrons = operatingTimezones.map(timezone => ({
-    rate: `cron(0 ${getCronHour(STOP_HOUR, timezone)} ${getStopCronDays(isWeekendsOff)})`,
+    rate: getCron(STOP_HOUR, timezone),
     enabled: isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
@@ -33,7 +35,7 @@ function stop() {
 
 function start() {
   const startCrons = operatingTimezones.map(timezone => ({
-    rate: `cron(0 ${getCronHour(START_HOUR, timezone)} ${getStartCronDays(isWeekendsOff)})`,
+    rate: getCron(START_HOUR, timezone),
     enabled: isEnabled(),
     input: {
       currentOperatingTimezone: timezone,

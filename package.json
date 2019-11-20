@@ -20,7 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.7.19",
-    "handlebars": "^4.4.3",
+    "handlebars": "^4.5.3",
     "luxon": "^1.11.4",
     "moment": "^2.22.1",
     "promise-retry": "^1.1.1",
