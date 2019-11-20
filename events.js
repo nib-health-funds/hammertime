@@ -1,7 +1,7 @@
 const luxon = require('luxon');
 const operatingTimezones = require('./operatingTimezones').timezones();
 const isEnabled = require('./isEnabled').isEnabled;
-const isWeekendsOff = require('./isWeekendsOff').isEnabled;
+const turnOffWeekends = require('./turnOffWeekends').turnOffWeekends;
 
 const START_HOUR = parseInt(process.env.HAMMERTIME_START_HOUR || '6', 10);
 const STOP_HOUR = parseInt(process.env.HAMMERTIME_STOP_HOUR || '19', 10);
@@ -19,7 +19,7 @@ function getCron(hour, timezone) {
     dayEnd: getCronDayHour('5', hour, timezone).day,
   };
   const cronHour = getCronDayHour(hour, timezone).hour;
-  return (isWeekendsOff ? `cron(0 ${cronHour} ? * ${week.dayBegin}-${week.dayEnd} *)` : `cron(0 ${cronHour} * * ? *)`);
+  return (turnOffWeekends ? `cron(0 ${cronHour} ? * ${week.dayBegin}-${week.dayEnd} *)` : `cron(0 ${cronHour} * * ? *)`);
 }
 
 function stop() {
