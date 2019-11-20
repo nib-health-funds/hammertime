@@ -1,6 +1,9 @@
 const startASGs = require('./asgs/startASGs');
 const listASGsToStart = require('./asgs/listASGsToStart');
 const untagASGs = require('./asgs/untagASGs');
+const resumeASGs = require('./asgs/resumeASGs');
+const listASGsToResume = require('./asgs/listASGsToResume');
+const untagResumedASGs = require('./asgs/untagResumedASGs');
 const startInstances = require('./instances/startInstances');
 const listInstancesToStart = require('./instances/listInstancesToStart');
 const untagInstances = require('./instances/untagInstances');
@@ -67,6 +70,47 @@ function spinUpASGs({ dryRun, currentOperatingTimezone }) {
     });
 }
 
+function resumeASGInstances({ dryRun, currentOperatingTimezone }) {
+  return listASGsToResume(currentOperatingTimezone)
+    .then((resumeableASGs) => {
+      if (dryRun) {
+        console.log('Dry run is enabled, will not start or untag any ASGs.');
+        console.log(`Found the following ${resumeableASGs.length} auto scaling groups that would have been resumed and ec2 instances started...`);
+        resumeableASGs.forEach((asg) => {
+          console.log(asg.AutoScalingGroupName);
+          const startedInstances = asg.Instances.map(insts => console.log(insts.InstanceId));
+          return Promise.all(startedInstances);
+        });
+        return [];
+      }
+
+      if (resumeableASGs.length === 0) {
+        console.log('No ASGs to resume, moving on...');
+        return [];
+      }
+
+      console.log(`Found the following ${resumeableASGs.length} auto scaling groups to resume...`);
+      resumeableASGs.forEach((asg) => {
+        console.log(asg.AutoScalingGroupName);
+      });
+
+      console.log(`Starting EC2 instances and resuming ASGs.`);
+      return resumeableASGs.forEach((asg) => {
+        const startedInstances = asg.Instances.map(insts => {
+          console.log(`Starting instance with id: ${insts.InstanceId}`)
+          startInstances([insts.InstanceId])
+        });
+        return Promise.all(startedInstances)
+        .then(() => {
+          return resumeASGs(resumeableASGs).then((resumedASGs) => {
+            console.log(`Finished resuming ASGs and starting instances. Moving on to untag ${resumedASGs.length} of them.`);
+            return untagResumedASGs(resumedASGs);
+          })
+        })
+      })
+    });
+}
+
 function startAllDBInstances(dryRun) {
   return listDBInstancesToStart()
     .then((arns) => {
@@ -103,6 +147,7 @@ module.exports = function start(options) {
     startAllDBInstances(dryRun),
     startAllInstances({ dryRun, currentOperatingTimezone }),
     spinUpASGs({ dryRun, currentOperatingTimezone }),
+    resumeASGInstances({ dryRun, currentOperatingTimezone }),
   ]).then(() => {
     if (!dryRun) {
       console.log('All EC2, RDS instances and ASGs started successfully. Good morning!');

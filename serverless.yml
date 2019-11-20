@@ -24,6 +24,9 @@ provider:
         - 'autoscaling:DeleteTags'
         - 'autoscaling:DescribeAutoScalingGroups'
         - 'autoscaling:UpdateAutoScalingGroup'
+        - 'autoscaling:SuspendProcesses'
+        - 'autoscaling:ResumeProcesses'
+        - 'kms:CreateGrant'
       Resource: '*'
     - Effect: Allow
       Action:
