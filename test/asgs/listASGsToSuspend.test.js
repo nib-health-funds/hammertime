@@ -40,7 +40,7 @@ describe('listASGsToSuspend()', () => {
       });
   });
 
-  it('ignores asgs that are already suspendped by hammertime', () => {
+  it('ignores asgs that are already suspended by hammertime', () => {
     AWS.mock('AutoScaling', 'describeAutoScalingGroups', (params, callback) => {
       callback(null, suspendAlreadyRunResponse);
     });
