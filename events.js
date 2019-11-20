@@ -6,18 +6,20 @@ const isWeekendsOff = require('./isWeekendsOff').isEnabled;
 const START_HOUR = parseInt(process.env.HAMMERTIME_START_HOUR || '6', 10);
 const STOP_HOUR = parseInt(process.env.HAMMERTIME_STOP_HOUR || '19', 10);
 
-function getCronDayHour(day, hour, zone) {
+function getCronDayHour(day = '0', hour, zone) {
   return {
-    day: luxon.DateTime.fromObject({ weekday: day, hour: hour, zone: zone }).setZone('UTC').weekdayShort,
-    hour: luxon.DateTime.fromObject({ weekday: day, hour: hour, zone: zone }).setZone('UTC').hour
-  }
+    day: luxon.DateTime.fromObject({ weekday: day, hour, zone }).setZone('UTC').weekdayShort,
+    hour: luxon.DateTime.fromObject({ weekday: day, hour, zone }).setZone('UTC').hour,
+  };
 }
 
 function getCron(hour, timezone) {
-  start = getCronDayHour('1', hour, timezone);
-  end = getCronDayHour('5', hour, timezone);
-  cronHour = start.hour
-  return (isWeekendsOff ? `cron(0 ${cronHour} ? * ${start.day}-${end.day} *)` : `cron(0 ${cronHour} * * ? *)`);
+  const week = {
+    dayBegin: getCronDayHour('1', hour, timezone).day,
+    dayEnd: getCronDayHour('5', hour, timezone).day,
+  };
+  const cronHour = getCronDayHour(hour, timezone).hour;
+  return (isWeekendsOff ? `cron(0 ${cronHour} ? * ${week.dayBegin}-${week.dayEnd} *)` : `cron(0 ${cronHour} * * ? *)`);
 }
 
 function stop() {
