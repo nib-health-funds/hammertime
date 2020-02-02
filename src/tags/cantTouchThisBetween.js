@@ -1,5 +1,5 @@
 const luxon = require('luxon');
-const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals');
+const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals.js');
 
 const CANT_TOUCH_THIS_BETWEEN_REGEX = /^(.*) and (.*)$/;
 

@@ -1,7 +1,7 @@
-const cantTouchThisBetween = require('./cantTouchThisBetween');
-const cantTouchThisBefore = require('./cantTouchThisBefore');
-const cantTouchThis = require('./cantTouchThis');
-const getHammerTimeTags = require('./getHammerTimeTags');
+const cantTouchThisBetween = require('./cantTouchThisBetween.js');
+const cantTouchThisBefore = require('./cantTouchThisBefore.js');
+const cantTouchThis = require('./cantTouchThis.js');
+const getHammerTimeTags = require('./getHammerTimeTags.js');
 
 const tagTests = [
   cantTouchThisBetween,

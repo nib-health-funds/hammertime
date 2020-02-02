@@ -1,6 +1,6 @@
-const hasTag = require("../tags/hasTag");
-const listTargetServices = require("./listTargetServices");
-const canITouchThis = require("../tags/canITouchThis");
+const hasTag = require("../tags/hasTag.js");
+const listTargetServices = require("./listTargetServices.js");
+const canITouchThis = require("../tags/canITouchThis.js");
 
 function stoppableService(service) {
   if (!service.tags)

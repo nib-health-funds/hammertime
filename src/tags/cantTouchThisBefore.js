@@ -1,5 +1,5 @@
 const luxon = require('luxon');
-const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals');
+const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals.js');
 
 /**
  * Returns true when the tag is a 'cantTouchThisBefore' tag and has a value

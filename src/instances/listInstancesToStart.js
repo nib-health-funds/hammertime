@@ -1,4 +1,4 @@
-const listTargetInstances = require('./listTargetInstances');
+const listTargetInstances = require('./listTargetInstances.js');
 
 function listInstancesToStart(currentOperatingTimezone) {
   const params = {

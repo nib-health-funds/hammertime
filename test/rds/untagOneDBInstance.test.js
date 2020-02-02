@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk-mock');
 const assert = require('assert');
-const untagOneDBInstance = require('../../src/rds/untagOneDBInstance');
+const untagOneDBInstance = require('../../src/rds/untagOneDBInstance.js');
 
 describe('untagOneDBInstance', () => {
   it('returns an arn of an RDS DB instance if the tag removal is succesfull', () => {

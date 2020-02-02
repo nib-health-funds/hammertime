@@ -1,4 +1,4 @@
-const cantTouchThisBetween = require('../../src/tags/cantTouchThisBetween');
+const cantTouchThisBetween = require('../../src/tags/cantTouchThisBetween.js');
 const luxon = require('luxon');
 
 const nowUTC = luxon.DateTime.utc();

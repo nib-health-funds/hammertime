@@ -1,5 +1,5 @@
-const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals');
-const getHammertimeTags = require('./getHammerTimeTags');
+const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals.js');
+const getHammertimeTags = require('./getHammerTimeTags.js');
 const defaultOperatingTimezone = require('../config').defaultOperatingTimezone;
 
 /**

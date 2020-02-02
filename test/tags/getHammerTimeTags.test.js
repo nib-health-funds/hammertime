@@ -1,4 +1,4 @@
-const getHammerTimeTags = require('../../src/tags/getHammerTimeTags');
+const getHammerTimeTags = require('../../src/tags/getHammerTimeTags.js');
 
 describe('getHammerTimeTags()', () => {
   it('should only return hammertime tags', () => {

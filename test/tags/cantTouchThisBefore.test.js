@@ -1,5 +1,5 @@
 const luxon = require('luxon');
-const cantTouchThisBefore = require('../../src/tags/cantTouchThisBefore');
+const cantTouchThisBefore = require('../../src/tags/cantTouchThisBefore.js');
 
 describe('cantTouchThisBefore()', () => {
   it('should return false when tag is not a cantTouchThisBefore tag', () => {

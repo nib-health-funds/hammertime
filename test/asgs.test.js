@@ -1,7 +1,7 @@
 'use strict';
 
 const assert  = require('assert');
-const asgs    = require('../src/asgs');
+const asgs    = require('../src/asgs.js');
 const AWS     = require('aws-sdk-mock');
 
 describe('asgs', () => {

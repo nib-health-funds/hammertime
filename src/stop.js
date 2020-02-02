@@ -1,15 +1,15 @@
-const stopASGs = require('./asgs/stopASGs');
-const listASGsToStop = require('./asgs/listASGsToStop');
-const tagASGs = require('./asgs/tagASGs');
-const listInstancesToStop = require('./instances/listInstancesToStop');
-const tagInstances = require('./instances/tagInstances');
-const stopInstances = require('./instances/stopInstances');
-const listDBInstancesToStop = require('./rds/listDBInstancesToStop');
-const stopDBInstances = require('./rds/stopDBInstances');
-const tagDBInstances = require('./rds/tagDBInstances');
-const listServicesToStop = require('./ecs/listServicesToStop');
-const tagServices = require('./ecs/tagServices');
-const stopServices = require('./ecs/stopServices');
+const stopASGs = require('./asgs/stopASGs.js');
+const listASGsToStop = require('./asgs/listASGsToStop.js');
+const tagASGs = require('./asgs/tagASGs.js');
+const listInstancesToStop = require('./instances/listInstancesToStop.js');
+const tagInstances = require('./instances/tagInstances.js');
+const stopInstances = require('./instances/stopInstances.js');
+const listDBInstancesToStop = require('./rds/listDBInstancesToStop.js');
+const stopDBInstances = require('./rds/stopDBInstances.js');
+const tagDBInstances = require('./rds/tagDBInstances.js');
+const listServicesToStop = require('./ecs/listServicesToStop.js');
+const tagServices = require('./ecs/tagServices.js');
+const stopServices = require('./ecs/stopServices.js');
 
 
 function stopAllInstances({ dryRun, currentOperatingTimezone }) {

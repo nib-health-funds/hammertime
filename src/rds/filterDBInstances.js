@@ -1,5 +1,5 @@
-const listAllDBInstances = require('./listAllDBInstances');
-const allValidDBInstances = require('./allValidDBInstances');
+const listAllDBInstances = require('./listAllDBInstances.js');
+const allValidDBInstances = require('./allValidDBInstances.js');
 
 module.exports = function filterDBInstances(status) {
   return listAllDBInstances()

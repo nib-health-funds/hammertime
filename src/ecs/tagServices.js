@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const retryWhenThrottled = require('../utils/retryWhenThrottled');
+const retryWhenThrottled = require('../utils/retryWhenThrottled.js');
 
 function tagService(service) {
     const ECS = new AWS.ECS();

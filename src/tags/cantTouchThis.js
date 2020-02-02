@@ -1,4 +1,4 @@
-const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals');
+const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals.js');
 
 /**
  * Returns true when tag is a cantTouchThis tag

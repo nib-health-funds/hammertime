@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
-const canITouchThis = require('../tags/canITouchThis');
-const hasTag = require('../tags/hasTag');
-const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone');
+const canITouchThis = require('../tags/canITouchThis.js');
+const hasTag = require('../tags/hasTag.js');
+const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone.js');
 
 function validInstance(instance) {
   return canITouchThis(instance.Tags) && !hasTag(instance.Tags, 'aws:autoscaling:groupName');

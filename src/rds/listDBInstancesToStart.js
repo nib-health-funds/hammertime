@@ -1,5 +1,5 @@
-const filterDBInstances = require('./filterDBInstances');
-const filterDBInstancesTaggedToStart = require('./filterDBInstancesTaggedToStart');
+const filterDBInstances = require('./filterDBInstances.js');
+const filterDBInstancesTaggedToStart = require('./filterDBInstancesTaggedToStart.js');
 
 module.exports = function listDBInstancesToStart() {
   return filterDBInstances('stopped')

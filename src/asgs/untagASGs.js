@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
-const retryWhenThrottled = require('../utils/retryWhenThrottled');
-const createTag = require('../utils/createTag');
+const retryWhenThrottled = require('../utils/retryWhenThrottled.js');
+const createTag = require('../utils/createTag.js');
 
 function untagASG(asg) {
   const autoscaling = new AWS.AutoScaling();

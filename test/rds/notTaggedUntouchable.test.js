@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk-mock');
 const assert = require('assert');
-const notTaggedUntouchable = require('../../src/rds/notTaggedUntouchable');
+const notTaggedUntouchable = require('../../src/rds/notTaggedUntouchable.js');
 
 describe('notTaggedUntouchable', () => {
   it('returns a null if an RDS DB instance is tagged with "hammertime:canttouchthis"', () => {

@@ -1,4 +1,4 @@
-const operatingTimezone = require('../tags/operatingTimezone');
+const operatingTimezone = require('../tags/operatingTimezone.js');
 
 function isInOperatingTimezone(currentOperatingTimezone) {
   return (tags) => {

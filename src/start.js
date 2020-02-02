@@ -1,15 +1,15 @@
-const startASGs = require('./asgs/startASGs');
-const listASGsToStart = require('./asgs/listASGsToStart');
-const untagASGs = require('./asgs/untagASGs');
-const startInstances = require('./instances/startInstances');
-const listInstancesToStart = require('./instances/listInstancesToStart');
-const untagInstances = require('./instances/untagInstances');
-const listDBInstancesToStart = require('./rds/listDBInstancesToStart');
-const startDBInstances = require('./rds/startDBInstances');
-const untagDBInstances = require('./rds/untagDBInstances');
-const listServicesToStart = require('./ecs/listServicesToStart');
-const startServices = require('./ecs/startServices');
-const untagServices = require('./ecs/untagServices');
+const startASGs = require('./asgs/startASGs.js');
+const listASGsToStart = require('./asgs/listASGsToStart.js');
+const untagASGs = require('./asgs/untagASGs.js');
+const startInstances = require('./instances/startInstances.js');
+const listInstancesToStart = require('./instances/listInstancesToStart.js');
+const untagInstances = require('./instances/untagInstances.js');
+const listDBInstancesToStart = require('./rds/listDBInstancesToStart.js');
+const startDBInstances = require('./rds/startDBInstances.js');
+const untagDBInstances = require('./rds/untagDBInstances.js');
+const listServicesToStart = require('./ecs/listServicesToStart.js');
+const startServices = require('./ecs/startServices.js');
+const untagServices = require('./ecs/untagServices.js');
 
 function startAllInstances({ dryRun, currentOperatingTimezone }) {
   return listInstancesToStart(currentOperatingTimezone)

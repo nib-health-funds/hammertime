@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const retryWhenThrottled = require('../utils/retryWhenThrottled');
+const retryWhenThrottled = require('../utils/retryWhenThrottled.js');
 
 const spinDownService = (service) => {
     const ECS = new AWS.ECS();

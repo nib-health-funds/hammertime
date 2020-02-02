@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk-mock');
 const assert = require('assert');
-const startOneDBInstance = require('../../src/rds/startOneDBInstance');
+const startOneDBInstance = require('../../src/rds/startOneDBInstance.js');
 
 describe('startOneDBInstance', () => {
   it('returns an arn of a started RDS DB instance', () => {

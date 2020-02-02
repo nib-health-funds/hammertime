@@ -1,11 +1,11 @@
 const assert = require('assert');
 const AWS = require('aws-sdk-mock');
-const listASGsToStop = require('../../src/asgs/listASGsToStop');
-const stopOnePageResponse = require('./responses/stopOnePageResponse');
-const emptyResponse = require('./responses/emptyResponse');
-const stopAlreadyRunResponse = require('./responses/stopAlreadyRunResponse');
-const paginatedStop = require('./responses/paginatedStop');
-const defaultOperatingTimezone = require('../../src/config').defaultOperatingTimezone;
+const listASGsToStop = require('../../src/asgs/listASGsToStop.js');
+const stopOnePageResponse = require('./responses/stopOnePageResponse.js');
+const emptyResponse = require('./responses/emptyResponse.js');
+const stopAlreadyRunResponse = require('./responses/stopAlreadyRunResponse.js');
+const paginatedStop = require('./responses/paginatedStop.js');
+const defaultOperatingTimezone = require('../../src/config.js').defaultOperatingTimezone;
 
 describe('listASGsToStop()', () => {
   it('returns list of valid running asgs', () => {

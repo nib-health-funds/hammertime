@@ -1,5 +1,5 @@
 const assert = require('assert');
-const valueForKey = require('../../src/utils/valueForKey');
+const valueForKey = require('../../src/utils/valueForKey.js');
 
 describe('valueForKey()', () => {
   it('should return correct value for key', () => {

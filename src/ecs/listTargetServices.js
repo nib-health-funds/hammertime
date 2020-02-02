@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
-const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone');
-const retryWhenThrottled = require('../utils/retryWhenThrottled');
+const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone.js');
+const retryWhenThrottled = require('../utils/retryWhenThrottled.js');
 
 function getAllClusters() {
     const ECS = new AWS.ECS();

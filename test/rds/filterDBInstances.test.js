@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk-mock');
 const assert = require('assert');
-const filterDBInstances = require('../../src/rds/filterDBInstances');
-const notTaggedUntouchable = require('../../src/rds/notTaggedUntouchable');
+const filterDBInstances = require('../../src/rds/filterDBInstances.js');
+const notTaggedUntouchable = require('../../src/rds/notTaggedUntouchable.js');
 
 describe('instances', () => {
   describe('filterDBInstances()', () => {

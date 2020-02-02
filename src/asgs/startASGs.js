@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
-const retryWhenThrottled = require('../utils/retryWhenThrottled');
-const valueForKey = require('../utils/valueForKey');
+const retryWhenThrottled = require('../utils/retryWhenThrottled.js');
+const valueForKey = require('../utils/valueForKey.js');
 
 function spinUpASG(asg) {
   const autoscaling = new AWS.AutoScaling();

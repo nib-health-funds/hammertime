@@ -1,4 +1,4 @@
-const canITouchThis = require('../../src/tags/canITouchThis');
+const canITouchThis = require('../../src/tags/canITouchThis.js');
 const moment = require('moment');
 
 describe('canITouchThis()', () => {

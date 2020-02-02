@@ -1,7 +1,7 @@
 const assert = require('assert');
 const AWS = require('aws-sdk-mock');
-const listInstancesToStart = require('../../src/instances/listInstancesToStart');
-const defaultOperatingTimezone = require('../../src/config').defaultOperatingTimezone;
+const listInstancesToStart = require('../../src/instances/listInstancesToStart.js');
+const defaultOperatingTimezone = require('../../src/config.js').defaultOperatingTimezone;
 
 describe('listInstancesToStart()', () => {
   it('returns list of valid instances stopped by hammertime', () => {

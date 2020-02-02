@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone');
+const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone.js');
 
 function getAllASGs() {
   const autoscaling = new AWS.AutoScaling();

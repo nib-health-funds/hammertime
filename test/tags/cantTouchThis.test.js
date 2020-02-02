@@ -1,4 +1,4 @@
-const cantTouchThis = require('../../src/tags/cantTouchThis');
+const cantTouchThis = require('../../src/tags/cantTouchThis.js');
 
 describe('cantTouchThis()', () => {
   it('should return true when tag is cantTouchThis tag', () => {

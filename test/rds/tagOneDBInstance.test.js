@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk-mock');
 const assert = require('assert');
-const tagOneDBInstance = require('../../src/rds/tagOneDBInstance');
+const tagOneDBInstance = require('../../src/rds/tagOneDBInstance.js');
 
 describe('tagOneDBInstance', () => {
   it('returns an arn of an RDS DB instance if the tag addition is succesfull', () => {

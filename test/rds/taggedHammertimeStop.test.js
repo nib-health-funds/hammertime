@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk-mock');
 const assert = require('assert');
-const taggedHammertimeStop = require('../../src/rds/taggedHammertimeStop');
+const taggedHammertimeStop = require('../../src/rds/taggedHammertimeStop.js');
 
 describe('taggedHammertimeStop', () => {
   it('returns an arn of an RDS DB instance tagged with "hammertime:stop"', () => {

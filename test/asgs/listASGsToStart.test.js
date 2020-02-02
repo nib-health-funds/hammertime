@@ -1,10 +1,10 @@
 const assert = require('assert');
 const AWS = require('aws-sdk-mock');
-const listASGsToStart = require('../../src/asgs/listASGsToStart');
-const startOnePageResponse = require('./responses/startOnePageResponse');
-const emptyResponse = require('./responses/emptyResponse');
-const paginatedStart = require('./responses/paginatedStart');
-const defaultOperatingTimezone = require('../../src/config').defaultOperatingTimezone;
+const listASGsToStart = require('../../src/asgs/listASGsToStart.js');
+const startOnePageResponse = require('./responses/startOnePageResponse.js');
+const emptyResponse = require('./responses/emptyResponse.js');
+const paginatedStart = require('./responses/paginatedStart.js');
+const defaultOperatingTimezone = require('../../src/config.js').defaultOperatingTimezone;
 
 describe('listASGsToStart()', () => {
   it('returns list of asgs spun down by hammertime', () => {

@@ -1,8 +1,8 @@
 const assert = require('assert');
 const AWS = require('aws-sdk-mock');
-const listServicesToStop = require('../../src/ecs/listServicesToStop');
-const defaultOperatingTimezone = require('../../src/config').defaultOperatingTimezone;
-const data = require('./mockData');
+const listServicesToStop = require('../../src/ecs/listServicesToStop.js');
+const defaultOperatingTimezone = require('../../src/config.js').defaultOperatingTimezone;
+const data = require('./mockData.js');
 
 describe('listServicesToStop()', () => {
     beforeEach(() => {

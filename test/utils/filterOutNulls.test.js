@@ -1,4 +1,4 @@
-const filterOutNulls = require('../../src/utils/filterOutNulls');
+const filterOutNulls = require('../../src/utils/filterOutNulls.js');
 const assert = require('assert');
 
 describe('filterOutNulls', () => {

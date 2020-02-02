@@ -1,7 +1,7 @@
 const assert = require('assert');
 const AWS = require('aws-sdk-mock');
-const listInstancesToStop = require('../../src/instances/listInstancesToStop');
-const defaultOperatingTimezone = require('../../src/config').defaultOperatingTimezone;
+const listInstancesToStop = require('../../src/instances/listInstancesToStop.js');
+const defaultOperatingTimezone = require('../../src/config.js').defaultOperatingTimezone;
 
 describe('listInstancesToStop()', () => {
   it('returns list of valid running instances', () => {

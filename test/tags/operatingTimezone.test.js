@@ -1,5 +1,5 @@
-const operatingTimezone = require('../../src/tags/operatingTimezone');
-const config = require('../../src/config');
+const operatingTimezone = require('../../src/tags/operatingTimezone.js');
+const config = require('../../src/config.js');
 
 describe('operatingTimezone()', () => {
 

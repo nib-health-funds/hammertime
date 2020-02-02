@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk-mock');
 const assert = require('assert');
-const stopOneDBInstance = require('../../src/rds/stopOneDBInstance');
+const stopOneDBInstance = require('../../src/rds/stopOneDBInstance.js');
 
 describe('stopOneDBInstance', () => {
   it('returns an arn of a stopped RDS DB instance', () => {

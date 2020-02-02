@@ -1,7 +1,7 @@
 'use strict';
 
 const assert    = require('assert');
-const instances = require('../src/instances');
+const instances = require('../src/instances.js');
 const AWS       = require('aws-sdk-mock');
 
 describe('instances', () => {

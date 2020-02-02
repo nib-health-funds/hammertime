@@ -1,5 +1,5 @@
 const assert = require('assert');
-const createTag = require('../../src/utils/createTag');
+const createTag = require('../../src/utils/createTag.js');
 
 describe('createTag()', () => {
   it('should return correct tag object', () => {
