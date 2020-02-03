@@ -104,9 +104,7 @@ function spinUpServices(dryRun, currentOperatingTimezone){
     if (dryRun) {
       console.log('Dry run is enabled, will not start or untag any services.');
       console.log(`Found the following ${startableServices.length} service[s] that would have been spun up`);
-      startableServices.forEach((service) => {
-          console.log(service.serviceName);
-      })
+      startableServices.map((service) => console.log(service.serviceName));
       return [];
     }
 
@@ -116,9 +114,7 @@ function spinUpServices(dryRun, currentOperatingTimezone){
     }
 
     console.log(`Found the following ${startableServices.length} services[s] to start...`);
-    startableServices.forEach((service) => {
-      console.log(service.serviceName);
-    })
+    startableServices.map((service) => console.log(service.serviceName));
 
     return startServices(startableServices).then((startedServiceIds) => {
       console.log('Finished starting service[s]. Moving on to untag them.');
