@@ -98,7 +98,7 @@ function startAllDBInstances(dryRun) {
     });
 }
 
-function spinUpServices(dryRun, currentOperatingTimezone){
+function spinUpServices({ dryRun, currentOperatingTimezone }){
   return listServicesToStart(currentOperatingTimezone)
   .then((startableServices) => {
     if (dryRun) {
@@ -131,7 +131,7 @@ module.exports = function start(options) {
     startAllDBInstances(dryRun),
     startAllInstances({ dryRun, currentOperatingTimezone }),
     spinUpASGs({ dryRun, currentOperatingTimezone }),
-    spinUpServices(dryRun, currentOperatingTimezone)
+    spinUpServices({ dryRun, currentOperatingTimezone })
   ]).then(() => {
     if (!dryRun) {
       console.log('All EC2, RDS instances, ASGs, and ECS services started successfully. Good morning!');

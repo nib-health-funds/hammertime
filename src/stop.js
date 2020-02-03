@@ -104,7 +104,7 @@ function stopAllDBInstances(dryRun) {
     });
 }
 
-function spinDownServices(dryRun, currentOperatingTimezone){
+function spinDownServices({ dryRun, currentOperatingTimezone }){
   return listServicesToStop(currentOperatingTimezone)
     .then((stoppableServices) => {
       if (dryRun) {
@@ -145,7 +145,7 @@ module.exports = function stop(options) {
     stopAllDBInstances(dryRun),
     stopAllInstances({ dryRun, currentOperatingTimezone }),
     spinDownASGs({ dryRun, currentOperatingTimezone }),
-    spinDownServices(dryRun, currentOperatingTimezone)
+    spinDownServices({ dryRun, currentOperatingTimezone })
   ]).then(() => {
     if (!dryRun) {
       console.log('All EC2, RDS instances, ASGs, and ECS services stopped successfully. Good night!');
