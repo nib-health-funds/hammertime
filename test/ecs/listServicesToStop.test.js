@@ -7,7 +7,7 @@ const data = require('./mockData.js');
 describe('listServicesToStop()', () => {
     beforeEach(() => {
         AWS.mock('ECS', 'describeServices', (params, callback) => callback(null, data.describeServices(params)));
-        AWS.mock('ECS', 'describeClusters', (params, callback) => callback(null, data.listClusters));
+        AWS.mock('ECS', 'describeClusters', (params, callback) => callback(null, data.describeClusters(params)));
         AWS.mock('ECS', 'listClusters', (params, callback) => callback(null, data.listClusters));
         AWS.mock('ECS', 'listServices', (params, callback) => callback(null, data.listServices(params)));
     })

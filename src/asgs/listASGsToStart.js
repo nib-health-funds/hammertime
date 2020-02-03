@@ -1,6 +1,6 @@
-const hasTag = require("../tags/hasTag");
-const listTargetASGs = require("./listTargetASGs");
-const canITouchThis = require("../tags/canITouchThis");
+const hasTag = require("../tags/hasTag.js");
+const listTargetASGs = require("./listTargetASGs.js");
+const canITouchThis = require("../tags/canITouchThis.js");
 
 function startableASG(asg) {
   return hasTag(asg.Tags, "stop:hammertime") && canITouchThis(asg.Tags);

@@ -27,6 +27,15 @@ module.exports = {
                 };
         }
     },
+    describeClusters: (params) => {
+        return {
+            clusters: [
+                { clusterArn: "arn:aws:ecs:cluster/1" },
+                { clusterArn: "arn:aws:ecs:cluster/2" },
+                { clusterArn: "arn:aws:ecs:cluster/3" }
+            ]
+        }
+    },
     describeServices: (params) => {
         switch (params.cluster) {
             case "arn:aws:ecs:cluster/1":

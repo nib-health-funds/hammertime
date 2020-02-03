@@ -21,7 +21,7 @@ async function describeAllClusters(clusters) {
 }
 
 async function describeChunkOfClusters(clusters) {
-    // Expects no more than 100 clustesr. 
+    // Expects no more than 100 clusters. 
     const ECS = new AWS.ECS();
     const params = { clusters: clusters };
     const response = await retryWhenThrottled(() => ECS.describeClusters(params));
