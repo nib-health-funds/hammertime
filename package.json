@@ -11,7 +11,7 @@
     "codecov": "codecov",
     "test": "npm run lint && npm run test.unit",
     "test.unit": "nyc mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec && codecov",
-    "build" : "babel src --out-dir dist"
+    "build": "babel src --out-dir dist"
   },
   "repository": {
     "type": "git",
