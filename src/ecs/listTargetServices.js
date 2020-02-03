@@ -2,102 +2,80 @@ const AWS = require('aws-sdk');
 const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone.js');
 const retryWhenThrottled = require('../utils/retryWhenThrottled.js');
 
-function getAllClusters() {
+async function getAllClusters(clusters, token) {
     const ECS = new AWS.ECS();
-    const params = {};
-
-    function followClusterPages(allClusters, data) {
-        const combinedClusters = [...allClusters, ...data.clusterArns];
-        if (data.NextToken) {
-            params.NextToken = data.NextToken;
-            return retryWhenThrottled(() => 
-                ECS.describeClusters(params)
-                    .then(res => followClusterPages(combinedClusters, res)
-            ));
-        }
-        return Promise.resolve(combinedClusters);
-    }
-    return retryWhenThrottled(() => ECS.listClusters(params)).then(data => followClusterPages([], data))
+    const params = { nextToken: token };
+    const response = await retryWhenThrottled(() => ECS.listClusters(params));
+    let clusterArray = []; 
+    if (clusters) clusterArray = [...clusterArray, ...clusters];
+    if (response.clusterArns) clusterArray = [...clusterArray, ...response.clusterArns ];
+    if (response.nextToken) return getAllClusters(clusterArray, response.nextToken);
+    return clusterArray;
 }
 
-const getAllServices = (clusterArnList) => {
-    const promises = [];
-    clusterArnList.map((clusterArn) => {
-        promises.push(getService(clusterArn));
-    })
-    return Promise.all(promises);
+async function describeAllClusters(clusters) {
+    const chunks = chunkArray(clusters, 100);
+    const data = await Promise.all(chunks.map(chunk => describeChunkOfClusters(chunk)));
+    const clusterArns = [].concat(...data).map((cluster) => cluster.clusterArn);
+    return clusterArns;
 }
 
-const getService = (clusterArn) => {
+async function describeChunkOfClusters(clusters) {
+    // Expects no more than 100 clustesr. 
     const ECS = new AWS.ECS();
-    const params = { cluster: clusterArn, launchType: 'FARGATE' }; // Only impact fargate services.
-    return retryWhenThrottled(() => 
-        ECS.listServices(params))
-            .then(data => ({ services: buildListOfServices(data.serviceArns), cluster: clusterArn })
-    );
+    const params = { clusters: clusters };
+    const response = await retryWhenThrottled(() => ECS.describeClusters(params));
+    return response.clusters;
 }
 
-const buildListOfServices = (serviceArns) => {
-    let cleanedServiceArns = [];
-    serviceArns.map((service) => {
-        cleanedServiceArns = cleanedServiceArns.concat(service);
-    })
-    return cleanedServiceArns;
+async function getAllServices(clusterArnList) {
+    const data = await Promise.all(clusterArnList.map((clusterArn) => getService(clusterArn)));
+    return data.filter((cluster) => cluster.services.length > 0);
 }
 
-const describeServices = (serviceDetails) => {
-    const promises = [];
-    serviceDetails.map((service) => {
-        if (service.services.length > 0)
-            promises.push(describeService(service));
-    })
-    return Promise.all(promises);
+async function getService(clusterArn) {
+    const ECS = new AWS.ECS();
+    const params = { cluster: clusterArn, launchType: 'FARGATE' };
+    const response = await retryWhenThrottled(() => ECS.listServices(params));
+    return { cluster: clusterArn, services: response.serviceArns };
 }
 
-const describeService = (service) => {
+async function describeServices(clusterList) {
+    const services = await Promise.all(clusterList.map((cluster) => describeService(cluster)));
+    return [].concat(...services);
+}
+
+async function describeService(service) {
     const ECS = new AWS.ECS();
     const params = { 
         services: service.services,
-        cluster: service.cluster,
+        cluster: service.cluster, 
         include: [ 'TAGS' ]
     };
-    return retryWhenThrottled(() => ECS.describeServices(params))
+    const response = await retryWhenThrottled(() => ECS.describeServices(params));
+    return response.services;
 }
 
-const chunkServicesTogether = (services) => {
-    const chunkedServices = [];
-    services.map((cluster) => {
-        cluster.services.map((service) => {
-            chunkedServices.push(service);
-        })
-    })
-    return chunkedServices;
-}
-
-const isServiceInCurrentOperatingTimezone = (currentOperatingTimezone) => {
+function isServiceInCurrentOperatingTimezone (currentOperatingTimezone) {
     const isInCurrentOperatingTimezone = isInOperatingTimezone(currentOperatingTimezone);
-    return service => {
-        return isInCurrentOperatingTimezone(service.tags);
-    }
-
+    return service => isInCurrentOperatingTimezone(service.tags);
 }
 
-const filterClusters = (filter, currentOperatingTimezone) => {
-    return getAllClusters()
-    .then((data) => {
-        return getAllServices(data);
-    }) 
-    .then((data) => {
-        return describeServices(data);
-    })
-    .then((data) => {
-        return chunkServicesTogether(data);
-    })
-    .then((data) => {
-        return data
-            .filter(filter)
-            .filter(isServiceInCurrentOperatingTimezone(currentOperatingTimezone));
-    })
+function chunkArray(array, size) {
+    if(array.length <= size) return [array]
+    return [array.slice(0,size), ...chunkArray(array.slice(size), size)]
+ }
+
+function filterClusters (filter, currentOperatingTimezone) {
+    return getAllClusters([], null)
+        .then((data) => describeAllClusters(data))
+        .then((data) => getAllServices(data))
+        .then((data) => describeServices(data))
+        .then((data) => {
+            return data
+                .filter(filter)
+                .filter(isServiceInCurrentOperatingTimezone(currentOperatingTimezone));
+        });
 }
 
 module.exports = filterClusters
