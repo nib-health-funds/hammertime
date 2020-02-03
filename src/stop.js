@@ -7,7 +7,9 @@ const stopInstances = require('./instances/stopInstances');
 const listDBInstancesToStop = require('./rds/listDBInstancesToStop');
 const stopDBInstances = require('./rds/stopDBInstances');
 const tagDBInstances = require('./rds/tagDBInstances');
-
+const listServicesToStop = require('./ecs/listServicesToStop');
+const tagServices = require('./ecs/tagServices');
+const stopServices = require('./ecs/stopServices');
 
 function stopAllInstances({ dryRun, currentOperatingTimezone }) {
   return listInstancesToStop(currentOperatingTimezone)
@@ -102,6 +104,39 @@ function stopAllDBInstances(dryRun) {
     });
 }
 
+function spinDownServices(dryRun, currentOperatingTimezone){
+  return listServicesToStop(currentOperatingTimezone)
+    .then((stoppableServices) => {
+      if (dryRun) {
+        console.log('Dry run is enabled, will not start or untag any services.');
+        console.log(`Found the following ${stoppableServices.length} service[s] that would have been spun down...`);
+        stoppableServices.forEach((service) => {
+          console.log(service.serviceName);
+        })
+        return [];
+      }
+
+      if (stoppableServices.length === 0) {
+        console.log('No services to spin down, moving on...');
+        return [];
+      }
+
+      console.log('Found the following service[s] to spin down...')
+      stoppableServices.forEach((service) => {
+        console.log(service);
+      })
+
+      return tagServices(stoppableServices).then((taggedServices) => {
+        if (taggedServices.length > 0) {
+          console.log('Finished tagging service[s]. Moving on to stop them.');
+          return stopServices(taggedServices);
+        }
+        return [];
+      })
+    })
+}
+
+
 module.exports = function stop(options) {
   const { event, callback, dryRun } = options;
   const currentOperatingTimezone = event.currentOperatingTimezone;
@@ -110,9 +145,10 @@ module.exports = function stop(options) {
     stopAllDBInstances(dryRun),
     stopAllInstances({ dryRun, currentOperatingTimezone }),
     spinDownASGs({ dryRun, currentOperatingTimezone }),
+    spinDownServices(dryRun, currentOperatingTimezone)
   ]).then(() => {
     if (!dryRun) {
-      console.log('All EC2, RDS instances and ASGs stopped successfully. Good night!');
+      console.log('All EC2, RDS instances, ASGs, and ECS services stopped successfully. Good night!');
     }
     callback(null, {
       message: 'Stop: Hammertime successfully completed.',
