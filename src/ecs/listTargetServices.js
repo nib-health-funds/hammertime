@@ -1,8 +1,7 @@
 const AWS = require('aws-sdk');
 const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone.js');
 const retryWhenThrottled = require('../utils/retryWhenThrottled.js');
-
-async function getAllClusters(clusters, token) {
+async function getAllClusters (clusters, token) {
     const ECS = new AWS.ECS();
     const params = { nextToken: token };
     const response = await retryWhenThrottled(() => ECS.listClusters(params));
@@ -66,7 +65,7 @@ function chunkArray(array, size) {
     return [array.slice(0,size), ...chunkArray(array.slice(size), size)]
  }
 
-function filterClusters (filter, currentOperatingTimezone) {
+const filterClusters = (filter, currentOperatingTimezone) => {
     return getAllClusters([], null)
         .then((data) => describeAllClusters(data))
         .then((data) => getAllServices(data))
