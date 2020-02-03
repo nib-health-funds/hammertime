@@ -1,7 +1,7 @@
 service: hammertime
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   memorySize: 128
   stage: '${env:SLICE}'
   region: '${env:AWS_REGION}'
