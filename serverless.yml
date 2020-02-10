@@ -29,6 +29,7 @@ provider:
         - 'ecs:DescribeServices'
         - 'ecs:DescribeClusters'
         - 'ecs:ListTagsForResource'
+        - 'ecs:TagResource'
         - 'ecs:UntagResource'
         - 'ecs:UpdateService'
       Resource: '*'
