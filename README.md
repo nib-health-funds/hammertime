@@ -5,7 +5,7 @@
 
 [![Build Status](https://travis-ci.org/nib-health-funds/hammertime.svg?branch=master)](https://travis-ci.org/nib-health-funds/hammertime)
 
-Serverless power cycling for AWS EC2, RDS instances and Auto Scaling Groups based on a schedule.
+Serverless power cycling for AWS EC2, RDS instances, Auto Scaling Groups, and Fargate based on a schedule.
 
 ![Stop! Hammer Time!](hammertime.gif)
 

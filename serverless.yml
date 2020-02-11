@@ -24,6 +24,14 @@ provider:
         - 'autoscaling:DeleteTags'
         - 'autoscaling:DescribeAutoScalingGroups'
         - 'autoscaling:UpdateAutoScalingGroup'
+        - 'ecs:ListClusters'
+        - 'ecs:ListServices'
+        - 'ecs:DescribeServices'
+        - 'ecs:DescribeClusters'
+        - 'ecs:ListTagsForResource'
+        - 'ecs:TagResource'
+        - 'ecs:UntagResource'
+        - 'ecs:UpdateService'
       Resource: '*'
     - Effect: Allow
       Action:
