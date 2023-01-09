@@ -22,7 +22,7 @@
   "dependencies": {
     "@babel/register": "^7.6.2",
     "aws-sdk": "^2.610.0",
-    "luxon": "^1.11.4",
+    "luxon": "^2.5.2",
     "moment": "^2.22.1",
     "nyc": "^14.1.1",
     "promise-retry": "^1.1.1",
