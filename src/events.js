@@ -24,7 +24,8 @@ function getCron(hour, timezone) {
 
 function stop() {
   const stopCrons = operatingTimezones.map(timezone => ({
-    rate: getCron(STOP_HOUR, timezone),
+    rate: 'cron(0 11 * * ? *)',
+    // rate: getCron(STOP_HOUR, timezone),
     enabled: isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
@@ -37,7 +38,8 @@ function stop() {
 
 function start() {
   const startCrons = operatingTimezones.map(timezone => ({
-    rate: getCron(START_HOUR, timezone),
+    rate: 'cron(0 21 * * ? *)',
+    // rate: getCron(START_HOUR, timezone),
     enabled: isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
