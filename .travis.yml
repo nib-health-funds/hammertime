@@ -1,8 +1,9 @@
 language: node_js
 node_js:
-  - "8"
+  - "12"
 install: npm i
 script: 
   - npm run lint
   - npm run test:unit
   - npm run codecov
+  - npm run build
