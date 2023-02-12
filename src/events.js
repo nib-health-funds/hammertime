@@ -8,7 +8,7 @@ const STOP_HOUR = parseInt(process.env.HAMMERTIME_STOP_HOUR || '19', 10);
 
 function getCronDayHour(day = '0', hour, zone) {
   return {
-    day: luxon.DateTime.fromObject({ weekday: day, hour, zone }).setZone('UTC').weekdayShort,
+    day: luxon.DateTime.fromObject({ weekday: day, hour, zone }).setZone('UTC').weekday,
     hour: luxon.DateTime.fromObject({ weekday: day, hour, zone }).setZone('UTC').hour,
   };
 }
@@ -18,14 +18,13 @@ function getCron(hour, timezone) {
     dayBegin: getCronDayHour('1', hour, timezone).day,
     dayEnd: getCronDayHour('5', hour, timezone).day,
   };
-  const cronHour = getCronDayHour(hour, timezone).hour;
+  const cronHour = getCronDayHour(0, hour, timezone).hour;
   return (turnOffWeekends ? `cron(0 ${cronHour} ? * ${week.dayBegin}-${week.dayEnd} *)` : `cron(0 ${cronHour} * * ? *)`);
 }
 
 function stop() {
   const stopCrons = operatingTimezones.map(timezone => ({
-    rate: 'cron(0 11 * * ? *)',
-    // rate: getCron(STOP_HOUR, timezone),
+    rate: getCron(STOP_HOUR, timezone),
     enabled: isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
@@ -38,8 +37,7 @@ function stop() {
 
 function start() {
   const startCrons = operatingTimezones.map(timezone => ({
-    rate: 'cron(0 21 * * ? *)',
-    // rate: getCron(START_HOUR, timezone),
+    rate: getCron(START_HOUR, timezone),
     enabled: isEnabled(),
     input: {
       currentOperatingTimezone: timezone,
