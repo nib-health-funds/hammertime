@@ -15,8 +15,8 @@ function getCronDayHour(day = '0', hour, zone) {
 
 function getCron(hour, timezone) {
   const week = {
-    dayBegin: getCronDayHour('1', hour, timezone).day,
-    dayEnd: getCronDayHour('5', hour, timezone).day,
+    dayBegin: getCronDayHour('2', hour, timezone).day,
+    dayEnd: getCronDayHour('6', hour, timezone).day,
   };
   const cronHour = getCronDayHour(0, hour, timezone).hour;
   return (turnOffWeekends ? `cron(0 ${cronHour} ? * ${week.dayBegin}-${week.dayEnd} *)` : `cron(0 ${cronHour} * * ? *)`);
