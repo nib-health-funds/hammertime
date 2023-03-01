@@ -8,6 +8,7 @@ module.exports = function retryWhenThrottled(func) {
         console.warn(`Throttled by the AWS API. Backing off... (${number}/10)`);
         retry(err);
       }
+      console.warn(`Throttling limit reached. Here is actual error:`);
       throw err;
     }));
 };
