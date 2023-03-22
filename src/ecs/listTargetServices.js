@@ -15,7 +15,14 @@ async function getAllClusters(clusters, token) {
 
 async function describeAllClusters(clusters) {
   const chunks = chunkArray(clusters, 100);
-  const data = await Promise.all(chunks.map(chunk => describeChunkOfClusters(chunk)));
+  try {
+    const data = await Promise.all(chunks.map(chunk => describeChunkOfClusters(chunk)));
+  }
+  catch (err) {
+    console.log('describeAllClusters - Broken Promise here:');
+    console.log(err);
+    return err;
+  } 
   const clusterArns = [].concat(...data).map(cluster => cluster.clusterArn);
   return clusterArns;
 }
@@ -29,7 +36,14 @@ async function describeChunkOfClusters(clusters) {
 }
 
 async function getAllServices(clusterArnList) {
-  const data = await Promise.all(clusterArnList.map(clusterArn => getService(clusterArn)));
+  try {
+    const data = await Promise.all(clusterArnList.map(clusterArn => getService(clusterArn)));
+  }
+  catch (err) {
+      console.log('getAllServices - Broken Promise here:');
+      console.log(err);
+      return err;
+  } 
   return data.filter(cluster => cluster.services.length > 0);
 }
 
@@ -41,7 +55,14 @@ async function getService(clusterArn) {
 }
 
 async function describeServices(clusterList) {
-  const services = await Promise.all(clusterList.map(cluster => describeService(cluster)));
+  try {
+    const services = await Promise.all(clusterList.map(cluster => describeService(cluster)));
+  }
+  catch (err) {
+    console.log('describeServices - Broken Promise here:');
+    console.log(err);
+    return err;
+  } 
   return [].concat(...services);
 }
 
