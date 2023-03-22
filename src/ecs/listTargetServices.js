@@ -16,7 +16,7 @@ async function getAllClusters(clusters, token) {
 async function describeAllClusters(clusters) {
   const chunks = chunkArray(clusters, 100);
   try {
-    const data = await Promise.all(chunks.map(chunk => describeChunkOfClusters(chunk)));
+    data = await Promise.all(chunks.map(chunk => describeChunkOfClusters(chunk)));
   }
   catch (err) {
     console.log('describeAllClusters - Broken Promise here:');
@@ -37,7 +37,7 @@ async function describeChunkOfClusters(clusters) {
 
 async function getAllServices(clusterArnList) {
   try {
-    const data = await Promise.all(clusterArnList.map(clusterArn => getService(clusterArn)));
+    data = await Promise.all(clusterArnList.map(clusterArn => getService(clusterArn)));
   }
   catch (err) {
       console.log('getAllServices - Broken Promise here:');
@@ -56,7 +56,7 @@ async function getService(clusterArn) {
 
 async function describeServices(clusterList) {
   try {
-    const services = await Promise.all(clusterList.map(cluster => describeService(cluster)));
+    services = await Promise.all(clusterList.map(cluster => describeService(cluster)));
   }
   catch (err) {
     console.log('describeServices - Broken Promise here:');
