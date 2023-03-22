@@ -56,14 +56,14 @@ async function getService(clusterArn) {
 
 async function describeServices(clusterList) {
   try {
-    services = await Promise.all(clusterList.map(cluster => describeService(cluster)));
+    const services = await Promise.all(clusterList.map(cluster => describeService(cluster)));
+    return [].concat(...services);
   }
   catch (err) {
     console.log('describeServices - Broken Promise here:');
     console.log(err);
     return err;
   } 
-  return [].concat(...services);
 }
 
 async function describeService(service) {
