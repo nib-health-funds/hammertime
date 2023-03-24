@@ -3,28 +3,24 @@ const retryWhenThrottled = require('../utils/retryWhenThrottled');
 const createTag = require('../utils/createTag');
 
 function untagASG(asg) {
+  console.log('Calling untagASG: ASG is:' + asg);
   const autoscaling = new AWS.AutoScaling();
   const params = {
     Tags: [
       createTag('stop:hammertime', asg.AutoScalingGroupName, 'auto-scaling-group'),
     ],
   };
+  console.log('Calling untagASG: Tag params are:' + params);
 
-  try {
-    return retryWhenThrottled(() => autoscaling.deleteTags(params))
-      .then(() => asg);
-  }
-  catch (err) {
-    console.log('untagASG - Broken Throttling here:' + err + ' ASG is:' + asg);
-    return err;
-  }
+  return retryWhenThrottled(() => autoscaling.deleteTags(params))
+    .then(() => asg);
+
 }
 
 function untagResumedASGs(asgs) {
   const untaggedASGs = asgs.map(asg => untagASG(asg));
   try {
-    data = Promise.all(untaggedASGs);
-    return data;
+    return Promise.all(untaggedASGs);
   }
     catch (err) {
       console.log('untagResumedASGs - Broken Promise here:' + err);
