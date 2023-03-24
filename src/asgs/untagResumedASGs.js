@@ -1,20 +1,17 @@
 const AWS = require('aws-sdk');
 const retryWhenThrottled = require('../utils/retryWhenThrottled');
-const createTag = require('../utils/createTag');
+// const createTag = require('../utils/createTag');
+const deleteTagParams = require('../utils/deleteTagParams');
 
 function untagASG(asg) {
-  console.log('Calling untagASG: ASG is:' + asg);
   const autoscaling = new AWS.AutoScaling();
   const params = {
     Tags: [
-      createTag('stop:hammertime', asg.AutoScalingGroupName, 'auto-scaling-group'),
+      deleteTagParams('stop:hammertime', asg.AutoScalingGroupName, 'auto-scaling-group'),
     ],
   };
-  console.log('Calling untagASG: Tag params are:' + params);
-
   return retryWhenThrottled(() => autoscaling.deleteTags(params))
     .then(() => asg);
-
 }
 
 function untagResumedASGs(asgs) {
