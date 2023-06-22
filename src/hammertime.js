@@ -2,7 +2,9 @@ const start = require('./start');
 const stop = require('./stop');
 
 // Try and use env var, otherwise default to false.
-const dryRun = process.env.hammerTimeDryRun === 'true' || false;
+// TODO: set dryRun = true for testing
+// const dryRun = process.env.hammerTimeDryRun === 'true' || false;
+const dryRun = true;
 
 module.exports = {
   start: (event, context, callback) => start({ event, context, callback, dryRun }),

@@ -14,6 +14,25 @@ const listServicesToStop = require('./ecs/listServicesToStop');
 const tagServices = require('./ecs/tagServices');
 const stopServices = require('./ecs/stopServices');
 
+/**
+ * The order we want to stop the ec2: wcf, healthline, app (all asg) -> icm (instance with tag aws:cloudformation:logical-id start with InformixIcm) -> db (instance with tag aws:cloudformation:logical-id start with InformixDB)
+ */
+function stopAllInstancesAndspinDownASGs(dryRun, currentOperatingTimezone) {
+  Promise.all([
+    spinDownASGs({ dryRun, currentOperatingTimezone }),
+    suspendASGInstances({ dryRun, currentOperatingTimezone }),
+    spinDownServices({ dryRun, currentOperatingTimezone })
+  ]).then(async () => {
+    let date_time = new Date();    
+    console.log("Sleep for 60000ms, time:", date_time)
+    await sleep(60000)
+    date_time = new Date();
+    console.log("Wake up and stop the instances, time:", date_time)
+    stopAllInstances({ dryRun, currentOperatingTimezone })
+  }).catch((err) => {
+    console.error(err);
+  });
+}
 function stopAllInstances({ dryRun, currentOperatingTimezone }) {
   return listInstancesToStop(currentOperatingTimezone)
     .then((stoppableInstances) => {
@@ -191,9 +210,7 @@ module.exports = function stop(options) {
   console.log(`Hammertime stop for ${currentOperatingTimezone}`);
   Promise.all([
     stopAllDBInstances(dryRun),
-    stopAllInstances({ dryRun, currentOperatingTimezone }),
-    spinDownASGs({ dryRun, currentOperatingTimezone }),
-    suspendASGInstances({ dryRun, currentOperatingTimezone }),
+    stopAllInstancesAndspinDownASGs({ dryRun, currentOperatingTimezone }),
     spinDownServices({ dryRun, currentOperatingTimezone })
   ]).then(() => {
     if (!dryRun) {
