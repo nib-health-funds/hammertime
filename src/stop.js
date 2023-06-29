@@ -39,7 +39,7 @@ async function stopAllInstancesAndspinDownSuspenceASGs(
     "rqp-whics-wcf",
     "rqp-whics-healthline",
     "rqp-whics-app",
-  ])
+  ]);
 
   console.log(
     "Sleep for 60000ms after stopping wcf healthline app, time:",
@@ -50,10 +50,12 @@ async function stopAllInstancesAndspinDownSuspenceASGs(
   stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
     "InformixIcm*",
   ]);
-  console.log("Sleep for another 60000ms after stopping icm, time:", date_time);
+  console.log(
+    "Sleep for another 60000ms after stopping icm, time:",
+    new Date()
+  );
   await sleep(60000); // We will wait for 4 minutes here
-  date_time = new Date();
-  console.log("Wake up and stop the rest instances, time:", date_time);
+  console.log("Wake up and stop the rest instances, time:", new Date());
   stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
     "*",
   ]);
