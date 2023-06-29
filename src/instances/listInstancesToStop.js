@@ -8,7 +8,7 @@ function listInstancesToStop(currentOperatingTimezone, application) {
         Values: ['running'],
       },
       {
-        Name: 'aws:cloudformation:stack-id',
+        Name: 'tag:aws:cloudformation:stack-id',
         Values: application,
       },      
     ],
