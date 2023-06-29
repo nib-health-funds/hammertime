@@ -24,7 +24,18 @@ function stopAllInstancesAndspinDownSuspenceASGs(
 ) {
   console.log(">>>> 1");
   sleep(5000).then((result)=>{
-    console.log('>>>> sleep', result);
+    console.log('>>>> 2 SLEEP should be 5000', result);
+    resolve(2);
+  }).then((result) => {
+    console.log('>>>> 3 should be 2:', result);
+    return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+      "InformixIcm*",
+      ])
+  }).then((result)=> {
+    console.log('>>>> 4 SLEEP should be alexy', result);
+    return sleep(8000);
+  }).then((result)=> {
+    console.log('>>>> 5 should be 8000', result);
   });
   // stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
   //   "rqp-whics-wcf",
