@@ -38,12 +38,10 @@ function stopAllInstancesAndspinDownSuspenceASGs(
     console.log("Wake up and stop icm instances, time:", new Date())
   ); // We will wait for 4 minutes here
 
-  Promise([
-    console.log("Start, time:", new Date()),
+  console.log("Start, time:", new Date()),
     stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
       "InformixIcm*",
-    ]),
-  ]).then();
+    ]).then();
 
   console.log(
     "Sleep for another 60000ms after stopping icm, time:",
@@ -53,22 +51,22 @@ function stopAllInstancesAndspinDownSuspenceASGs(
     console.log("Wake up and stop the rest instances, time:", new Date())
   ); // We will wait for 4 minutes here
 
-  Promise([
-    console.log("Start, time:", new Date()),
+  console.log("Start, time:", new Date()),
     stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
       "*",
-    ]),
-  ]).then();
+    ]).then();
 }
 
-async function stopAllInstancesAndspinDownSuspenceASG(
+function stopAllInstancesAndspinDownSuspenceASG(
   dryRun,
   currentOperatingTimezone,
   application
 ) {
-  spinDownASGs({ dryRun, currentOperatingTimezone, application });
-  suspendASGInstances({ dryRun, currentOperatingTimezone, application });
-  stopAllInstances({ dryRun, currentOperatingTimezone, application });
+  return new Promise(() => {
+    spinDownASGs({ dryRun, currentOperatingTimezone, application });
+    suspendASGInstances({ dryRun, currentOperatingTimezone, application });
+    stopAllInstances({ dryRun, currentOperatingTimezone, application });
+  });
 }
 
 function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
