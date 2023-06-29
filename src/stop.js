@@ -34,20 +34,22 @@ async function stopAllInstancesAndspinDownSuspenceASGs(
   //   .catch((err) => {
   //     console.error(err);
   //   });
-
-  stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-    "rqp-whics-wcf",
-    "rqp-whics-healthline",
-    "rqp-whics-app",
-  ]);
+  console.log("Start, time:", new Date()),
+  
+  await stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+  "rqp-whics-wcf",
+  "rqp-whics-healthline",
+  "rqp-whics-app",
+]);
 
   console.log(
     "Sleep for 60000ms after stopping wcf healthline app, time:",
     new Date()
   );
+
   await sleep(60000); // We will wait for 4 minutes here
   console.log("Wake up and stop icm instances, time:", new Date());
-  stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+  await stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
     "InformixIcm*",
   ]);
   console.log(
@@ -56,23 +58,19 @@ async function stopAllInstancesAndspinDownSuspenceASGs(
   );
   await sleep(60000); // We will wait for 4 minutes here
   console.log("Wake up and stop the rest instances, time:", new Date());
-  stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+  await stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
     "*",
   ]);
 }
 
-function stopAllInstancesAndspinDownSuspenceASG(
+async function stopAllInstancesAndspinDownSuspenceASG(
   dryRun,
   currentOperatingTimezone,
   application
 ) {
-  Promise.all([
-    spinDownASGs({ dryRun, currentOperatingTimezone, application }),
-    suspendASGInstances({ dryRun, currentOperatingTimezone, application }),
-    stopAllInstances({ dryRun, currentOperatingTimezone, application }),
-  ]).catch((err) => {
-    console.error(err);
-  });
+  spinDownASGs({ dryRun, currentOperatingTimezone, application });
+  suspendASGInstances({ dryRun, currentOperatingTimezone, application });
+  stopAllInstances({ dryRun, currentOperatingTimezone, application });
 }
 
 function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
