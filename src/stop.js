@@ -18,7 +18,7 @@ const sleep = require("./utils/sleep");
 /**
  * The order we want to stop the ec2: wcf, healthline, app (all asg) -> icm (instance with tag aws:cloudformation:logical-id start with InformixIcm) -> db (instance with tag aws:cloudformation:logical-id start with InformixDB)
  */
-async function stopAllInstancesAndspinDownSuspenceASGs(
+function stopAllInstancesAndspinDownSuspenceASGs(
   dryRun,
   currentOperatingTimezone
 ) {
