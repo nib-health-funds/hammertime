@@ -23,42 +23,43 @@ function stopAllInstancesAndspinDownSuspenceASGs(
   currentOperatingTimezone
 ) {
   console.log(">>>> 1");
-  sleep(5000)
-  .then((result)=>{
-    console.log('>>>> 2 SLEEP should be 5000', result);
-    return doNothing();
-  }).then((result)=> {
-    console.log('>>>> 3 SLEEP should be NOTHING', result);
-    return sleep(8000);
-  }).then((result)=> {
-    console.log('>>>> 4 should be 8000', result);
-  });
-  // stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-  //   "rqp-whics-wcf",
-  //   "rqp-whics-healthline",
-  //   "rqp-whics-app",
-  // ]).then( (result) => {
-  //   console.log(">>> 2", result);
-  //   return sleep(6000);
+  // sleep(5000)
+  // .then((result)=>{
+  //   console.log('>>>> 2 SLEEP should be 5000', result);
+  //   return doNothing();
   // }).then((result)=> {
-  //   console.log(">>> 3", result);
-  //   return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-  //     "InformixIcm*",
-  //   ]);
-  // }).then( (result) => {
-  //   console.log(">>> 4", result);
-  //   return sleep(6000);
+  //   console.log('>>>> 3 SLEEP should be NOTHING', result);
+  //   return sleep(8000);
   // }).then((result)=> {
-  //   console.log(">>> 5", result);
-  //   return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-  //     "*",
-  //   ]).then();
-  // })
-  // .then((result)=> {
-  //   console.log(">>>> 6 FINAL", result);
-  // }).catch(error => {
-  //   console.log(">>> ERROR");
+  //   console.log('>>>> 4 should be 8000', result);
   // });
+
+  stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+    "rqp-whics-wcf",
+    "rqp-whics-healthline",
+    "rqp-whics-app",
+  ]).then( (result) => {
+    console.log(">>> 2", result);
+    return sleep(6000);
+  }).then((result)=> {
+    console.log(">>> 3", result);
+    return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+      "InformixIcm*",
+    ]);
+  }).then( (result) => {
+    console.log(">>> 4", result);
+    return sleep(6000);
+  }).then((result)=> {
+    console.log(">>> 5", result);
+    return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+      "*",
+    ]);
+  })
+  .then((result)=> {
+    console.log(">>>> 6 FINAL", result);
+  }).catch(error => {
+    console.log(">>> ERROR");
+  });
 
   // sleep(60000).then(
   //   console.log("Wake up and stop icm instances, time:", new Date())
@@ -104,14 +105,11 @@ function stopAllInstancesAndspinDownSuspenceASG(
   currentOperatingTimezone,
   application
 ) {
-  return new Promise((resolve) => {
-    // spinDownASGs({ dryRun, currentOperatingTimezone, application });
-    // suspendASGInstances({ dryRun, currentOperatingTimezone, application });
-    // stopAllInstances({ dryRun, currentOperatingTimezone, application });
-    console.log('-==-=-=-=-=-=-= RUNNING INSIDE');
-
-    resolve('alexy');
-  });
+  return Promise.all([
+    spinDownASGs({ dryRun, currentOperatingTimezone, application }),
+    suspendASGInstances({ dryRun, currentOperatingTimezone, application }),
+    stopAllInstances({ dryRun, currentOperatingTimezone, application }),
+  ]);
 }
 
 /**
