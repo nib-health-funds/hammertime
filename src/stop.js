@@ -31,14 +31,20 @@ function stopAllInstancesAndspinDownSuspenceASGs(
   ])
     .then(async () => {
       let date_time = new Date();
-      console.log("Sleep for 60000ms, time:", date_time);
+      console.log(
+        "Sleep for 60000ms after stopping wcf healthline app, time:",
+        date_time
+      );
       await sleep(60000); // We will wait for 4 minutes here
       date_time = new Date();
       console.log("Wake up and stop icm instances, time:", date_time);
       stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
         "InformixIcm*",
       ]);
-      console.log("Sleep for another 60000ms, time:", date_time);
+      console.log(
+        "Sleep for another 60000ms after stopping icm, time:",
+        date_time
+      );
       await sleep(60000); // We will wait for 4 minutes here
       date_time = new Date();
       console.log("Wake up and stop the rest instances, time:", date_time);
@@ -273,11 +279,11 @@ module.exports = function stop(options) {
   console.log(`Hammertime stop for ${currentOperatingTimezone}`);
   Promise.all([
     stopAllDBInstances(dryRun),
-    spinDownServices({ dryRun, currentOperatingTimezone }),
     stopAllInstancesAndspinDownSuspenceASGs({
       dryRun,
       currentOperatingTimezone,
-    })
+    }),
+    spinDownServices({ dryRun, currentOperatingTimezone }),
   ])
     .then(() => {
       if (!dryRun) {
