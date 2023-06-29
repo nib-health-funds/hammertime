@@ -14,6 +14,57 @@ const listServicesToStart = require('./ecs/listServicesToStart');
 const startServices = require('./ecs/startServices');
 const untagServices = require('./ecs/untagServices');
 
+function startAllInstancesAndAsgs({ dryRun, currentOperatingTimezone }) {
+  Promise.all([
+    startAllInstancesAndAsg(dryRun, currentOperatingTimezone, [
+      "InformixDB*",
+    ]),
+  ])
+    .then(async () => {
+      let date_time = new Date();
+      console.log(
+        "Sleep for 60000ms after start DB, time:",
+        date_time
+      );
+      await sleep(60000); // We will wait for 4 minutes here
+      date_time = new Date();
+      console.log("Wake up and start the rest instances, time:", date_time);
+      startAllInstancesAndAsg(dryRun, currentOperatingTimezone, [
+        "*",
+      ]);
+      console.log(
+        "Sleep for another 60000ms after start icm and the rest instance, time:",
+        date_time
+      );
+      await sleep(60000); // We will wait for 4 minutes here
+      date_time = new Date();
+      console.log("Wake up and start app, wcf healthline, time:", date_time);
+      startAllInstancesAndAsg(dryRun, currentOperatingTimezone, [
+        "rqp-whics-wcf",
+        "rqp-whics-healthline",
+        "rqp-whics-app",
+    ]);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+
+}
+
+function startAllInstancesAndAsg(  dryRun,
+  currentOperatingTimezone,
+  application
+) {
+  Promise.all([
+    spinUpASGs({ dryRun, currentOperatingTimezone, application }),
+    resumeASGInstances({ dryRun, currentOperatingTimezone, application }),
+    spinUpServices({ dryRun, currentOperatingTimezone, application })
+  ]).catch((err) => {
+    console.error(err);
+  });
+
+}
+
 function startAllInstances({ dryRun, currentOperatingTimezone }) {
   return listInstancesToStart(currentOperatingTimezone)
     .then((startableInstances) => {

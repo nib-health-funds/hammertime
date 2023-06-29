@@ -23,6 +23,10 @@ function stopAllInstancesAndspinDownSuspenceASGs(
   currentOperatingTimezone
 ) {
   Promise.all([
+    console.log(
+      "Start, time:",
+      new Date()
+    ),
     stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
       "rqp-whics-wcf",
       "rqp-whics-healthline",
@@ -30,14 +34,12 @@ function stopAllInstancesAndspinDownSuspenceASGs(
     ]),
   ])
     .then(async () => {
-      let date_time = new Date();
       console.log(
         "Sleep for 60000ms after stopping wcf healthline app, time:",
-        date_time
+        new Date()
       );
       await sleep(60000); // We will wait for 4 minutes here
-      date_time = new Date();
-      console.log("Wake up and stop icm instances, time:", date_time);
+      console.log("Wake up and stop icm instances, time:", new Date());
       stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
         "InformixIcm*",
       ]);
