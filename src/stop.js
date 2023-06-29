@@ -34,7 +34,7 @@ function stopAllInstancesAndspinDownSuspenceASGs(
   //   console.log('>>>> 4 should be 8000', result);
   // });
 
-  stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+  handleASGs(dryRun, currentOperatingTimezone, [
     "rqp-whics-wcf",
     "rqp-whics-healthline",
     "rqp-whics-app",
@@ -43,7 +43,7 @@ function stopAllInstancesAndspinDownSuspenceASGs(
     return sleep(6000);
   }).then((result)=> {
     console.log(">>> 3", result);
-    return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+    return stopAllInstances(dryRun, currentOperatingTimezone, [
       "InformixIcm*",
     ]);
   }).then( (result) => {
@@ -51,7 +51,7 @@ function stopAllInstancesAndspinDownSuspenceASGs(
     return sleep(6000);
   }).then((result)=> {
     console.log(">>> 5", result);
-    return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+    return stopAllInstances(dryRun, currentOperatingTimezone, [
       "*",
     ]);
   })
@@ -84,15 +84,6 @@ function stopAllInstancesAndspinDownSuspenceASGs(
   //   ]).then();
 }
 
-function doNothing() {
-  return new Promise((resolve) => {
-    console.log('-==-=-=-=-=-=-= RUNNING INSIDE DOING NOTHING');
-
-    resolve('NOTHING');
-  });
-}
-
-
 /**
  *
  * @param {*} dryRun
@@ -100,7 +91,7 @@ function doNothing() {
  * @param {*} application
  * @returns
  */
-function stopAllInstancesAndspinDownSuspenceASG(
+function handleASGs(
   dryRun,
   currentOperatingTimezone,
   application
@@ -108,14 +99,13 @@ function stopAllInstancesAndspinDownSuspenceASG(
   return Promise.all([
     spinDownASGs({ dryRun, currentOperatingTimezone, application }),
     suspendASGInstances({ dryRun, currentOperatingTimezone, application }),
-    stopAllInstances({ dryRun, currentOperatingTimezone, application }),
   ]);
 }
 
 /**
- *
- * @param {*} param0
- * @returns
+ * 
+ * @param {*} param0 
+ * @returns 
  */
 function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
   return listInstancesToStop(currentOperatingTimezone, application).then(
