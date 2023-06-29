@@ -22,53 +22,81 @@ function stopAllInstancesAndspinDownSuspenceASGs(
   dryRun,
   currentOperatingTimezone
 ) {
-  console.log("Start, time:", new Date()),
-    stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-      "rqp-whics-wcf",
-      "rqp-whics-healthline",
-      "rqp-whics-app",
-    ]).then(
-      console.log(
-        "Sleep for 60000ms after stopping wcf healthline app, time:",
-        new Date()
-      )
-    );
-
-  sleep(60000).then(
-    console.log("Wake up and stop icm instances, time:", new Date())
-  ); // We will wait for 4 minutes here
-
-  console.log("Start, time:", new Date()),
-    stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+  console.log(">>>> 1");
+  stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+    "rqp-whics-wcf",
+    "rqp-whics-healthline",
+    "rqp-whics-app",
+  ]).then( (result) => {
+    console.log(">>> 2");
+    return sleep(6000);
+  }).then((result)=> {
+    console.log(">>> 3");
+    return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
       "InformixIcm*",
-    ]).then();
-
-  console.log(
-    "Sleep for another 60000ms after stopping icm, time:",
-    new Date()
-  );
-  sleep(60000).then(
-    console.log("Wake up and stop the rest instances, time:", new Date())
-  ); // We will wait for 4 minutes here
-
-  console.log("Start, time:", new Date()),
-    stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+    ]);
+  }).then( (result) => {
+    console.log(">>> 4");
+    return sleep(6000);
+  }).then((result)=> {
+    console.log(">>> 5");
+    return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
       "*",
     ]).then();
+  })
+  .then((result)=> {
+    console.log(">>>> 6 FINAL");
+  }).catch(error => {
+    console.log(">>> ERROR");
+  });
+
+  // sleep(60000).then(
+  //   console.log("Wake up and stop icm instances, time:", new Date())
+  // ); // We will wait for 4 minutes here
+
+  // console.log("Start, time:", new Date()),
+  //   stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+  //     "InformixIcm*",
+  //   ]).then();
+
+  // console.log(
+  //   "Sleep for another 60000ms after stopping icm, time:",
+  //   new Date()
+  // );
+  // sleep(60000).then(
+  //   console.log("Wake up and stop the rest instances, time:", new Date())
+  // ); // We will wait for 4 minutes here
+
+  // console.log("Start, time:", new Date()),
+  //   stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+  //     "*",
+  //   ]).then();
 }
 
+/**
+ *
+ * @param {*} dryRun
+ * @param {*} currentOperatingTimezone
+ * @param {*} application
+ * @returns
+ */
 function stopAllInstancesAndspinDownSuspenceASG(
   dryRun,
   currentOperatingTimezone,
   application
 ) {
-  return new Promise(() => {
+  return new Promise((resolve) => {
     spinDownASGs({ dryRun, currentOperatingTimezone, application });
     suspendASGInstances({ dryRun, currentOperatingTimezone, application });
     stopAllInstances({ dryRun, currentOperatingTimezone, application });
   });
 }
 
+/**
+ *
+ * @param {*} param0
+ * @returns
+ */
 function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
   return listInstancesToStop(currentOperatingTimezone, application).then(
     (stoppableInstances) => {
