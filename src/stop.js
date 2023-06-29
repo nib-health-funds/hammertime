@@ -28,24 +28,24 @@ function stopAllInstancesAndspinDownSuspenceASGs(
     "rqp-whics-healthline",
     "rqp-whics-app",
   ]).then( (result) => {
-    console.log(">>> 2");
+    console.log(">>> 2", result);
     return sleep(6000);
   }).then((result)=> {
-    console.log(">>> 3");
+    console.log(">>> 3", result);
     return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
       "InformixIcm*",
     ]);
   }).then( (result) => {
-    console.log(">>> 4");
+    console.log(">>> 4", result);
     return sleep(6000);
   }).then((result)=> {
-    console.log(">>> 5");
+    console.log(">>> 5", result);
     return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
       "*",
     ]).then();
   })
   .then((result)=> {
-    console.log(">>>> 6 FINAL");
+    console.log(">>>> 6 FINAL", result);
   }).catch(error => {
     console.log(">>> ERROR");
   });
@@ -86,9 +86,12 @@ function stopAllInstancesAndspinDownSuspenceASG(
   application
 ) {
   return new Promise((resolve) => {
-    spinDownASGs({ dryRun, currentOperatingTimezone, application });
-    suspendASGInstances({ dryRun, currentOperatingTimezone, application });
-    stopAllInstances({ dryRun, currentOperatingTimezone, application });
+    // spinDownASGs({ dryRun, currentOperatingTimezone, application });
+    // suspendASGInstances({ dryRun, currentOperatingTimezone, application });
+    // stopAllInstances({ dryRun, currentOperatingTimezone, application });
+    console.log('-==-=-=-=-=-=-= RUNNING INSIDE');
+
+    resolve('alexy');
   });
 }
 
