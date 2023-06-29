@@ -22,18 +22,24 @@ async function stopAllInstancesAndspinDownSuspenceASGs(
   dryRun,
   currentOperatingTimezone
 ) {
-  Promise([
-    console.log("Start, time:", new Date()),
-    stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-      "rqp-whics-wcf",
-      "rqp-whics-healthline",
-      "rqp-whics-app",
-    ]),
+  // Promise([
+  //   console.log("Start, time:", new Date()),
+  //   stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+  //     "rqp-whics-wcf",
+  //     "rqp-whics-healthline",
+  //     "rqp-whics-app",
+  //   ]),
+  // ])
+  //   .then()
+  //   .catch((err) => {
+  //     console.error(err);
+  //   });
+
+  stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+    "rqp-whics-wcf",
+    "rqp-whics-healthline",
+    "rqp-whics-app",
   ])
-    .then()
-    .catch((err) => {
-      console.error(err);
-    });
 
   console.log(
     "Sleep for 60000ms after stopping wcf healthline app, time:",
