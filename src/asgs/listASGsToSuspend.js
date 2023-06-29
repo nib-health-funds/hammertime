@@ -14,8 +14,8 @@ function suspendableASG(application) {
   };
 }
 
-function listASGsToSuspend(currentOperatingTimezone) {
-  return listTargetASGs({ filter: suspendableASG, currentOperatingTimezone });
+function listASGsToSuspend(currentOperatingTimezone, application) {
+  return listTargetASGs({ filter: suspendableASG(application), currentOperatingTimezone });
 }
 
 module.exports = listASGsToSuspend;

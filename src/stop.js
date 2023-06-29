@@ -34,32 +34,35 @@ function stopAllInstancesAndspinDownSuspenceASGs(
   //   console.log('>>>> 4 should be 8000', result);
   // });
 
-  handleASGs(dryRun, currentOperatingTimezone, [
+  spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, [
     "rqp-whics-wcf",
     "rqp-whics-healthline",
     "rqp-whics-app",
-  ]).then( (result) => {
-    console.log(">>> 2", result);
-    return sleep(6000);
-  }).then((result)=> {
-    console.log(">>> 3", result);
-    return stopAllInstances(dryRun, currentOperatingTimezone, [
-      "InformixIcm*",
-    ]);
-  }).then( (result) => {
-    console.log(">>> 4", result);
-    return sleep(6000);
-  }).then((result)=> {
-    console.log(">>> 5", result);
-    return stopAllInstances(dryRun, currentOperatingTimezone, [
-      "*",
-    ]);
-  })
-  .then((result)=> {
-    console.log(">>>> 6 FINAL", result);
-  }).catch(error => {
-    console.log(">>> ERROR");
-  });
+  ])
+    .then((result) => {
+      console.log(">>> 2", result);
+      return sleep(6000);
+    })
+    .then((result) => {
+      console.log(">>> 3", result);
+      return stopAllInstances(dryRun, currentOperatingTimezone, [
+        "InformixIcm*",
+      ]);
+    })
+    .then((result) => {
+      console.log(">>> 4", result);
+      return sleep(6000);
+    })
+    .then((result) => {
+      console.log(">>> 5", result);
+      return stopAllInstances(dryRun, currentOperatingTimezone, ["*"]);
+    })
+    .then((result) => {
+      console.log(">>>> 6 FINAL", result);
+    })
+    .catch((error) => {
+      console.log(">>> ERROR");
+    });
 
   // sleep(60000).then(
   //   console.log("Wake up and stop icm instances, time:", new Date())
@@ -91,11 +94,7 @@ function stopAllInstancesAndspinDownSuspenceASGs(
  * @param {*} application
  * @returns
  */
-function handleASGs(
-  dryRun,
-  currentOperatingTimezone,
-  application
-) {
+function spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, application) {
   return Promise.all([
     spinDownASGs({ dryRun, currentOperatingTimezone, application }),
     suspendASGInstances({ dryRun, currentOperatingTimezone, application }),
@@ -103,9 +102,9 @@ function handleASGs(
 }
 
 /**
- * 
- * @param {*} param0 
- * @returns 
+ *
+ * @param {*} param0
+ * @returns
  */
 function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
   return listInstancesToStop(currentOperatingTimezone, application).then(
