@@ -23,32 +23,35 @@ function stopAllInstancesAndspinDownSuspenceASGs(
   currentOperatingTimezone
 ) {
   console.log(">>>> 1");
-  stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-    "rqp-whics-wcf",
-    "rqp-whics-healthline",
-    "rqp-whics-app",
-  ]).then( (result) => {
-    console.log(">>> 2", result);
-    return sleep(6000);
-  }).then((result)=> {
-    console.log(">>> 3", result);
-    return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-      "InformixIcm*",
-    ]);
-  }).then( (result) => {
-    console.log(">>> 4", result);
-    return sleep(6000);
-  }).then((result)=> {
-    console.log(">>> 5", result);
-    return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-      "*",
-    ]).then();
-  })
-  .then((result)=> {
-    console.log(">>>> 6 FINAL", result);
-  }).catch(error => {
-    console.log(">>> ERROR");
+  sleep(5000).then((result)=>{
+    console.log('>>>> sleep', result);
   });
+  // stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+  //   "rqp-whics-wcf",
+  //   "rqp-whics-healthline",
+  //   "rqp-whics-app",
+  // ]).then( (result) => {
+  //   console.log(">>> 2", result);
+  //   return sleep(6000);
+  // }).then((result)=> {
+  //   console.log(">>> 3", result);
+  //   return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+  //     "InformixIcm*",
+  //   ]);
+  // }).then( (result) => {
+  //   console.log(">>> 4", result);
+  //   return sleep(6000);
+  // }).then((result)=> {
+  //   console.log(">>> 5", result);
+  //   return stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+  //     "*",
+  //   ]).then();
+  // })
+  // .then((result)=> {
+  //   console.log(">>>> 6 FINAL", result);
+  // }).catch(error => {
+  //   console.log(">>> ERROR");
+  // });
 
   // sleep(60000).then(
   //   console.log("Wake up and stop icm instances, time:", new Date())
