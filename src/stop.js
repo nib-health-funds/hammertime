@@ -22,45 +22,43 @@ async function stopAllInstancesAndspinDownSuspenceASGs(
   dryRun,
   currentOperatingTimezone
 ) {
-  // Promise([
-  //   console.log("Start, time:", new Date()),
-  //   stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-  //     "rqp-whics-wcf",
-  //     "rqp-whics-healthline",
-  //     "rqp-whics-app",
-  //   ]),
-  // ])
-  //   .then()
-  //   .catch((err) => {
-  //     console.error(err);
-  //   });
   console.log("Start, time:", new Date()),
-  
-  await stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-  "rqp-whics-wcf",
-  "rqp-whics-healthline",
-  "rqp-whics-app",
-]);
+    stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+      "rqp-whics-wcf",
+      "rqp-whics-healthline",
+      "rqp-whics-app",
+    ]).then(
+      console.log(
+        "Sleep for 60000ms after stopping wcf healthline app, time:",
+        new Date()
+      )
+    );
 
-  console.log(
-    "Sleep for 60000ms after stopping wcf healthline app, time:",
-    new Date()
-  );
+  sleep(60000).then(
+    console.log("Wake up and stop icm instances, time:", new Date())
+  ); // We will wait for 4 minutes here
 
-  await sleep(60000); // We will wait for 4 minutes here
-  console.log("Wake up and stop icm instances, time:", new Date());
-  await stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-    "InformixIcm*",
-  ]);
+  Promise([
+    console.log("Start, time:", new Date()),
+    stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+      "InformixIcm*",
+    ]),
+  ]).then();
+
   console.log(
     "Sleep for another 60000ms after stopping icm, time:",
     new Date()
   );
-  await sleep(60000); // We will wait for 4 minutes here
-  console.log("Wake up and stop the rest instances, time:", new Date());
-  await stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-    "*",
-  ]);
+  sleep(60000).then(
+    console.log("Wake up and stop the rest instances, time:", new Date())
+  ); // We will wait for 4 minutes here
+
+  Promise([
+    console.log("Start, time:", new Date()),
+    stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
+      "*",
+    ]),
+  ]).then();
 }
 
 async function stopAllInstancesAndspinDownSuspenceASG(
