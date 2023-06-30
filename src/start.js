@@ -82,6 +82,8 @@ function spinUpOrResumeASGs({ dryRun, currentOperatingTimezone, application }) {
   ]);
 }
 function startAllInstances({ dryRun, currentOperatingTimezone, application }) {
+  console.log('APPLICATION - startAllInstances:', application)
+
   return listInstancesToStart(currentOperatingTimezone, application).then(
     (startableInstances) => {
       if (dryRun) {
