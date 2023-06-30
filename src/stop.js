@@ -80,6 +80,7 @@ function spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, application) {
  * @returns
  */
 function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
+  console.log('stopAllInstances-application value:', application)
   return listInstancesToStop(currentOperatingTimezone, application).then(
     (stoppableInstances) => {
       if (dryRun) {
