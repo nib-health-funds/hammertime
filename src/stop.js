@@ -14,7 +14,9 @@ const listServicesToStop = require("./ecs/listServicesToStop");
 const tagServices = require("./ecs/tagServices");
 const stopServices = require("./ecs/stopServices");
 const sleep = require("./utils/sleep");
+// const sleepTime = 240000;
 const sleepTime = 6000;
+
 /**
  * The order we want to stop the ec2: wcf, healthline, app (all asg) -> icm (instance with tag aws:cloudformation:logical-id start with InformixIcm) -> db (instance with tag aws:cloudformation:logical-id start with InformixDB)
  * @param {*} dryRun

@@ -18,7 +18,7 @@ function filterInstances(data, currentOperatingTimezone) {
     .map(reservation => reservation.Instances)
     .reduce((prev, curr) => prev.concat(curr), [])
     .filter(validInstance)
-    // .filter(isInstanceInCurrentOperatingTimezone(currentOperatingTimezone))
+    .filter(isInstanceInCurrentOperatingTimezone(currentOperatingTimezone))
     .map(instance => instance.InstanceId);
 }
 
