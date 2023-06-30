@@ -20,7 +20,10 @@ function resumeableASG(application) {
       hasTag(asg.Tags, "hammertime:asgsuspend") &&
       canITouchThis(asg.Tags) &&
       hasTag(asg.Tags, "Application") &&
-      hasTagValue(asg.Tags, "Application", application)
+      hasTagValue(asg.Tags, "Application", application) &&
+      // TODO: this is for testing this is for testing
+      hasTagValue(asg.Tags, "Slice", ['auto-w-2-c-636'])
+      // TODO: this is for testing this is for testing
     );
   };
 }
