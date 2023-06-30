@@ -148,7 +148,7 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
       resumeableASGs.forEach((asg) => {
         console.log(asg.AutoScalingGroupName);
         const startedInstances = asg.Instances.map((insts) =>
-          console.log('Would have been started ec2 instance for suspended asg', insts.InstanceId)
+          console.log('Would have been started ec2 instance for suspended asg:', insts.InstanceId)
         );
         return Promise.all(startedInstances);
       });

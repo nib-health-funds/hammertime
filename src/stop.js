@@ -178,7 +178,7 @@ function suspendASGInstances({
         suspendableASG.forEach((asg) => {
           console.log(asg.AutoScalingGroupName);
           const stoppedInstances = asg.Instances.map((insts) =>
-            console.log('Would have been stopped ec2 instance for suspended asg', insts.InstanceId)
+            console.log('Would have been stopped ec2 instance for suspended asg:', insts.InstanceId)
           );
           return Promise.all(stoppedInstances);
         });
@@ -294,12 +294,14 @@ module.exports = function stop(options) {
   const currentOperatingTimezone = event.currentOperatingTimezone;
   console.log(`Hammertime stop for ${currentOperatingTimezone}`);
   Promise.all([
-    stopAllDBInstances(dryRun),
+    // TODO: comment for testing
+    // stopAllDBInstances(dryRun),
     stopAllInstancesAndspinDownSuspenceASGs({
       dryRun,
       currentOperatingTimezone,
     }),
-    spinDownServices({ dryRun, currentOperatingTimezone }),
+    // TODO: comment for testing
+    // spinDownServices({ dryRun, currentOperatingTimezone }),
   ])
     .then(() => {
       if (!dryRun) {
