@@ -17,81 +17,57 @@ const sleep = require("./utils/sleep");
 
 /**
  * The order we want to stop the ec2: wcf, healthline, app (all asg) -> icm (instance with tag aws:cloudformation:logical-id start with InformixIcm) -> db (instance with tag aws:cloudformation:logical-id start with InformixDB)
+ * @param {*} dryRun 
+ * @param {*} currentOperatingTimezone 
  */
 function stopAllInstancesAndspinDownSuspenceASGs(
   dryRun,
   currentOperatingTimezone
 ) {
-  console.log(">>>> 1");
-  // sleep(5000)
-  // .then((result)=>{
-  //   console.log('>>>> 2 SLEEP should be 5000', result);
-  //   return doNothing();
-  // }).then((result)=> {
-  //   console.log('>>>> 3 SLEEP should be NOTHING', result);
-  //   return sleep(8000);
-  // }).then((result)=> {
-  //   console.log('>>>> 4 should be 8000', result);
-  // });
-
+  console.log(
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1 spinDownOrSuspendASGs"
+  );
   spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, [
     "rqp-whics-wcf",
     "rqp-whics-healthline",
     "rqp-whics-app",
   ])
     .then((result) => {
-      console.log(">>> 2", result);
-      return sleep(6000);
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2 sleep");
+      return sleep(15000);
     })
     .then((result) => {
-      console.log(">>> 3", result);
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3 InformixIcm");
       return stopAllInstances(dryRun, currentOperatingTimezone, [
         "InformixIcm*",
       ]);
     })
     .then((result) => {
-      console.log(">>> 4", result);
-      return sleep(6000);
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 4 sleep");
+      return sleep(15000);
     })
     .then((result) => {
-      console.log(">>> 5", result);
+      console.log(
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 5 the rest instances"
+      );
       return stopAllInstances(dryRun, currentOperatingTimezone, ["*"]);
     })
     .then((result) => {
-      console.log(">>>> 6 FINAL", result);
+      console.log(
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 6 FINISH",
+        result
+      );
     })
     .catch((error) => {
-      console.log(">>> ERROR");
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ERROR");
     });
-
-  // sleep(60000).then(
-  //   console.log("Wake up and stop icm instances, time:", new Date())
-  // ); // We will wait for 4 minutes here
-
-  // console.log("Start, time:", new Date()),
-  //   stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-  //     "InformixIcm*",
-  //   ]).then();
-
-  // console.log(
-  //   "Sleep for another 60000ms after stopping icm, time:",
-  //   new Date()
-  // );
-  // sleep(60000).then(
-  //   console.log("Wake up and stop the rest instances, time:", new Date())
-  // ); // We will wait for 4 minutes here
-
-  // console.log("Start, time:", new Date()),
-  //   stopAllInstancesAndspinDownSuspenceASG(dryRun, currentOperatingTimezone, [
-  //     "*",
-  //   ]).then();
 }
 
 /**
- *
+ * O
  * @param {*} dryRun
  * @param {*} currentOperatingTimezone
- * @param {*} application
+ * @param {*} application: list of application will check for Application tag, only check startwith, if do not care about this, put 'all'
  * @returns
  */
 function spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, application) {

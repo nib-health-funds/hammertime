@@ -133,7 +133,7 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone }) {
         resumeableASGs.forEach((asg) => {
           console.log(asg.AutoScalingGroupName);
           const startedInstances = asg.Instances.map(insts => console.log(insts.InstanceId));
-          return Promise.all(startedInstances);
+          // return Promise.all(startedInstances);
         });
         return [];
       }

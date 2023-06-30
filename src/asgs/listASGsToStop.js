@@ -5,6 +5,13 @@ const hasTagValue = require("../tags/hasTagValue");
 
 function stoppableASG(application) {
   return function stoppableASGFilter(asg) {
+    if (application === 'all') {
+      return (
+        !hasTag(asg.Tags, "stop:hammertime") &&
+        !hasTag(asg.Tags, "hammertime:asgsuspend") &&
+        canITouchThis(asg.Tags)
+      );
+    }
     return (
       !hasTag(asg.Tags, "stop:hammertime") &&
       !hasTag(asg.Tags, "hammertime:asgsuspend") &&
