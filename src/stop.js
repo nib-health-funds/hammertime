@@ -85,7 +85,7 @@ function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
       if (dryRun) {
         console.log("Dry run is enabled, will not stop or tag any instances.");
         console.log(
-          "Found the following instances that would have been shut down..."
+          `Found ${stoppableInstances.length} the following instances that would have been shut down...`
         );
         stoppableInstances.forEach((instance) => {
           console.log(instance);

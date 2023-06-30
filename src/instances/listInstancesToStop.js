@@ -11,6 +11,10 @@ function listInstancesToStop(currentOperatingTimezone, application) {
         Name: 'tag:aws:cloudformation:logical-id',
         Values: application,
       },      
+      {
+        Name: 'tag:Slice',
+        Values: 'auto-w-2-c-636',
+      },      
     ],
   };
 
