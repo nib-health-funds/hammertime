@@ -14,7 +14,7 @@ const listServicesToStop = require("./ecs/listServicesToStop");
 const tagServices = require("./ecs/tagServices");
 const stopServices = require("./ecs/stopServices");
 const sleep = require("./utils/sleep");
-const sleepTime = 6000
+const sleepTime = 6000;
 /**
  * The order we want to stop the ec2: wcf, healthline, app (all asg) -> icm (instance with tag aws:cloudformation:logical-id start with InformixIcm) -> db (instance with tag aws:cloudformation:logical-id start with InformixDB)
  * @param {*} dryRun
@@ -38,9 +38,11 @@ function stopAllInstancesAndspinDownSuspenceASGs(
     })
     .then((result) => {
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3 InformixIcm");
-      return stopAllInstances(dryRun, currentOperatingTimezone, [
-        'InformixIcm*'
-      ]);
+      return stopAllInstances({
+        dryRun,
+        currentOperatingTimezone,
+        application: ["InformixIcm*"],
+      });
     })
     .then((result) => {
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 4 sleep");
@@ -50,7 +52,11 @@ function stopAllInstancesAndspinDownSuspenceASGs(
       console.log(
         ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 5 the rest instances"
       );
-      return stopAllInstances(dryRun, currentOperatingTimezone, ['*']);
+      return stopAllInstances({
+        dryRun,
+        currentOperatingTimezone,
+        application: ["*"],
+      });
     })
     .then((result) => {
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 6 FINISH");
@@ -80,7 +86,7 @@ function spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, application) {
  * @returns
  */
 function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
-  console.log('stopAllInstances-application value:', application)
+  console.log("stopAllInstances-application value:", application);
   return listInstancesToStop(currentOperatingTimezone, application).then(
     (stoppableInstances) => {
       if (dryRun) {

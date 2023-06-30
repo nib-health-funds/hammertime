@@ -10,7 +10,7 @@ function listInstancesToStop(currentOperatingTimezone, application) {
       },
       {
         Name: 'tag:aws:cloudformation:logical-id',
-        Values: ['InformixIcm*'],
+        Values: application,
       },      
       {
         Name: 'tag:Slice',
