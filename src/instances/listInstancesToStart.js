@@ -1,7 +1,6 @@
 const listTargetInstances = require('./listTargetInstances');
 
 function listInstancesToStart(currentOperatingTimezone, application) {
-  console.log('APPLICATION - listInstancesToStart:', application)
   const params = {
     Filters: [
       {

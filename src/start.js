@@ -82,8 +82,6 @@ function spinUpOrResumeASGs({ dryRun, currentOperatingTimezone, application }) {
   ]);
 }
 function startAllInstances({ dryRun, currentOperatingTimezone, application }) {
-  console.log('APPLICATION - startAllInstances:', application)
-
   return listInstancesToStart(currentOperatingTimezone, application).then(
     (startableInstances) => {
       if (dryRun) {
@@ -278,9 +276,9 @@ module.exports = function start(options) {
   const currentOperatingTimezone = event.currentOperatingTimezone;
   console.log(`Hammertime start for ${currentOperatingTimezone}`);
   Promise.all([
-    startAllDBInstances(dryRun),
+    // startAllDBInstances(dryRun),
     startAllInstancesAndAsgs({ dryRun, currentOperatingTimezone }),
-    spinUpServices({ dryRun, currentOperatingTimezone }),
+    // spinUpServices({ dryRun, currentOperatingTimezone }),
   ])
     .then(() => {
       if (!dryRun) {
