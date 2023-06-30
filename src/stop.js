@@ -83,7 +83,7 @@ function stopAllInstancesAndspinDownSuspenceASGs({
  * @param {*} application: list of application will check for Application tag, only check startwith, if do not care about this, put 'all'
  * @returns
  */
-function spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, application) {
+function spinDownOrSuspendASGs({dryRun, currentOperatingTimezone, application}) {
   console.log("DRYRUN - spinDownOrSuspendASGs:", dryRun);
 
   return Promise.all([
