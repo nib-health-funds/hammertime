@@ -27,17 +27,18 @@ function stopAllInstancesAndspinDownSuspenceASGs(
   console.log(
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1 spinDownOrSuspendASGs"
   );
-  spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, [
-    "rqp-whics-wcf",
-    "rqp-whics-healthline",
-    "rqp-whics-app",
-  ])
+  // spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, [
+  //   "rqp-whics-wcf",
+  //   "rqp-whics-healthline",
+  //   "rqp-whics-app",
+  // ])
+  spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, 'all')
     .then((result) => {
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2 sleep");
       return sleep(sleepTime);
     })
     .then((result) => {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3 InformixIcm");
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3 stop InformixIcm");
       return stopAllInstances({
         dryRun,
         currentOperatingTimezone,
@@ -45,12 +46,12 @@ function stopAllInstancesAndspinDownSuspenceASGs(
       });
     })
     .then((result) => {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 4 sleep");
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 4 stop sleep");
       return sleep(sleepTime);
     })
     .then((result) => {
       console.log(
-        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 5 the rest instances"
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 5 stop the rest instances"
       );
       return stopAllInstances({
         dryRun,
@@ -86,7 +87,6 @@ function spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, application) {
  * @returns
  */
 function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
-  console.log("stopAllInstances-application value:", application);
   return listInstancesToStop(currentOperatingTimezone, application).then(
     (stoppableInstances) => {
       if (dryRun) {
