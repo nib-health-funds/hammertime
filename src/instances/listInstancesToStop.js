@@ -1,7 +1,6 @@
 const listTargetInstances = require('./listTargetInstances');
 
 function listInstancesToStop(currentOperatingTimezone, application) {
-  console.log("application for filter:", application)
   const params = {
     Filters: [
       {
@@ -11,11 +10,13 @@ function listInstancesToStop(currentOperatingTimezone, application) {
       {
         Name: 'tag:aws:cloudformation:logical-id',
         Values: application,
-      },      
+      },     
+      //TODO: This is for testing this is for testing 
       {
         Name: 'tag:Slice',
         Values: ['auto-w-2-c-636'],
       },      
+      //TODO: This is for testing this is for testing 
     ],
   };
 
