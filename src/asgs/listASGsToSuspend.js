@@ -1,4 +1,5 @@
-const hasTag = require("../tags/hasTag");
+const hasTag = require("../tags/hasTagValue");
+const hasTagValue = require("../tags/hasTag");
 const listTargetASGs = require("./listTargetASGs");
 const canITouchThis = require("../tags/canITouchThis");
 
