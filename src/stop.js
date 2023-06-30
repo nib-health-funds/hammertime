@@ -24,6 +24,11 @@ function stopAllInstancesAndspinDownSuspenceASGs(
   dryRun,
   currentOperatingTimezone
 ) {
+
+  console.log(
+    "DRYRUN - stopAllInstancesAndspinDownSuspenceASGs:", dryRun
+  );
+
   console.log(
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1 spinDownOrSuspendASGs"
   );
@@ -76,6 +81,10 @@ function stopAllInstancesAndspinDownSuspenceASGs(
  * @returns
  */
 function spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, application) {
+  console.log(
+    "DRYRUN - spinDownOrSuspendASGs:", dryRun
+  );
+
   return Promise.all([
     spinDownASGs({ dryRun, currentOperatingTimezone, application }),
     suspendASGInstances({ dryRun, currentOperatingTimezone, application }),
@@ -88,6 +97,9 @@ function spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, application) {
  * @returns
  */
 function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
+  console.log(
+    "DRYRUN - suspendASGInstances:", dryRun
+  );
   return listInstancesToStop(currentOperatingTimezone, application).then(
     (stoppableInstances) => {
       if (dryRun) {
@@ -124,6 +136,10 @@ function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
 }
 
 function spinDownASGs({ dryRun, currentOperatingTimezone, application }) {
+  console.log(
+    "DRYRUN - spinDownASGs:", dryRun
+  );
+
   return listASGsToStop(currentOperatingTimezone, application).then(
     (stoppableASGs) => {
       if (dryRun) {
@@ -168,6 +184,10 @@ function suspendASGInstances({
   currentOperatingTimezone,
   application,
 }) {
+  console.log(
+    "DRYRUN - suspendASGInstances:", dryRun
+  );
+
   return listASGsToSuspend(currentOperatingTimezone, application).then(
     (suspendableASG) => {
       if (dryRun) {
