@@ -1,6 +1,6 @@
 const listTargetInstances = require('./listTargetInstances');
 
-function listInstancesToStart(currentOperatingTimezone) {
+function listInstancesToStart(currentOperatingTimezone, application) {
   const params = {
     Filters: [
       {
@@ -11,6 +11,10 @@ function listInstancesToStart(currentOperatingTimezone) {
         Name: 'tag-key',
         Values: ['stop:hammertime'],
       },
+      {
+        Name: 'tag:aws:cloudformation:logical-id',
+        Values: application,
+      },      
     ],
   };
 
