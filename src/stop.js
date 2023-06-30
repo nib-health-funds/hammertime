@@ -20,14 +20,11 @@ const sleepTime = 6000;
  * @param {*} dryRun
  * @param {*} currentOperatingTimezone
  */
-function stopAllInstancesAndspinDownSuspenceASGs(
+function stopAllInstancesAndspinDownSuspenceASGs({
   dryRun,
-  currentOperatingTimezone
-) {
-
-  console.log(
-    "DRYRUN - stopAllInstancesAndspinDownSuspenceASGs:", dryRun
-  );
+  currentOperatingTimezone,
+}) {
+  console.log("DRYRUN - stopAllInstancesAndspinDownSuspenceASGs:", dryRun);
 
   console.log(
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1 spinDownOrSuspendASGs"
@@ -38,13 +35,19 @@ function stopAllInstancesAndspinDownSuspenceASGs(
   //   "rqp-whics-healthline",
   //   "rqp-whics-app",
   // ])
-  spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, 'all')
+  spinDownOrSuspendASGs({
+    dryRun,
+    currentOperatingTimezone,
+    application: "all",
+  })
     .then((result) => {
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2 sleep");
       return sleep(sleepTime);
     })
     .then((result) => {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3 stop InformixIcm");
+      console.log(
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3 stop InformixIcm"
+      );
       return stopAllInstances({
         dryRun,
         currentOperatingTimezone,
@@ -81,9 +84,7 @@ function stopAllInstancesAndspinDownSuspenceASGs(
  * @returns
  */
 function spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, application) {
-  console.log(
-    "DRYRUN - spinDownOrSuspendASGs:", dryRun
-  );
+  console.log("DRYRUN - spinDownOrSuspendASGs:", dryRun);
 
   return Promise.all([
     spinDownASGs({ dryRun, currentOperatingTimezone, application }),
@@ -97,9 +98,7 @@ function spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, application) {
  * @returns
  */
 function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
-  console.log(
-    "DRYRUN - suspendASGInstances:", dryRun
-  );
+  console.log("DRYRUN - suspendASGInstances:", dryRun);
   return listInstancesToStop(currentOperatingTimezone, application).then(
     (stoppableInstances) => {
       if (dryRun) {
@@ -136,9 +135,7 @@ function stopAllInstances({ dryRun, currentOperatingTimezone, application }) {
 }
 
 function spinDownASGs({ dryRun, currentOperatingTimezone, application }) {
-  console.log(
-    "DRYRUN - spinDownASGs:", dryRun
-  );
+  console.log("DRYRUN - spinDownASGs:", dryRun);
 
   return listASGsToStop(currentOperatingTimezone, application).then(
     (stoppableASGs) => {
@@ -184,9 +181,7 @@ function suspendASGInstances({
   currentOperatingTimezone,
   application,
 }) {
-  console.log(
-    "DRYRUN - suspendASGInstances:", dryRun
-  );
+  console.log("DRYRUN - suspendASGInstances:", dryRun);
 
   return listASGsToSuspend(currentOperatingTimezone, application).then(
     (suspendableASG) => {
@@ -198,7 +193,10 @@ function suspendASGInstances({
         suspendableASG.forEach((asg) => {
           console.log(asg.AutoScalingGroupName);
           const stoppedInstances = asg.Instances.map((insts) =>
-            console.log('Would have been stopped ec2 instance for suspended asg:', insts.InstanceId)
+            console.log(
+              "Would have been stopped ec2 instance for suspended asg:",
+              insts.InstanceId
+            )
           );
           return Promise.all(stoppedInstances);
         });
@@ -312,7 +310,9 @@ function spinDownServices({ dryRun, currentOperatingTimezone }) {
 module.exports = function stop(options) {
   const { event, callback, dryRun } = options;
   const currentOperatingTimezone = event.currentOperatingTimezone;
-  console.log(`Hammertime stop for ${currentOperatingTimezone}, dryrun: ${dryRun}`);
+  console.log(
+    `Hammertime stop for ${currentOperatingTimezone}, dryrun: ${dryRun}`
+  );
   Promise.all([
     // TODO: comment for testing
     // stopAllDBInstances(dryRun),
