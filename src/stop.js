@@ -292,7 +292,7 @@ function spinDownServices({ dryRun, currentOperatingTimezone }) {
 module.exports = function stop(options) {
   const { event, callback, dryRun } = options;
   const currentOperatingTimezone = event.currentOperatingTimezone;
-  console.log(`Hammertime stop for ${currentOperatingTimezone}`);
+  console.log(`Hammertime stop for ${currentOperatingTimezone}, dryrun: ${dryRun}`);
   Promise.all([
     // TODO: comment for testing
     // stopAllDBInstances(dryRun),
