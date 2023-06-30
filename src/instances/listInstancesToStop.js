@@ -13,7 +13,7 @@ function listInstancesToStop(currentOperatingTimezone, application) {
       },      
       {
         Name: 'tag:Slice',
-        Values: 'auto-w-2-c-636',
+        Values: ['auto-w-2-c-636'],
       },      
     ],
   };
