@@ -9,7 +9,10 @@ function suspendableASG(application) {
       return (
         !hasTag(asg.Tags, "stop:hammertime") &&
         hasTag(asg.Tags, "hammertime:asgsuspend") &&
-        canITouchThis(asg.Tags)
+        canITouchThis(asg.Tags) && 
+        // TODO: this is for testing this is for testing
+        hasTagValue(asg.Tags, "Slice", ['auto-w-2-c-636'])
+        // TODO: this is for testing this is for testing
       );  
     }
     return (

@@ -27,6 +27,7 @@ function stopAllInstancesAndspinDownSuspenceASGs(
   console.log(
     ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1 spinDownOrSuspendASGs"
   );
+  // We can list the application - just need to meet the startwith from Application tag if do not want to spindown/suspend all the asg like the example below
   // spinDownOrSuspendASGs(dryRun, currentOperatingTimezone, [
   //   "rqp-whics-wcf",
   //   "rqp-whics-healthline",
@@ -177,7 +178,7 @@ function suspendASGInstances({
         suspendableASG.forEach((asg) => {
           console.log(asg.AutoScalingGroupName);
           const stoppedInstances = asg.Instances.map((insts) =>
-            console.log(insts.InstanceId)
+            console.log('Would have been stopped ec2 instance for suspended asg', insts.InstanceId)
           );
           return Promise.all(stoppedInstances);
         });
