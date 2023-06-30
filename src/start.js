@@ -14,6 +14,7 @@ const listServicesToStart = require("./ecs/listServicesToStart");
 const startServices = require("./ecs/startServices");
 const untagServices = require("./ecs/untagServices");
 const sleep = require("./utils/sleep");
+const sleepTime = 6000
 
 /**
  *
@@ -26,7 +27,7 @@ function startAllInstancesAndAsgs(dryRun, currentOperatingTimezone) {
   startAllInstances(dryRun, currentOperatingTimezone, ["InformixDB*"])
     .then((result) => {
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2 sleep");
-      return sleep(15000);
+      return sleep(sleepTime);
     })
     .then((result) => {
       console.log(
@@ -36,10 +37,10 @@ function startAllInstancesAndAsgs(dryRun, currentOperatingTimezone) {
     })
     .then((result) => {
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 4 sleep");
-      return sleep(15000);
+      return sleep(sleepTime);
     })
     .then((result) => {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 5 hand ASGs");
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 5 handle ASGs");
       return spinUpOrResumeASGs(dryRun, currentOperatingTimezone, [
         "rqp-whics-wcf",
         "rqp-whics-healthline",
@@ -47,13 +48,10 @@ function startAllInstancesAndAsgs(dryRun, currentOperatingTimezone) {
       ]);
     })
     .then((result) => {
-      console.log(
-        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 6 FINISH",
-        result
-      );
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 6 FINISH");
     })
     .catch((error) => {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ERROR");
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ERROR", error);
     });
 }
 /**
