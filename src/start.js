@@ -276,9 +276,9 @@ module.exports = function start(options) {
   const currentOperatingTimezone = event.currentOperatingTimezone;
   console.log(`Hammertime start for ${currentOperatingTimezone}`);
   Promise.all([
-    // startAllDBInstances(dryRun),
+    startAllDBInstances(dryRun),
     startAllInstancesAndAsgs({ dryRun, currentOperatingTimezone }),
-    // spinUpServices({ dryRun, currentOperatingTimezone }),
+    spinUpServices({ dryRun, currentOperatingTimezone }),
   ])
     .then(() => {
       if (!dryRun) {

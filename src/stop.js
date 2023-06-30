@@ -305,14 +305,12 @@ module.exports = function stop(options) {
     `Hammertime stop for ${currentOperatingTimezone}, dryrun: ${dryRun}`
   );
   Promise.all([
-    // TODO: comment for testing
-    // stopAllDBInstances(dryRun),
+    stopAllDBInstances(dryRun),
     stopAllInstancesAndspinDownSuspenceASGs({
       dryRun,
       currentOperatingTimezone,
     }),
-    // TODO: comment for testing
-    // spinDownServices({ dryRun, currentOperatingTimezone }),
+    spinDownServices({ dryRun, currentOperatingTimezone }),
   ])
     .then(() => {
       if (!dryRun) {
