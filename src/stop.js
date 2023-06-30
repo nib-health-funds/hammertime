@@ -39,7 +39,7 @@ function stopAllInstancesAndspinDownSuspenceASGs(
     .then((result) => {
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3 InformixIcm");
       return stopAllInstances(dryRun, currentOperatingTimezone, [
-        "InformixIcm*",
+        'InformixIcm*'
       ]);
     })
     .then((result) => {
@@ -50,7 +50,7 @@ function stopAllInstancesAndspinDownSuspenceASGs(
       console.log(
         ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 5 the rest instances"
       );
-      return stopAllInstances(dryRun, currentOperatingTimezone, ["*"]);
+      return stopAllInstances(dryRun, currentOperatingTimezone, ['*']);
     })
     .then((result) => {
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 6 FINISH");

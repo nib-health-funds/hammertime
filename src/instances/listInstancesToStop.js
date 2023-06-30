@@ -1,16 +1,17 @@
 const listTargetInstances = require('./listTargetInstances');
 
 function listInstancesToStop(currentOperatingTimezone, application) {
+  console.log("application for filter:", application)
   const params = {
     Filters: [
       {
         Name: 'instance-state-name',
         Values: ['running'],
       },
-      // {
-      //   Name: 'tag:aws:cloudformation:logical-id',
-      //   Values: application,
-      // },      
+      {
+        Name: 'tag:aws:cloudformation:logical-id',
+        Values: ['InformixIcm*'],
+      },      
       {
         Name: 'tag:Slice',
         Values: ['auto-w-2-c-636'],
