@@ -10,7 +10,7 @@ describe('listASGsToStart()', () => {
   it('returns list of asgs spun down by hammertime', () => {
     AWS.mock('AutoScaling', 'describeAutoScalingGroups', startOnePageResponse);
 
-    return listASGsToStart(defaultOperatingTimezone)
+    return listASGsToStart(defaultOperatingTimezone, 'all')
       .then((validAsgs) => {
         assert.equal(validAsgs.length, 1);
         assert.equal(validAsgs[0].AutoScalingGroupName, 'can-touch-this-asg-page-2');
@@ -19,7 +19,7 @@ describe('listASGsToStart()', () => {
 
   it('returns an empty list if no asgs found', () => {
     AWS.mock('AutoScaling', 'describeAutoScalingGroups', emptyResponse);
-    return listASGsToStart(defaultOperatingTimezone)
+    return listASGsToStart(defaultOperatingTimezone, 'all')
       .then((validAsgs) => {
         assert.deepEqual(validAsgs, []);
       });
@@ -30,7 +30,7 @@ describe('listASGsToStart()', () => {
       callback(null, paginatedStart(params.NextToken));
     });
 
-    return listASGsToStart(defaultOperatingTimezone, ['*'])
+    return listASGsToStart(defaultOperatingTimezone, 'all')
       .then((validAsgs) => {
         assert.equal(validAsgs.length, 2);
         assert.equal(validAsgs.some(asg => asg.AutoScalingGroupName === 'can-touch-this-asg-page-1'), true);
