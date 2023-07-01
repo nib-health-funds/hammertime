@@ -24,7 +24,7 @@ const sleepTime = 240000;
 function startAllInstancesAndAsgs({ dryRun, currentOperatingTimezone }) {
   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1 start InformixDB");
 
-  startAllInstances({
+  return startAllInstances({
     dryRun,
     currentOperatingTimezone,
     application: ["InformixDB*"],

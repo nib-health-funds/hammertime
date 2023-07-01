@@ -34,7 +34,7 @@ function stopAllInstancesAndspinDownSuspenceASGs({
   //   "rqp-whics-healthline",
   //   "rqp-whics-app",
   // ])
-  spinDownOrSuspendASGs({
+  return spinDownOrSuspendASGs({
     dryRun,
     currentOperatingTimezone,
     application: "all",
