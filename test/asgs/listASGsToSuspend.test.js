@@ -11,7 +11,7 @@ describe('listASGsToSuspend()', () => {
   it('returns list of valid running asgs', () => {
     AWS.mock('AutoScaling', 'describeAutoScalingGroups', suspendOnePageResponse);
 
-    return listASGsToSuspend(defaultOperatingTimezone)
+    return listASGsToSuspend(defaultOperatingTimezone, 'all')
       .then((validAsgs) => {
         assert.equal(validAsgs.length, 1);
         assert.equal(validAsgs[0].AutoScalingGroupName, 'can-touch-this-asg-page-2');
@@ -32,7 +32,7 @@ describe('listASGsToSuspend()', () => {
       callback(null, paginatedSuspend(params.NextToken));
     });
 
-    return listASGsToSuspend(defaultOperatingTimezone)
+    return listASGsToSuspend(defaultOperatingTimezone, 'all')
       .then((validAsgs) => {
         assert.equal(validAsgs.length, 2);
         assert.equal(validAsgs.some(asg => asg.AutoScalingGroupName === 'can-touch-this-asg-page-1'), true);
@@ -45,7 +45,7 @@ describe('listASGsToSuspend()', () => {
       callback(null, suspendAlreadyRunResponse);
     });
 
-    return listASGsToSuspend(defaultOperatingTimezone)
+    return listASGsToSuspend(defaultOperatingTimezone, 'all')
       .then((validAsgs) => {
         assert.equal(validAsgs.length, 1);
         assert.equal(validAsgs.some(asg => asg.AutoScalingGroupName === 'can-touch-this-asg'), true);

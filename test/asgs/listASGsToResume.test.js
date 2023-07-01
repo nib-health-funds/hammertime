@@ -30,7 +30,7 @@ describe('listASGsToResume()', () => {
       callback(null, paginatedResume(params.NextToken));
     });
 
-    return listASGsToResume(defaultOperatingTimezone)
+    return listASGsToResume(defaultOperatingTimezone, 'all')
       .then((validAsgs) => {
         assert.equal(validAsgs.length, 2);
         assert.equal(validAsgs.some(asg => asg.AutoScalingGroupName === 'can-touch-this-asg-page-1'), true);
