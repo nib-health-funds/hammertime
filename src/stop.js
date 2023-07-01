@@ -314,9 +314,6 @@ module.exports = function stop(options) {
     spinDownServices({ dryRun, currentOperatingTimezone }),
   ])
     .then(() => {
-      console.log(
-        "Dryrun All EC2, RDS instances, ASGs, and ECS services stopped successfully. Good night!"
-      );
       if (!dryRun) {
         console.log(
           "All EC2, RDS instances, ASGs, and ECS services stopped successfully. Good night!"
