@@ -193,7 +193,7 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
           console.log(`Starting instance with id: ${insts.InstanceId}`);
           startInstances([insts.InstanceId]);
         });
-        return Promise.all(startInstances);
+        return Promise.all(startedInstances);
       });
 
       return Promise.all(allPromises).then(() => {
