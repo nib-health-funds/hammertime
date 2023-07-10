@@ -193,7 +193,7 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
           console.log(`Starting instance with id: ${insts.InstanceId}`);
           startInstances([insts.InstanceId]);
         });
-        return Promise(startedInstances).then(() => {
+        return startedInstances.then(() => {
           return resumeASGs(resumeableASGs).then((resumedASGs) => {
             console.log(
               `Finished resuming ASGs and starting instances. Moving on to untag ${asg.AutoScalingGroupName} of them.`
