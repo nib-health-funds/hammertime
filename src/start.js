@@ -189,39 +189,41 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
 
       console.log(`Starting EC2 instances and resuming ASGs.`);
       return resumeableASGs.forEach((asg) => {
-        return Promise.all(asg.Instances.map((insts) => {
+        const startedInstances= asg.Instances.map((insts) => {
           console.log(`Starting instance with id: ${insts.InstanceId}`);
           startInstances([insts.InstanceId]);
-        })).then(() => {
-          return resumeASGs(resumeableASGs).then((resumedASGs) => {
-            console.log(
-              `Finished resuming ASGs and starting instances. Moving on to untag ${asg.AutoScalingGroupName} of them.`
-            );
-            return untagResumedASGs(resumedASGs);
-          });
         });
-        // return Promise.all(startedInstances).then(() => {
-        //   return resumeASGs(resumeableASGs).then((resumedASGs) => {
-        //     console.log(
-        //       `Finished resuming ASGs and starting instances. Moving on to untag ${asg.AutoScalingGroupName} of them.`
-        //     );
-        //     return untagResumedASGs(resumedASGs);
-        //   });
-        // });
+        return Promise.all(startedInstances);
+      }).then(() => {
+        return resumeASGs(resumeableASGs).then((resumedASGs) => {
+          console.log(
+            `Finished resuming ASGs and starting instances. Moving on to untag ${asg.AutoScalingGroupName} of them.`
+          );
+          return untagResumedASGs(resumedASGs);
+        });
       });
 
 
-      // return suspendASGs(taggedASGs).then(() => {
-      //   suspendableASG.forEach((asg) => {
+      // return tagSuspendedASGs(suspendableASG).then((taggedASGs) => {
+      //   if (taggedASGs.length > 0) {
       //     console.log(
-      //       "Finished suspending ASGs. Moving on to stopping instances."
+      //       `Finished tagging ASGs. Moving on to suspend processes for ${taggedASGs.length} ASGs.`
       //     );
-      //     const stoppedInstances = asg.Instances.map((insts) => {
-      //       console.log(`Stopping instance with id: ${insts.InstanceId}`);
-      //       stopInstances([insts.InstanceId]);
+      //     return suspendASGs(taggedASGs).then(() => {
+      //       suspendableASG.forEach((asg) => {
+      //         console.log(
+      //           "Finished suspending ASGs. Moving on to stopping instances."
+      //         );
+      //         const stoppedInstances = asg.Instances.map((insts) => {
+      //           console.log(`Stopping instance with id: ${insts.InstanceId}`);
+      //           stopInstances([insts.InstanceId]);
+      //         });
+      //         return Promise.all(stoppedInstances);
+      //       });
       //     });
-      //     return Promise.all(stoppedInstances);
-      //   });
+      //   }
+
+      //   return [];
       // });
 
     }
