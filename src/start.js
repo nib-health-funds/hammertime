@@ -14,7 +14,7 @@ const listServicesToStart = require("./ecs/listServicesToStart");
 const startServices = require("./ecs/startServices");
 const untagServices = require("./ecs/untagServices");
 const sleep = require("./utils/sleep");
-const sleepTime = 240000;
+const sleepTime = 6000;
 
 /**
  *
@@ -193,10 +193,10 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
           console.log(`Starting instance with id: ${insts.InstanceId}`);
           startInstances([insts.InstanceId]);
         });
-        return Promise.all(startedInstances).then(() => {
+        return Promise(startedInstances).then(() => {
           return resumeASGs(resumeableASGs).then((resumedASGs) => {
             console.log(
-              `Finished resuming ASGs and starting instances. Moving on to untag ${resumedASGs.length} of them.`
+              `Finished resuming ASGs and starting instances. Moving on to untag ${asg.AutoScalingGroupName} of them.`
             );
             return untagResumedASGs(resumedASGs);
           });

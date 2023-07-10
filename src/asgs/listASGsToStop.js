@@ -9,7 +9,8 @@ function stoppableASG(application) {
       return (
         !hasTag(asg.Tags, "stop:hammertime") &&
         !hasTag(asg.Tags, "hammertime:asgsuspend") &&
-        canITouchThis(asg.Tags)
+        canITouchThis(asg.Tags) &&
+        hasTagValue(asg.Tags, "Slice", ['w-2-c-546'])        
       );
     }
     return (
@@ -17,7 +18,8 @@ function stoppableASG(application) {
       !hasTag(asg.Tags, "hammertime:asgsuspend") &&
       canITouchThis(asg.Tags) &&
       hasTag(asg.Tags, "Application") &&
-      hasTagValue(asg.Tags, "Application", application)
+      hasTagValue(asg.Tags, "Application", application) &&
+      hasTagValue(asg.Tags, "Slice", ['w-2-c-546'])      
     );
   };
 }
