@@ -188,13 +188,15 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
       });
 
       console.log(`Starting EC2 instances and resuming ASGs.`);
-      return resumeableASGs.forEach((asg) => {
-        const startedInstances= asg.Instances.map((insts) => {
+      const allPromises = resumeableASGs.map((asg) => {
+        const startedInstances = asg.Instances.map((insts) => {
           console.log(`Starting instance with id: ${insts.InstanceId}`);
           startInstances([insts.InstanceId]);
         });
-        return Promise.all(startedInstances);
-      }).then(() => {
+        return Promise.all(startInstances);
+      });
+
+      return Promise.all(allPromises).then(() => {
         return resumeASGs(resumeableASGs).then((resumedASGs) => {
           console.log(
             `Finished resuming ASGs and starting instances. Moving on to untag ${asg.AutoScalingGroupName} of them.`
@@ -202,7 +204,6 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
           return untagResumedASGs(resumedASGs);
         });
       });
-
 
       // return tagSuspendedASGs(suspendableASG).then((taggedASGs) => {
       //   if (taggedASGs.length > 0) {
@@ -225,7 +226,6 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
 
       //   return [];
       // });
-
     }
   );
 }
