@@ -199,7 +199,7 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
       return Promise.all(allPromises).then(() => {
         return resumeASGs(resumeableASGs).then((resumedASGs) => {
           console.log(
-            `Finished resuming ASGs and starting instances. Moving on to untag ${resumeableASGs.length} of them.`
+            `Finished resuming ASGs and starting instances. Moving on to untag ${resumedASGs.length} of them.`
           );
           return untagResumedASGs(resumedASGs);
         });
