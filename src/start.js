@@ -193,7 +193,8 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
           console.log(`Starting instance with id: ${insts.InstanceId}`);
           startInstances([insts.InstanceId]);
         });
-        return Promise.all(startedInstances).then(() => {
+        // return Promise.all(startedInstances).then(() => {
+        return startedInstances.then(() => {
           return resumeASGs(resumeableASGs).then((resumedASGs) => {
             console.log(
               `Finished resuming ASGs and starting instances. Moving on to untag ${asg.AutoScalingGroupName} of them.`
@@ -202,6 +203,21 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
           });
         });
       });
+
+
+      // return suspendASGs(taggedASGs).then(() => {
+      //   suspendableASG.forEach((asg) => {
+      //     console.log(
+      //       "Finished suspending ASGs. Moving on to stopping instances."
+      //     );
+      //     const stoppedInstances = asg.Instances.map((insts) => {
+      //       console.log(`Stopping instance with id: ${insts.InstanceId}`);
+      //       stopInstances([insts.InstanceId]);
+      //     });
+      //     return Promise.all(stoppedInstances);
+      //   });
+      // });
+
     }
   );
 }
