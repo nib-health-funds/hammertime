@@ -17,7 +17,7 @@ function untagASG(asg) {
 function untagResumedASGs(asgs) {
   const untaggedASGs = asgs.map(asg => untagASG(asg));
   try {
-    return Promise(untaggedASGs);
+    return Promise.all(untaggedASGs);
   }
     catch (err) {
       console.log('untagResumedASGs - Broken Promise here:' + err);
