@@ -5,12 +5,11 @@ const hasTagValue = require("../tags/hasTagValue");
 
 function startableASG(application) {
   return function startableASGFilter(asg) {
-    if (application === 'all') {
+    if (application === "all") {
       return (
         hasTag(asg.Tags, "stop:hammertime") &&
         !hasTag(asg.Tags, "hammertime:asgsuspend") &&
-        canITouchThis(asg.Tags) &&
-        hasTagValue(asg.Tags, "Slice", ['w-2-c-546'])
+        canITouchThis(asg.Tags)
       );
     }
     return (
@@ -18,14 +17,16 @@ function startableASG(application) {
       !hasTag(asg.Tags, "hammertime:asgsuspend") &&
       canITouchThis(asg.Tags) &&
       hasTag(asg.Tags, "Application") &&
-      hasTagValue(asg.Tags, "Application", application) &&
-      hasTagValue(asg.Tags, "Slice", ['w-2-c-546'])
+      hasTagValue(asg.Tags, "Application", application)
     );
   };
 }
 
 function listASGsToStart(currentOperatingTimezone, application) {
-  return listTargetASGs({ filter: startableASG(application), currentOperatingTimezone });
+  return listTargetASGs({
+    filter: startableASG(application),
+    currentOperatingTimezone,
+  });
 }
 
 module.exports = listASGsToStart;
