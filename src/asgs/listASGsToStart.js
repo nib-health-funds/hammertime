@@ -5,7 +5,7 @@ const hasTagValue = require("../tags/hasTagValue");
 
 function startableASG(application) {
   return function startableASGFilter(asg) {
-    if (application === 'all') {
+    if (application === "all") {
       return (
         hasTag(asg.Tags, "stop:hammertime") &&
         !hasTag(asg.Tags, "hammertime:asgsuspend") &&
@@ -23,7 +23,10 @@ function startableASG(application) {
 }
 
 function listASGsToStart(currentOperatingTimezone, application) {
-  return listTargetASGs({ filter: startableASG(application), currentOperatingTimezone });
+  return listTargetASGs({
+    filter: startableASG(application),
+    currentOperatingTimezone,
+  });
 }
 
 module.exports = listASGsToStart;

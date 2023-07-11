@@ -5,12 +5,12 @@ const canITouchThis = require("../tags/canITouchThis");
 
 function suspendableASG(application) {
   return function suspendableASGFilter(asg) {
-    if (application === 'all') {
+    if (application === "all") {
       return (
         !hasTag(asg.Tags, "stop:hammertime") &&
         hasTag(asg.Tags, "hammertime:asgsuspend") &&
         canITouchThis(asg.Tags)
-      );  
+      );
     }
     return (
       !hasTag(asg.Tags, "stop:hammertime") &&
@@ -23,7 +23,10 @@ function suspendableASG(application) {
 }
 
 function listASGsToSuspend(currentOperatingTimezone, application) {
-  return listTargetASGs({ filter: suspendableASG(application), currentOperatingTimezone });
+  return listTargetASGs({
+    filter: suspendableASG(application),
+    currentOperatingTimezone,
+  });
 }
 
 module.exports = listASGsToSuspend;
