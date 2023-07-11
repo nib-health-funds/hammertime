@@ -204,28 +204,6 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
           return untagResumedASGs(resumedASGs);
         });
       });
-
-      // return tagSuspendedASGs(suspendableASG).then((taggedASGs) => {
-      //   if (taggedASGs.length > 0) {
-      //     console.log(
-      //       `Finished tagging ASGs. Moving on to suspend processes for ${taggedASGs.length} ASGs.`
-      //     );
-      //     return suspendASGs(taggedASGs).then(() => {
-      //       suspendableASG.forEach((asg) => {
-      //         console.log(
-      //           "Finished suspending ASGs. Moving on to stopping instances."
-      //         );
-      //         const stoppedInstances = asg.Instances.map((insts) => {
-      //           console.log(`Stopping instance with id: ${insts.InstanceId}`);
-      //           stopInstances([insts.InstanceId]);
-      //         });
-      //         return Promise.all(stoppedInstances);
-      //       });
-      //     });
-      //   }
-
-      //   return [];
-      // });
     }
   );
 }
