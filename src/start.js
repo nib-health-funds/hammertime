@@ -14,6 +14,7 @@ const listServicesToStart = require("./ecs/listServicesToStart");
 const startServices = require("./ecs/startServices");
 const untagServices = require("./ecs/untagServices");
 const sleep = require("./utils/sleep");
+const retryWhenThrottled = require("../utils/retryWhenThrottled");
 const sleepTime = 6000;
 
 /**
@@ -190,8 +191,12 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
       console.log(`Starting EC2 instances and resuming ASGs.`);
       const allPromises = resumeableASGs.map((asg) => {
         const startedInstances = asg.Instances.map((insts) => {
-          console.log(`Starting instance with id: ${insts.InstanceId} for asg ${asg.AutoScalingGroupName}`);
-          startInstances([insts.InstanceId]).then(() => {return sleep(500)});
+          console.log(
+            `Starting instance with id: ${insts.InstanceId} for asg ${asg.AutoScalingGroupName}`
+          );
+          startInstances([insts.InstanceId]).then(() => {
+            return sleep(500);
+          });
         });
         return Promise.all(startedInstances);
       });
