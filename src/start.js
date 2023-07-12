@@ -188,17 +188,24 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
       });
 
       console.log(`Starting EC2 instances and resuming ASGs.`);
-      const allPromises = resumeableASGs.map((asg) => {
-        const startedInstances = asg.Instances.map((insts) => {
-          console.log(
-            `Starting instance with id: ${insts.InstanceId} for asg ${asg.AutoScalingGroupName}`
-          );
-          return startInstances([insts.InstanceId]);
-        });
-        return Promise.all(startedInstances);
-      });
 
-      return Promise.all(allPromises).then(() => {
+      const instancesAsgs = []
+      resumeableASGs.forEach((asg) => {
+        const instancesAsg = asg.Instances.map((insts) => insts.InstanceId)
+        console.log(
+          `Instance id: ${instancesAsg} for asg ${asg.AutoScalingGroupName}`
+        );
+        instancesAsgs = instancesAsgs.concat(instancesAsg)
+      })
+      console.log(
+        `List instances need to start for suspended asg: ${instancesAsgs}`
+      );
+
+      return startInstances(instancesAsgs).then(() => {
+        console.log(
+          `Finished start ${instancesAsgs.length} instances for asg. Moving on to resume ASGs.`
+        );
+
         return resumeASGs(resumeableASGs).then((resumedASGs) => {
           console.log(
             `Finished resuming ASGs and starting instances. Moving on to untag ${resumedASGs.length} of them.`
@@ -206,6 +213,26 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
           return untagResumedASGs(resumedASGs);
         });
       });
+
+
+      // const allPromises = resumeableASGs.map((asg) => {
+      //   const startedInstances = asg.Instances.map((insts) => {
+      //     console.log(
+      //       `Starting instance with id: ${insts.InstanceId} for asg ${asg.AutoScalingGroupName}`
+      //     );
+      //     return startInstances([insts.InstanceId]);
+      //   });
+      //   return Promise.all(startedInstances);
+      // });
+
+      // return Promise.all(allPromises).then(() => {
+      //   return resumeASGs(resumeableASGs).then((resumedASGs) => {
+      //     console.log(
+      //       `Finished resuming ASGs and starting instances. Moving on to untag ${resumedASGs.length} of them.`
+      //     );
+      //     return untagResumedASGs(resumedASGs);
+      //   });
+      // });
     }
   );
 }
