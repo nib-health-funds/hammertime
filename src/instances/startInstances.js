@@ -4,6 +4,7 @@ const retryWhenThrottled = require("../utils/retryWhenThrottled");
 function startInstances(instanceIds) {
   const ec2 = new AWS.EC2();
   return retryWhenThrottled(() => ec2.startInstances({ InstanceIds: instanceIds }))
+    .then(() => instanceIds);
 }
 
 // return retryWhenThrottled(() => autoscaling.resumeProcesses(params))

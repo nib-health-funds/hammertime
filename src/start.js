@@ -193,11 +193,11 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
           console.log(
             `Starting instance with id: ${insts.InstanceId} for asg ${asg.AutoScalingGroupName}`
           );
-          startInstances([insts.InstanceId]).then(() => {
-            return sleep(500);
-          });
+          startInstances([insts.InstanceId]);
         });
-        return Promise.all(startedInstances);
+        return Promise.all(startedInstances).then(() => {
+          return sleep(500);
+        });
       });
 
       return Promise.all(allPromises).then(() => {
