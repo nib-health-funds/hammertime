@@ -14,7 +14,7 @@ const listServicesToStart = require("./ecs/listServicesToStart");
 const startServices = require("./ecs/startServices");
 const untagServices = require("./ecs/untagServices");
 const sleep = require("./utils/sleep");
-const sleepTime = 240000;
+const sleepTime = 6000;
 
 /**
  *
