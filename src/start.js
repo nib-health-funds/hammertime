@@ -189,7 +189,7 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
 
       console.log(`Starting EC2 instances and resuming ASGs.`);
 
-      const instancesAsgs = []
+      let instancesAsgs = []
       resumeableASGs.forEach((asg) => {
         const instancesAsg = asg.Instances.map((insts) => insts.InstanceId)
         console.log(
