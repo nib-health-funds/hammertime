@@ -9,7 +9,8 @@ module.exports = function retryWhenThrottled(func) {
           if (
             err.code === "Throttling" ||
             err.code === "ThrottlingException" ||
-            err.code === "RequestLimitExceeded"
+            err.code === "RequestLimitExceeded" ||
+            err.code.includes("RequestLimitExceeded")
           ) {
             console.log(
               `Throttled by the AWS API. Backing off... (${number}/5)`
