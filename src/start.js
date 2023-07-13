@@ -197,22 +197,32 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
         );
         instancesAsgs = instancesAsgs.concat(instancesAsg)
       })
-      console.log(
-        `List instances need to start for suspended asg: ${instancesAsgs}`
-      );
-
-      return startInstances(instancesAsgs).then(() => {
-        console.log(
-          `Finished start ${instancesAsgs.length} instances for asg. Moving on to resume ASGs.`
-        );
-
+      if (instancesAsgs.length === 0) {
+        console.log("No instances found to start, Moving on to resume ASGs");
         return resumeASGs(resumeableASGs).then((resumedASGs) => {
           console.log(
             `Finished resuming ASGs and starting instances. Moving on to untag ${resumedASGs.length} of them.`
           );
           return untagResumedASGs(resumedASGs);
         });
-      });
+      } else {
+        console.log(
+          `List instances need to start for suspended asg: ${instancesAsgs}`
+        );
+  
+        return startInstances(instancesAsgs).then(() => {
+          console.log(
+            `Finished start ${instancesAsgs.length} instances for asg. Moving on to resume ASGs.`
+          );
+  
+          return resumeASGs(resumeableASGs).then((resumedASGs) => {
+            console.log(
+              `Finished resuming ASGs and starting instances. Moving on to untag ${resumedASGs.length} of them.`
+            );
+            return untagResumedASGs(resumedASGs);
+          });
+        });  
+      }
 
 
       // const allPromises = resumeableASGs.map((asg) => {
