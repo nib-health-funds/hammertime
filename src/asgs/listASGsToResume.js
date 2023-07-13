@@ -9,8 +9,7 @@ function resumeableASG(application) {
       return (
         hasTag(asg.Tags, "stop:hammertime") &&
         hasTag(asg.Tags, "hammertime:asgsuspend") &&
-        canITouchThis(asg.Tags) &&
-        (hasTagValue(asg.Tags, "Slice", ['w-2-c-680']) || hasTagValue(asg.Tags, "branch", ['W2C-680']))
+        canITouchThis(asg.Tags)
       );
     }
     return (
@@ -18,8 +17,7 @@ function resumeableASG(application) {
       hasTag(asg.Tags, "hammertime:asgsuspend") &&
       canITouchThis(asg.Tags) &&
       hasTag(asg.Tags, "Application") &&
-      hasTagValue(asg.Tags, "Application", application) &&
-      (hasTagValue(asg.Tags, "Slice", ['w-2-c-680']) || hasTagValue(asg.Tags, "branch", ['W2C-680']))
+      hasTagValue(asg.Tags, "Application", application)
     );
   };
 }

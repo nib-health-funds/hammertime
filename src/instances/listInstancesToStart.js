@@ -15,10 +15,6 @@ function listInstancesToStart(currentOperatingTimezone, application) {
         Name: "tag:aws:cloudformation:logical-id",
         Values: application,
       },
-      {
-        Name: "tag:Slice",
-        Values: ["w-2-c-680"],
-      },      
     ],
   };
 

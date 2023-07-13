@@ -6,9 +6,4 @@ function startInstances(instanceIds) {
   return retryWhenThrottled(() => ec2.startInstances({ InstanceIds: instanceIds }))
     .then(() => instanceIds);
 }
-
-// return retryWhenThrottled(() => autoscaling.resumeProcesses(params))
-// .then(() => asg);
-// }
-
 module.exports = startInstances;

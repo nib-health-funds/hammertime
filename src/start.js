@@ -36,7 +36,7 @@ function startAllInstancesAndAsgs({ dryRun, currentOperatingTimezone }) {
     .then((result) => {
       console.log(
         ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3 start the rest instance"
-      ); //remember to check if it start instance suspended from asg
+      );
       return startAllInstances({
         dryRun,
         currentOperatingTimezone,
