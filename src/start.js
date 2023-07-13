@@ -223,26 +223,6 @@ function resumeASGInstances({ dryRun, currentOperatingTimezone, application }) {
           });
         });  
       }
-
-
-      // const allPromises = resumeableASGs.map((asg) => {
-      //   const startedInstances = asg.Instances.map((insts) => {
-      //     console.log(
-      //       `Starting instance with id: ${insts.InstanceId} for asg ${asg.AutoScalingGroupName}`
-      //     );
-      //     return startInstances([insts.InstanceId]);
-      //   });
-      //   return Promise.all(startedInstances);
-      // });
-
-      // return Promise.all(allPromises).then(() => {
-      //   return resumeASGs(resumeableASGs).then((resumedASGs) => {
-      //     console.log(
-      //       `Finished resuming ASGs and starting instances. Moving on to untag ${resumedASGs.length} of them.`
-      //     );
-      //     return untagResumedASGs(resumedASGs);
-      //   });
-      // });
     }
   );
 }
