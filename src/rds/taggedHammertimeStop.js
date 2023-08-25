@@ -1,16 +1,17 @@
-const AWS = require('aws-sdk');
+const { RDSClient, ListTagsForResourceCommand } = require("@aws-sdk/client-rds");
+
+const region = process.env.RQP_REGION || 'ap-southeast-2';
 
 function hammertimeStop(data) {
   return (data.TagList.some(tag => tag.Key === 'hammertime:stop'));
 }
 
-module.exports = function taggedHammertimeStop(arn) {
+module.exports = async function taggedHammertimeStop(arn) {
   const params = {
     ResourceName: arn
   };
-  const rds = new AWS.RDS();
-  return rds.listTagsForResource(params)
-    .promise()
+  const client = new RDSClient({region: region});
+  return await client.send(new ListTagsForResourceCommand(params))
     .then(data => {
       if (hammertimeStop(data))
         return arn;

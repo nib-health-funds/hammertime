@@ -1,11 +1,13 @@
-const AWS = require('aws-sdk');
+const { ECSClient, ListClustersCommand, DescribeClustersCommand, ListServicesCommand, DescribeServicesCommand } = require("@aws-sdk/client-ecs");
 const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone');
 const retryWhenThrottled = require('../utils/retryWhenThrottled');
 
+const region = process.env.RQP_REGION || 'ap-southeast-2';
+
 async function getAllClusters(clusters, token) {
-  const ECS = new AWS.ECS();
+  const client = new ECSClient({ region: region });
   const params = { nextToken: token };
-  const response = await retryWhenThrottled(() => ECS.listClusters(params));
+  const response = await retryWhenThrottled(async () => await client.send(new ListClustersCommand(params)));
   let clusterArray = [];
   if (clusters) clusterArray = [...clusterArray, ...clusters];
   if (response.clusterArns) clusterArray = [...clusterArray, ...response.clusterArns];
@@ -22,9 +24,9 @@ async function describeAllClusters(clusters) {
 
 async function describeChunkOfClusters(clusters) {
   // Expects no more than 100 clusters.
-  const ECS = new AWS.ECS();
+  const client = new ECSClient({ region: region });
   const params = { clusters };
-  const response = await retryWhenThrottled(() => ECS.describeClusters(params));
+  const response = await retryWhenThrottled(async () =>  await client.send(new DescribeClustersCommand(params)));
   return response.clusters;
 }
 
@@ -34,9 +36,9 @@ async function getAllServices(clusterArnList) {
 }
 
 async function getService(clusterArn) {
-  const ECS = new AWS.ECS();
+  const client = new ECSClient({ region: region });
   const params = { cluster: clusterArn, launchType: 'FARGATE' };
-  const response = await retryWhenThrottled(() => ECS.listServices(params));
+  const response = await retryWhenThrottled(async () =>  await client.send(new ListServicesCommand(params)));
   return { cluster: clusterArn, services: response.serviceArns };
 }
 
@@ -46,13 +48,13 @@ async function describeServices(clusterList) {
 }
 
 async function describeService(service) {
-  const ECS = new AWS.ECS();
+  const client = new ECSClient({ region: region });
   const params = {
     services: service.services,
     cluster: service.cluster,
     include: ['TAGS'],
   };
-  const response = await retryWhenThrottled(() => ECS.describeServices(params));
+  const response = await retryWhenThrottled(async () => await client.send(new DescribeServicesCommand(params)));
   return response.services;
 }
 
@@ -66,14 +68,13 @@ function chunkArray(array, size) {
   return [array.slice(0, size), ...chunkArray(array.slice(size), size)];
 }
 
-function filterClusters(filter, currentOperatingTimezone) {
-  return getAllClusters([], null)
-    .then(data => describeAllClusters(data))
-    .then(data => getAllServices(data))
-    .then(data => describeServices(data))
-    .then(data => data
-      .filter(filter)
-      .filter(isServiceInCurrentOperatingTimezone(currentOperatingTimezone)));
+async function filterClusters(filter, currentOperatingTimezone) {
+  const data = await getAllClusters([], null);
+  const data_1 = await describeAllClusters(data);
+  const data_2 = await getAllServices(data_1);
+  const data_3 = await describeServices(data_2);
+  return data_3.filter(filter)
+    .filter(isServiceInCurrentOperatingTimezone(currentOperatingTimezone));
 }
 
 module.exports = filterClusters;

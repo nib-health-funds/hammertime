@@ -1,6 +1,8 @@
-const AWS = require('aws-sdk');
+const { EC2Client, DeleteTagsCommand } = require("@aws-sdk/client-ec2");
 
-function untagInstances(instanceIds) {
+const region = process.env.RQP_REGION || 'ap-southeast-2';
+
+async function untagInstances(instanceIds) {
   const options = {
     Resources: instanceIds,
     Tags: [
@@ -9,9 +11,8 @@ function untagInstances(instanceIds) {
       },
     ],
   };
-  const ec2 = new AWS.EC2();
-  return ec2.deleteTags(options)
-    .promise()
+  const client = new EC2Client({ region: region });
+  return await client.send(new DeleteTagsCommand(options))
     .then(() => instanceIds);
 }
 

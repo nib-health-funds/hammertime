@@ -4,7 +4,7 @@ const createTag = require('../utils/createTag');
 
 const region = process.env.RQP_REGION || 'ap-southeast-2';
 
-function tagASG(asg) {
+async function tagASG(asg) {
   const client = new AutoScalingClient({ region:region });
   const params = {
     Tags: [
@@ -13,8 +13,8 @@ function tagASG(asg) {
     ],
   };
 
-  return retryWhenThrottled(async () => await client.send(new CreateOrUpdateTagsCommand(params)))
-    .then(() => asg);
+  await retryWhenThrottled(async () => await client.send(new CreateOrUpdateTagsCommand(params)));
+  return asg;
 }
 
 function tagASGs(asgs) {

@@ -4,7 +4,7 @@ const valueForKey = require('../utils/valueForKey');
 
 const region = process.env.RQP_REGION || 'ap-southeast-2';
 
-function spinUpASG(asg) {
+async function spinUpASG(asg) {
   const client = new AutoScalingClient({ region:region });
   const originalASGSize = valueForKey(asg.Tags, 'hammertime:originalASGSize').split(',');
   const params = {
@@ -14,8 +14,8 @@ function spinUpASG(asg) {
     DesiredCapacity: originalASGSize[2],
   };
 
-  return retryWhenThrottled(async () => await client.send(new UpdateAutoScalingGroupCommand(params)))
-    .then(() => asg);
+  await retryWhenThrottled(async () => await client.send(new UpdateAutoScalingGroupCommand(params)));
+  return asg;
 }
 
 function startASGs(asgs) {

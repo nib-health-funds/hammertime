@@ -4,7 +4,7 @@ const createTag = require('../utils/createTag');
 
 const region = process.env.RQP_REGION || 'ap-southeast-2';
 
-function untagASG(asg) {
+async function untagASG(asg) {
   const client = new AutoScalingClient({ region:region });
   const params = {
     Tags: [
@@ -13,8 +13,8 @@ function untagASG(asg) {
     ],
   };
 
-  return retryWhenThrottled(async () => await client.send(new DeleteTagsCommand(params)))
-    .then(() => asg);
+  await retryWhenThrottled(async () => await client.send(new DeleteTagsCommand(params)));
+  return asg;
 }
 
 function untagASGs(asgs) {

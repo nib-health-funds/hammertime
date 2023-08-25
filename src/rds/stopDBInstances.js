@@ -1,4 +1,3 @@
-const AWS = require('aws-sdk');
 const stopOneDBInstance = require('./stopOneDBInstance');
 
 module.exports = function stopDBInstances(arns) {

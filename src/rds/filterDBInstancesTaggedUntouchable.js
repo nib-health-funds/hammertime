@@ -1,4 +1,3 @@
-const AWS = require('aws-sdk');
 const notTaggedUntouchable = require('./notTaggedUntouchable');
 const filterOutNulls = require('../utils/filterOutNulls');
 

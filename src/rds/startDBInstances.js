@@ -1,4 +1,3 @@
-const AWS = require('aws-sdk');
 const startOneDBInstance = require('./startOneDBInstance');
 
 module.exports = function startDBInstances(arns) {

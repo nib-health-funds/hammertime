@@ -3,7 +3,7 @@ const retryWhenThrottled = require('../utils/retryWhenThrottled');
 
 const region = process.env.RQP_REGION || 'ap-southeast-2';
 
-function spinDownASG(asg) {
+async function spinDownASG(asg) {
   const client = new AutoScalingClient({ region:region });
   const params = {
     AutoScalingGroupName: asg.AutoScalingGroupName,
@@ -11,8 +11,8 @@ function spinDownASG(asg) {
     MinSize: 0,
   };
 
-  return retryWhenThrottled(async () => await client.send(new UpdateAutoScalingGroupCommand(params)))
-    .then(() => asg);
+  await retryWhenThrottled(async () => await client.send(new UpdateAutoScalingGroupCommand(params)));
+  return asg;
 }
 
 function stopASGs(asgs) {

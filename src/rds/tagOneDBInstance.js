@@ -1,6 +1,8 @@
-const AWS = require('aws-sdk');
+const { RDSClient, AddTagsToResourceCommand } = require("@aws-sdk/client-rds");
 
-module.exports = function tagOneDBInstance(arn) {
+const region = process.env.RQP_REGION || 'ap-southeast-2';
+
+module.exports = async function tagOneDBInstance(arn) {
   const params = {
     ResourceName: arn,
     Tags: [{
@@ -8,8 +10,7 @@ module.exports = function tagOneDBInstance(arn) {
       Value: new Date().toISOString()
     }]
   };
-  const rds = new AWS.RDS();
-  return rds.addTagsToResource(params)
-    .promise()
+  const client = new RDSClient({region: region});
+  return await client.send(new AddTagsToResourceCommand(params))
     .then(() => arn);
 };

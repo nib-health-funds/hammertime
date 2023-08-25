@@ -1,12 +1,13 @@
-const AWS = require('aws-sdk');
+const { RDSClient, RemoveTagsFromResourceCommand } = require("@aws-sdk/client-rds");
 
-module.exports = function untagOneDBInstance(arn) {
+const region = process.env.RQP_REGION || 'ap-southeast-2';
+
+module.exports = async function untagOneDBInstance(arn) {
   const params = {
     ResourceName: arn,
     TagKeys: ['hammertime:stop']
   };
-  const rds = new AWS.RDS();
-  return rds.removeTagsFromResource(params)
-    .promise()
+  const client = new RDSClient({region: region});
+  return await client.send(new RemoveTagsFromResourceCommand(params))
     .then(() => arn);
 };
