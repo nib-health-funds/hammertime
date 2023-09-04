@@ -1,9 +1,16 @@
-const AWS = require('aws-sdk-mock');
+const { mockClient } = require('aws-sdk-client-mock');
 const assert = require('assert');
 const taggedHammertimeStop = require('../../src/rds/taggedHammertimeStop');
+const { RDSClient, ListTagsForResourceCommand } = require('@aws-sdk/client-rds');
+
+const rdsMock = mockClient(RDSClient);
 
 describe('taggedHammertimeStop', () => {
-  it('returns an arn of an RDS DB instance tagged with "hammertime:stop"', () => {
+  beforeEach(() => {
+    rdsMock.reset();
+  });
+  
+  it('returns an arn of an RDS DB instance tagged with "hammertime:stop"', async () => {
     const mockTagList = {
       TagList: [{
           Key: 'hammertime:stop',
@@ -15,13 +22,13 @@ describe('taggedHammertimeStop', () => {
         }
       ]
     };
-    AWS.mock('RDS', 'listTagsForResource', mockTagList);
-    return taggedHammertimeStop('somearn')
-      .then((arn) => {
-        assert.deepEqual(arn, 'somearn');
-      });
+    rdsMock
+      .on(ListTagsForResourceCommand)
+      .resolves(mockTagList)
+    const arn_1 = await taggedHammertimeStop('somearn');
+    assert.deepEqual(arn_1, 'somearn');
   });
-  it('returns a null value if RDS DB instance is not tagged with "hammertime:stop"', () => {
+  it('returns a null value if RDS DB instance is not tagged with "hammertime:stop"', async () => {
     const mockTagList = {
       TagList: [{
           Key: 'summertime:gershwin',
@@ -33,14 +40,11 @@ describe('taggedHammertimeStop', () => {
         }
       ]
     };
-    AWS.mock('RDS', 'listTagsForResource', mockTagList);
-    return taggedHammertimeStop('somearn')
-      .then((arn) => {
-        console.log("ARN output: " + arn);
-        assert.deepEqual(arn, null);
-      });
-  });
-  afterEach(() => {
-    AWS.restore('RDS', 'listTagsForResource');
+    rdsMock
+      .on(ListTagsForResourceCommand)
+      .resolves(mockTagList)
+    const arn_1 = await taggedHammertimeStop('somearn');
+    console.log("ARN output: " + arn_1);
+    assert.deepEqual(arn_1, null);
   });
 });

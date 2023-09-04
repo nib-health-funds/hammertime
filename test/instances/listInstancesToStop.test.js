@@ -1,10 +1,17 @@
 const assert = require('assert');
-const AWS = require('aws-sdk-mock');
+const { mockClient } = require('aws-sdk-client-mock');
 const listInstancesToStop = require('../../src/instances/listInstancesToStop');
 const defaultOperatingTimezone = require('../../src/config').defaultOperatingTimezone;
+const { EC2Client, DescribeInstancesCommand } = require('@aws-sdk/client-ec2');
+
+const ec2Mock = mockClient(EC2Client);
 
 describe('listInstancesToStop()', () => {
-  it('returns list of valid running instances', () => {
+  it('returns list of valid running instances', async () => {
+    beforeEach(() => {
+      ec2Mock.reset();
+    });
+  
     const mockInstances = {
       Reservations: [
         {
@@ -43,26 +50,22 @@ describe('listInstancesToStop()', () => {
         },
       ],
     };
-    AWS.mock('EC2', 'describeInstances', mockInstances);
-    return listInstancesToStop(defaultOperatingTimezone)
-      .then((instanceIds) => {
-        assert.deepEqual(instanceIds, ['i-validinstance']);
-      });
+    ec2Mock
+      .on(DescribeInstancesCommand)
+      .resolves(mockInstances)
+    const instanceIds = await listInstancesToStop(defaultOperatingTimezone);
+    assert.deepEqual(instanceIds, ['i-validinstance']);
   });
 
-  it('returns an empty list if no running instances found in aws', () => {
+  it('returns an empty list if no running instances found in aws', async () => {
     const mockInstances = {
       Reservations: [],
     };
-    AWS.mock('EC2', 'describeInstances', mockInstances);
+    ec2Mock
+      .on(DescribeInstancesCommand)
+      .resolves(mockInstances)
 
-    return listInstancesToStop(defaultOperatingTimezone)
-      .then((instanceIds) => {
-        assert.deepEqual(instanceIds, []);
-      });
-  });
-
-  afterEach(() => {
-    AWS.restore('EC2', 'describeInstances');
+    const instanceIds = await listInstancesToStop(defaultOperatingTimezone);
+    assert.deepEqual(instanceIds, []);
   });
 });

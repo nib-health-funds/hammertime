@@ -1,11 +1,13 @@
-const { ECSClient, ListClustersCommand, DescribeClustersCommand, ListServicesCommand, DescribeServicesCommand } = require("@aws-sdk/client-ecs");
+const {
+  ECSClient, ListClustersCommand, DescribeClustersCommand, ListServicesCommand, DescribeServicesCommand,
+} = require('@aws-sdk/client-ecs');
 const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone');
 const retryWhenThrottled = require('../utils/retryWhenThrottled');
 
 const region = process.env.RQP_REGION || 'ap-southeast-2';
 
 async function getAllClusters(clusters, token) {
-  const client = new ECSClient({ region: region });
+  const client = new ECSClient({ region });
   const params = { nextToken: token };
   const response = await retryWhenThrottled(async () => await client.send(new ListClustersCommand(params)));
   let clusterArray = [];
@@ -17,38 +19,38 @@ async function getAllClusters(clusters, token) {
 
 async function describeAllClusters(clusters) {
   const chunks = chunkArray(clusters, 100);
-  const data = await Promise.all(chunks.map(chunk => describeChunkOfClusters(chunk)));
-  const clusterArns = [].concat(...data).map(cluster => cluster.clusterArn);
+  const data = await Promise.all(chunks.map((chunk) => describeChunkOfClusters(chunk)));
+  const clusterArns = [].concat(...data).map((cluster) => cluster.clusterArn);
   return clusterArns;
 }
 
 async function describeChunkOfClusters(clusters) {
   // Expects no more than 100 clusters.
-  const client = new ECSClient({ region: region });
+  const client = new ECSClient({ region });
   const params = { clusters };
-  const response = await retryWhenThrottled(async () =>  await client.send(new DescribeClustersCommand(params)));
+  const response = await retryWhenThrottled(async () => await client.send(new DescribeClustersCommand(params)));
   return response.clusters;
 }
 
 async function getAllServices(clusterArnList) {
-  const data = await Promise.all(clusterArnList.map(clusterArn => getService(clusterArn)));
-  return data.filter(cluster => cluster.services.length > 0);
+  const data = await Promise.all(clusterArnList.map((clusterArn) => getService(clusterArn)));
+  return data.filter((cluster) => cluster.services.length > 0);
 }
 
 async function getService(clusterArn) {
-  const client = new ECSClient({ region: region });
+  const client = new ECSClient({ region });
   const params = { cluster: clusterArn, launchType: 'FARGATE' };
-  const response = await retryWhenThrottled(async () =>  await client.send(new ListServicesCommand(params)));
+  const response = await retryWhenThrottled(async () => await client.send(new ListServicesCommand(params)));
   return { cluster: clusterArn, services: response.serviceArns };
 }
 
 async function describeServices(clusterList) {
-  const services = await Promise.all(clusterList.map(cluster => describeService(cluster)));
+  const services = await Promise.all(clusterList.map((cluster) => describeService(cluster)));
   return [].concat(...services);
 }
 
 async function describeService(service) {
-  const client = new ECSClient({ region: region });
+  const client = new ECSClient({ region });
   const params = {
     services: service.services,
     cluster: service.cluster,
@@ -60,7 +62,7 @@ async function describeService(service) {
 
 function isServiceInCurrentOperatingTimezone(currentOperatingTimezone) {
   const isInCurrentOperatingTimezone = isInOperatingTimezone(currentOperatingTimezone);
-  return service => isInCurrentOperatingTimezone(service.tags);
+  return (service) => isInCurrentOperatingTimezone(service.tags);
 }
 
 function chunkArray(array, size) {

@@ -1,9 +1,9 @@
-const hasTag = require("../tags/hasTag");
-const listTargetASGs = require("./listTargetASGs");
-const canITouchThis = require("../tags/canITouchThis");
+const hasTag = require('../tags/hasTag');
+const listTargetASGs = require('./listTargetASGs');
+const canITouchThis = require('../tags/canITouchThis');
 
 function stoppableASG(asg) {
-  return !hasTag(asg.Tags, "stop:hammertime") && canITouchThis(asg.Tags);
+  return !hasTag(asg.Tags, 'stop:hammertime') && canITouchThis(asg.Tags);
 }
 
 function listASGsToStop(currentOperatingTimezone) {

@@ -1,10 +1,10 @@
-const { ECSClient, TagResourceCommand } = require("@aws-sdk/client-ecs");
+const { ECSClient, TagResourceCommand } = require('@aws-sdk/client-ecs');
 const retryWhenThrottled = require('../utils/retryWhenThrottled');
 
 const region = process.env.RQP_REGION || 'ap-southeast-2';
 
 async function tagService(service) {
-  const client = new ECSClient({ region: region });
+  const client = new ECSClient({ region });
   const params = {
     resourceArn: service.serviceArn,
     tags: [
@@ -17,7 +17,7 @@ async function tagService(service) {
 }
 
 function tagServices(services) {
-  return Promise.all(services.map(service => tagService(service)));
+  return Promise.all(services.map((service) => tagService(service)));
 }
 
 module.exports = tagServices;

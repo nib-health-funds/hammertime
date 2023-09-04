@@ -1,8 +1,7 @@
 const promiseRetry = require('promise-retry');
 
 module.exports = function retryWhenThrottled(func) {
-  return promiseRetry((retry, number) => func()
-    .promise()
+  return promiseRetry((retry, number) => Promise.resolve(func())
     .catch((err) => {
       if (err.code === 'Throttling' || err.code === 'ThrottlingException') {
         console.warn(`Throttled by the AWS API. Backing off... (${number}/10)`);

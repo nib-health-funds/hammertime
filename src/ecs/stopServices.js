@@ -1,10 +1,10 @@
-const { ECSClient, UpdateServiceCommand } = require("@aws-sdk/client-ecs");
+const { ECSClient, UpdateServiceCommand } = require('@aws-sdk/client-ecs');
 const retryWhenThrottled = require('../utils/retryWhenThrottled');
 
 const region = process.env.RQP_REGION || 'ap-southeast-2';
 
 async function spinDownService(service) {
-  const client = new ECSClient({ region: region });
+  const client = new ECSClient({ region });
   const params = {
     cluster: service.clusterArn,
     service: service.serviceArn,
@@ -15,7 +15,7 @@ async function spinDownService(service) {
 }
 
 function stopServices(services) {
-  return Promise.all(services.map(service => spinDownService(service)));
+  return Promise.all(services.map((service) => spinDownService(service)));
 }
 
 module.exports = stopServices;

@@ -98,40 +98,40 @@ function startAllDBInstances(dryRun) {
     });
 }
 
-function spinUpServices({ dryRun, currentOperatingTimezone }){
+function spinUpServices({ dryRun, currentOperatingTimezone }) {
   return listServicesToStart(currentOperatingTimezone)
-  .then((startableServices) => {
-    if (dryRun) {
-      console.log('Dry run is enabled, will not start or untag any services.');
-      console.log(`Found the following ${startableServices.length} service[s] that would have been spun up`);
+    .then((startableServices) => {
+      if (dryRun) {
+        console.log('Dry run is enabled, will not start or untag any services.');
+        console.log(`Found the following ${startableServices.length} service[s] that would have been spun up`);
+        startableServices.map((service) => console.log(service.serviceName));
+        return [];
+      }
+
+      if (startableServices.length === 0) {
+        console.log('No instances found to start, moving on...');
+        return [];
+      }
+
+      console.log(`Found the following ${startableServices.length} services[s] to start...`);
       startableServices.map((service) => console.log(service.serviceName));
-      return [];
-    }
 
-    if (startableServices.length === 0) {
-      console.log('No instances found to start, moving on...');
-      return [];
-    }
-
-    console.log(`Found the following ${startableServices.length} services[s] to start...`);
-    startableServices.map((service) => console.log(service.serviceName));
-
-    return startServices(startableServices).then((startedServiceIds) => {
-      console.log('Finished starting service[s]. Moving on to untag them.');
-      return untagServices(startedServiceIds);
-    })
-  });
+      return startServices(startableServices).then((startedServiceIds) => {
+        console.log('Finished starting service[s]. Moving on to untag them.');
+        return untagServices(startedServiceIds);
+      });
+    });
 }
 
 module.exports = function start(options) {
   const { event, callback, dryRun } = options;
-  const currentOperatingTimezone = event.currentOperatingTimezone;
+  const { currentOperatingTimezone } = event;
   console.log(`Hammertime start for ${currentOperatingTimezone}`);
   Promise.all([
     startAllDBInstances(dryRun),
     startAllInstances({ dryRun, currentOperatingTimezone }),
     spinUpASGs({ dryRun, currentOperatingTimezone }),
-    spinUpServices({ dryRun, currentOperatingTimezone })
+    spinUpServices({ dryRun, currentOperatingTimezone }),
   ]).then(() => {
     if (!dryRun) {
       console.log('All EC2, RDS instances, ASGs, and ECS services started successfully. Good morning!');

@@ -1,4 +1,4 @@
-const { EC2Client, DescribeInstancesCommand } = require("@aws-sdk/client-ec2");
+const { EC2Client, DescribeInstancesCommand } = require('@aws-sdk/client-ec2');
 const canITouchThis = require('../tags/canITouchThis');
 const hasTag = require('../tags/hasTag');
 const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone');
@@ -11,24 +11,24 @@ function validInstance(instance) {
 
 function isInstanceInCurrentOperatingTimezone(currentOperatingTimezone) {
   const isInCurrentOperatingTimezone = isInOperatingTimezone(currentOperatingTimezone);
-  return instance => isInCurrentOperatingTimezone(instance.Tags);
+  return (instance) => isInCurrentOperatingTimezone(instance.Tags);
 }
 
 function filterInstances(data, currentOperatingTimezone) {
   return data
     .Reservations
-    .map(reservation => reservation.Instances)
+    .map((reservation) => reservation.Instances)
     .reduce((prev, curr) => prev.concat(curr), [])
     .filter(validInstance)
     .filter(isInstanceInCurrentOperatingTimezone(currentOperatingTimezone))
-    .map(instance => instance.InstanceId);
+    .map((instance) => instance.InstanceId);
 }
 
 async function listTargetInstances(options) {
   const { params, currentOperatingTimezone } = options;
-  const client = new EC2Client({ region: region });
+  const client = new EC2Client({ region });
   return await client.send(new DescribeInstancesCommand(params))
-    .then(data => filterInstances(data, currentOperatingTimezone));
+    .then((data) => filterInstances(data, currentOperatingTimezone));
 }
 
 module.exports = listTargetInstances;
