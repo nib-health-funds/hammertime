@@ -29,7 +29,7 @@
     "moment": "^2.29.4",
     "nyc": "^15.1.0",
     "promise-retry": "^2.0.1",
-    "serverless": "^3.34.0"
+    "serverless": "^2.72.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.10",
