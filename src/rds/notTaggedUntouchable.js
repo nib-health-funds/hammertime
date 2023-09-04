@@ -11,7 +11,7 @@ module.exports = async function notTaggedUntouchable(arn) {
     ResourceName: arn,
   };
   const client = new RDSClient({ region });
-  return await client.send(new ListTagsForResourceCommand(params))
+  return client.send(new ListTagsForResourceCommand(params))
     .then((data) => {
       if (notUntouchable(data)) return arn;
 

@@ -7,7 +7,7 @@ module.exports = async function startOneDBInstance(arn) {
 
   const instanceId = arn.split(':').pop();
   console.log(`Starting ${instanceId} ...`);
-  return await client.send(new StartDBInstanceCommand({
+  return client.send(new StartDBInstanceCommand({
     DBInstanceIdentifier: instanceId,
   }))
     .then(() => arn);

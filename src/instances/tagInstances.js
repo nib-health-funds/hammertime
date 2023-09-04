@@ -13,7 +13,7 @@ async function tagInstances(instanceIds) {
     ],
   };
   const client = new EC2Client({ region });
-  return await client.send(new CreateTagsCommand(options))
+  return client.send(new CreateTagsCommand(options))
     .then(() => instanceIds);
 }
 

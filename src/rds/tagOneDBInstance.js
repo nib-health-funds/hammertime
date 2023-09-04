@@ -11,6 +11,6 @@ module.exports = async function tagOneDBInstance(arn) {
     }],
   };
   const client = new RDSClient({ region });
-  return await client.send(new AddTagsToResourceCommand(params))
+  return client.send(new AddTagsToResourceCommand(params))
     .then(() => arn);
 };

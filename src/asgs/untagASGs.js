@@ -13,7 +13,7 @@ async function untagASG(asg) {
     ],
   };
 
-  await retryWhenThrottled(async () => await client.send(new DeleteTagsCommand(params)));
+  await retryWhenThrottled(async () => client.send(new DeleteTagsCommand(params)));
   return asg;
 }
 

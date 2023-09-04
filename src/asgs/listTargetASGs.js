@@ -12,14 +12,14 @@ async function getAllASGs() {
 
     if (data.NextToken) {
       params.NextToken = data.NextToken;
-      return await client.send(new DescribeAutoScalingGroupsCommand(params))
+      return client.send(new DescribeAutoScalingGroupsCommand(params))
         .then((res) => followASGPages(combinedAsgs, res));
     }
 
     return Promise.resolve(combinedAsgs);
   }
 
-  return await client.send(new DescribeAutoScalingGroupsCommand(params))
+  return client.send(new DescribeAutoScalingGroupsCommand(params))
     .then((data) => followASGPages([], data));
 }
 

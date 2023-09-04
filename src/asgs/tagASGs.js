@@ -13,7 +13,7 @@ async function tagASG(asg) {
     ],
   };
 
-  await retryWhenThrottled(async () => await client.send(new CreateOrUpdateTagsCommand(params)));
+  await retryWhenThrottled(async () => client.send(new CreateOrUpdateTagsCommand(params)));
   return asg;
 }
 

@@ -11,7 +11,7 @@ module.exports = async function taggedHammertimeStop(arn) {
     ResourceName: arn,
   };
   const client = new RDSClient({ region });
-  return await client.send(new ListTagsForResourceCommand(params))
+  return client.send(new ListTagsForResourceCommand(params))
     .then((data) => {
       if (hammertimeStop(data)) return arn;
 

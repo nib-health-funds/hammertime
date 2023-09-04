@@ -10,7 +10,7 @@ async function spinDownService(service) {
     service: service.serviceArn,
     desiredCount: 0,
   };
-  await retryWhenThrottled(async () => await client.send(new UpdateServiceCommand(params)));
+  await retryWhenThrottled(async () => client.send(new UpdateServiceCommand(params)));
   return service;
 }
 

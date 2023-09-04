@@ -4,5 +4,5 @@ const region = process.env.RQP_REGION || 'ap-southeast-2';
 
 module.exports = async function listAllDBInstances() {
   const client = new RDSClient({ region });
-  return await client.send(new DescribeDBInstancesCommand());
+  return client.send(new DescribeDBInstancesCommand());
 };

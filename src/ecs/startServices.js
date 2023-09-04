@@ -11,7 +11,7 @@ async function startService(service) {
     service: service.serviceArn,
     desiredCount: originalServiceSize,
   };
-  await retryWhenThrottled(async () => await client.send(new UpdateServiceCommand(params)));
+  await retryWhenThrottled(async () => client.send(new UpdateServiceCommand(params)));
   return service;
 }
 

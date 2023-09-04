@@ -12,7 +12,7 @@ async function tagService(service) {
       { key: 'stop:hammertime', value: new Date().toISOString() },
     ],
   };
-  await retryWhenThrottled(async () => await client.send(new TagResourceCommand(params)));
+  await retryWhenThrottled(async () => client.send(new TagResourceCommand(params)));
   return service;
 }
 

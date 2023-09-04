@@ -7,7 +7,7 @@ module.exports = async function stopOneDBInstance(arn) {
 
   const instanceId = arn.split(':').pop();
   console.log(`Stopping ${instanceId} ...`);
-  return await client.send(new StopDBInstanceCommand({
+  return client.send(new StopDBInstanceCommand({
     DBInstanceIdentifier: instanceId,
   }))
     .then(() => arn);

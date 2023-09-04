@@ -4,7 +4,7 @@ const region = process.env.RQP_REGION || 'ap-southeast-2';
 
 async function startInstances(instanceIds) {
   const client = new EC2Client({ region });
-  return await client.send(new StartInstancesCommand({ InstanceIds: instanceIds }))
+  return client.send(new StartInstancesCommand({ InstanceIds: instanceIds }))
     .then(() => instanceIds);
 }
 

@@ -11,7 +11,7 @@ async function spinDownASG(asg) {
     MinSize: 0,
   };
 
-  await retryWhenThrottled(async () => await client.send(new UpdateAutoScalingGroupCommand(params)));
+  await retryWhenThrottled(async () => client.send(new UpdateAutoScalingGroupCommand(params)));
   return asg;
 }
 
