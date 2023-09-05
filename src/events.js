@@ -6,7 +6,7 @@ const START_HOUR = parseInt(process.env.HAMMERTIME_START_HOUR || '6', 10);
 const STOP_HOUR = parseInt(process.env.HAMMERTIME_STOP_HOUR || '19', 10);
 
 function getCronHour(hour, zone) {
-  return DateTime.fromObject({ hour, zone }).setZone('UTC', { keepLocalTime: true }).hour;
+  return DateTime.fromObject({ hour }, zone).setZone('UTC').hour;
 }
 
 function stop() {
