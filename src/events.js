@@ -1,4 +1,4 @@
-const luxon = require('luxon');
+const { DateTime } = require('luxon');
 const operatingTimezones = require('./operatingTimezones').timezones();
 const { isEnabled } = require('./isEnabled');
 
@@ -6,7 +6,7 @@ const START_HOUR = parseInt(process.env.HAMMERTIME_START_HOUR || '6', 10);
 const STOP_HOUR = parseInt(process.env.HAMMERTIME_STOP_HOUR || '19', 10);
 
 function getCronHour(hour, zone) {
-  return luxon.DateTime.fromObject({ hour, zone }).setZone('UTC').hour;
+  return DateTime.fromObject({ hour, zone }).setZone('UTC', { keepLocalTime: true }).hour;
 }
 
 function stop() {
