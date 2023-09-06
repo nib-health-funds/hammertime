@@ -5,7 +5,8 @@
         "no-unused-expressions": 0,
         "chai-friendly/no-unused-expressions": 2,
         "camelcase": "off",
-        "max-len": "off"
+        "max-len": "off",
+        "object-shorthand": 0
     },
     "globals": {
         "expect": true
