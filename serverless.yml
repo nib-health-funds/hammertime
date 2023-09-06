@@ -4,7 +4,7 @@ provider:
   runtime: nodejs18.x
   memorySize: 128
   stage: '${env:SLICE}'
-  region: '${env:AWS_REGION}'
+  region: '${env:RQP_REGION}'
   deploymentBucket: '${env:DEPLOY_BUCKET}'
   iamRoleStatements:
     - Effect: Allow
