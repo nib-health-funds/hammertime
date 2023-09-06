@@ -20,15 +20,10 @@
   "author": "nib",
   "license": "MIT",
   "dependencies": {
-    "@aws-sdk/client-auto-scaling": "^3.398.0",
-    "@aws-sdk/client-ec2": "^3.399.0",
-    "@aws-sdk/client-ecs": "^3.398.0",
-    "@aws-sdk/client-rds": "^3.399.0",
     "@babel/register": "^7.22.5",
     "luxon": "^3.4.1",
     "moment": "^2.29.4",
     "nyc": "^15.1.0",
-    "promise-retry": "^2.0.1",
     "serverless": "^2.72.4"
   },
   "devDependencies": {
@@ -50,6 +45,11 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-mocha": "^10.1.0",
     "eslint-plugin-react": "^7.33.2",
-    "mocha": "^10.2.0"
+    "mocha": "^10.2.0",
+    "promise-retry": "^2.0.1",
+    "@aws-sdk/client-auto-scaling": "^3.398.0",
+    "@aws-sdk/client-ec2": "^3.399.0",
+    "@aws-sdk/client-ecs": "^3.398.0",
+    "@aws-sdk/client-rds": "^3.399.0"
   }
 }
