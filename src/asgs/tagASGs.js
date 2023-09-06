@@ -5,7 +5,7 @@ const createTag = require('../utils/createTag');
 const region = process.env.RQP_REGION || 'ap-southeast-2';
 
 async function tagASG(asg) {
-  const client = new AutoScalingClient({ region });
+  const client = new AutoScalingClient({ region: region });
   const params = {
     Tags: [
       createTag('hammertime:originalASGSize', asg.AutoScalingGroupName, 'auto-scaling-group', `${asg.MinSize},${asg.MaxSize},${asg.DesiredCapacity}`),

@@ -4,7 +4,7 @@ const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezon
 const region = process.env.RQP_REGION || 'ap-southeast-2';
 
 async function getAllASGs() {
-  const client = new AutoScalingClient({ region });
+  const client = new AutoScalingClient({ region: region });
   const params = {};
 
   async function followASGPages(allAsgs, data) {

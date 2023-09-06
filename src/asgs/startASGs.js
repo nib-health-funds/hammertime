@@ -5,7 +5,7 @@ const valueForKey = require('../utils/valueForKey');
 const region = process.env.RQP_REGION || 'ap-southeast-2';
 
 async function spinUpASG(asg) {
-  const client = new AutoScalingClient({ region });
+  const client = new AutoScalingClient({ region: region });
   const originalASGSize = valueForKey(asg.Tags, 'hammertime:originalASGSize').split(',');
   const params = {
     AutoScalingGroupName: asg.AutoScalingGroupName,

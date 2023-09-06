@@ -4,7 +4,7 @@ const retryWhenThrottled = require('../utils/retryWhenThrottled');
 const region = process.env.RQP_REGION || 'ap-southeast-2';
 
 async function startService(service) {
-  const client = new ECSClient({ region });
+  const client = new ECSClient({ region: region });
   const originalServiceSize = service.tags.find((tag) => tag.key === 'hammertime:originalServiceSize').value;
   const params = {
     cluster: service.clusterArn,

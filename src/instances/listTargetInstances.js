@@ -26,7 +26,7 @@ function filterInstances(data, currentOperatingTimezone) {
 
 async function listTargetInstances(options) {
   const { params, currentOperatingTimezone } = options;
-  const client = new EC2Client({ region });
+  const client = new EC2Client({ region: region });
   return client.send(new DescribeInstancesCommand(params))
     .then((data) => filterInstances(data, currentOperatingTimezone));
 }

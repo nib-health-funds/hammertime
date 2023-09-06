@@ -10,7 +10,7 @@ module.exports = async function tagOneDBInstance(arn) {
       Value: new Date().toISOString(),
     }],
   };
-  const client = new RDSClient({ region });
+  const client = new RDSClient({ region: region });
   return client.send(new AddTagsToResourceCommand(params))
     .then(() => arn);
 };

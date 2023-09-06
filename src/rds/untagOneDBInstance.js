@@ -7,7 +7,7 @@ module.exports = async function untagOneDBInstance(arn) {
     ResourceName: arn,
     TagKeys: ['hammertime:stop'],
   };
-  const client = new RDSClient({ region });
+  const client = new RDSClient({ region: region });
   return client.send(new RemoveTagsFromResourceCommand(params))
     .then(() => arn);
 };

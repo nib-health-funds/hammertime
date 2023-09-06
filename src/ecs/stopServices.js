@@ -4,7 +4,7 @@ const retryWhenThrottled = require('../utils/retryWhenThrottled');
 const region = process.env.RQP_REGION || 'ap-southeast-2';
 
 async function spinDownService(service) {
-  const client = new ECSClient({ region });
+  const client = new ECSClient({ region: region });
   const params = {
     cluster: service.clusterArn,
     service: service.serviceArn,

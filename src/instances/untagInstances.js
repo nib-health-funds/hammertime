@@ -11,7 +11,7 @@ async function untagInstances(instanceIds) {
       },
     ],
   };
-  const client = new EC2Client({ region });
+  const client = new EC2Client({ region: region });
   return client.send(new DeleteTagsCommand(options))
     .then(() => instanceIds);
 }

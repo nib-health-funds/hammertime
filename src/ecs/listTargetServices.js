@@ -12,7 +12,7 @@ function chunkArray(array, size) {
 }
 
 async function getService(clusterArn) {
-  const client = new ECSClient({ region });
+  const client = new ECSClient({ region: region });
   const params = { cluster: clusterArn, launchType: 'FARGATE' };
   const response = await retryWhenThrottled(async () => client.send(new ListServicesCommand(params)));
   return { cluster: clusterArn, services: response.serviceArns };
@@ -20,14 +20,14 @@ async function getService(clusterArn) {
 
 async function describeChunkOfClusters(clusters) {
   // Expects no more than 100 clusters.
-  const client = new ECSClient({ region });
+  const client = new ECSClient({ region: region });
   const params = { clusters };
   const response = await retryWhenThrottled(async () => client.send(new DescribeClustersCommand(params)));
   return response.clusters;
 }
 
 async function describeService(service) {
-  const client = new ECSClient({ region });
+  const client = new ECSClient({ region: region });
   const params = {
     services: service.services,
     cluster: service.cluster,
@@ -38,7 +38,7 @@ async function describeService(service) {
 }
 
 async function getAllClusters(clusters, token) {
-  const client = new ECSClient({ region });
+  const client = new ECSClient({ region: region });
   const params = { nextToken: token };
   const response = await retryWhenThrottled(async () => client.send(new ListClustersCommand(params)));
   let clusterArray = [];
