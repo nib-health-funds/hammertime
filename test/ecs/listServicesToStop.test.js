@@ -1,47 +1,44 @@
 const assert = require("assert");
-const AWS = require("aws-sdk-mock");
+const { mockClient } = require('aws-sdk-client-mock');
 const listServicesToStop = require("../../src/ecs/listServicesToStop.js");
 const defaultOperatingTimezone = require("../../src/config.js").defaultOperatingTimezone;
-const data = require("./mockData.js");
+const data = require("./mockData");
+const { ECSClient, DescribeServicesCommand, ListServicesCommand, DescribeClustersCommand, ListClustersCommand } = require("@aws-sdk/client-ecs");
+
+const ecsMock = mockClient(ECSClient);
 
 describe("listServicesToStop()", () => {
   beforeEach(() => {
-    AWS.mock("ECS", "describeServices", (params, callback) =>
-      callback(null, data.describeServices(params))
-    );
-    AWS.mock("ECS", "describeClusters", (params, callback) =>
-      callback(null, data.describeClusters(params))
-    );
-    AWS.mock("ECS", "listClusters", (params, callback) =>
-      callback(null, data.listClusters(params))
-    );
-    AWS.mock("ECS", "listServices", (params, callback) =>
-      callback(null, data.listServices(params))
-    );
+    ecsMock.reset();
   });
 
-  it("returns list of services spun down by hammertime", () => {
-    return listServicesToStop(defaultOperatingTimezone).then(
-      hammertimeableServices => {
-        const valid = [
-          "arn:aws:ecs:service:1-R-unhammertimed",
-          "arn:aws:ecs:service:2-R-unhammertimed"
-        ];
-        assert.equal(hammertimeableServices.length, 2);
-        assert.equal(
-          hammertimeableServices.filter(service =>
-            valid.some(validService => validService === service.serviceArn)
-          ).length,
-          2
-        );
-      }
+  it("returns list of services spun down by hammertime", async () => {
+    ecsMock
+      .on(DescribeServicesCommand)
+      .callsFake((params) => data.describeServices(params));
+    
+    ecsMock
+      .on(DescribeClustersCommand)
+      .callsFake((params) => data.describeClusters(params));
+    
+    ecsMock
+      .on(ListClustersCommand)
+      .callsFake((params) => data.listClusters(params));
+ 
+    ecsMock
+      .on(ListServicesCommand)
+      .callsFake((params) => data.listServices(params));
+  
+    const hammertimeableServices = await listServicesToStop(defaultOperatingTimezone);
+    const valid = [
+      "arn:aws:ecs:service:1-R-unhammertimed",
+      "arn:aws:ecs:service:2-R-unhammertimed"
+    ];
+    assert.equal(hammertimeableServices.length, 2);
+    assert.equal(
+      hammertimeableServices.filter(service => valid.some(validService => validService === service.serviceArn)
+      ).length,
+      2
     );
-  });
-
-  afterEach(() => {
-    AWS.restore("ECS", "describeServices");
-    AWS.restore("ECS", "describeClusters");
-    AWS.restore("ECS", "listClusters");
-    AWS.restore("ECS", "listServices");
   });
 });

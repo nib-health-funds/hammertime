@@ -6,4 +6,4 @@ const HAMMERTIME_TAG_REGEX = new RegExp(`^${TAG_PREFIX}:[\\w]+$`);
  * @param {Array<{Key:string, Value: string}>} tags
  * @returns {Array<{Key:string, Value: string}>}
  */
-module.exports = tags => tags.filter(tag => HAMMERTIME_TAG_REGEX.test(tag.Key));
+module.exports = (tags) => tags.filter((tag) => HAMMERTIME_TAG_REGEX.test(tag.Key));

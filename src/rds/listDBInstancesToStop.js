@@ -3,7 +3,5 @@ const filterDBInstancesTaggedUntouchable = require('./filterDBInstancesTaggedUnt
 
 module.exports = function listDBInstancesToStop() {
   return filterDBInstances('available')
-    .then(arns => {
-      return filterDBInstancesTaggedUntouchable(arns);
-    });
+    .then((arns) => filterDBInstancesTaggedUntouchable(arns));
 };

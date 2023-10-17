@@ -1,9 +1,10 @@
-const AWS = require('aws-sdk');
+const { EC2Client, StopInstancesCommand } = require('@aws-sdk/client-ec2');
 
-function stopInstances(instanceIds) {
-  const ec2 = new AWS.EC2();
-  return ec2.stopInstances({ InstanceIds: instanceIds })
-    .promise()
+const region = process.env.RQP_REGION || 'ap-southeast-2';
+
+async function stopInstances(instanceIds) {
+  const client = new EC2Client({ region: region });
+  return client.send(new StopInstancesCommand({ InstanceIds: instanceIds }))
     .then(() => instanceIds);
 }
 

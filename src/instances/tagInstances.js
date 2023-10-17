@@ -1,6 +1,8 @@
-const AWS = require('aws-sdk');
+const { EC2Client, CreateTagsCommand } = require('@aws-sdk/client-ec2');
 
-function tagInstances(instanceIds) {
+const region = process.env.RQP_REGION || 'ap-southeast-2';
+
+async function tagInstances(instanceIds) {
   const options = {
     Resources: instanceIds,
     Tags: [
@@ -10,9 +12,8 @@ function tagInstances(instanceIds) {
       },
     ],
   };
-  const ec2 = new AWS.EC2();
-  return ec2.createTags(options)
-    .promise()
+  const client = new EC2Client({ region: region });
+  return client.send(new CreateTagsCommand(options))
     .then(() => instanceIds);
 }
 

@@ -1,13 +1,14 @@
-const AWS = require('aws-sdk');
+const { RDSClient, StopDBInstanceCommand } = require('@aws-sdk/client-rds');
 
-module.exports = function stopOneDBInstance(arn) {
-  const rds = new AWS.RDS();
+const region = process.env.RQP_REGION || 'ap-southeast-2';
 
-  var instanceId = arn.split(':').pop();
-  console.log("Stopping " + instanceId + "...");
-  return rds.stopDBInstance({
-      DBInstanceIdentifier: instanceId
-    })
-    .promise()
+module.exports = async function stopOneDBInstance(arn) {
+  const client = new RDSClient({ region: region });
+
+  const instanceId = arn.split(':').pop();
+  console.log(`Stopping ${instanceId} ...`);
+  return client.send(new StopDBInstanceCommand({
+    DBInstanceIdentifier: instanceId,
+  }))
     .then(() => arn);
 };

@@ -1,9 +1,11 @@
-const AWS = require('aws-sdk');
+const { AutoScalingClient, UpdateAutoScalingGroupCommand } = require('@aws-sdk/client-auto-scaling');
 const retryWhenThrottled = require('../utils/retryWhenThrottled');
 const valueForKey = require('../utils/valueForKey');
 
-function spinUpASG(asg) {
-  const autoscaling = new AWS.AutoScaling();
+const region = process.env.RQP_REGION || 'ap-southeast-2';
+
+async function spinUpASG(asg) {
+  const client = new AutoScalingClient({ region: region });
   const originalASGSize = valueForKey(asg.Tags, 'hammertime:originalASGSize').split(',');
   const params = {
     AutoScalingGroupName: asg.AutoScalingGroupName,
@@ -12,12 +14,12 @@ function spinUpASG(asg) {
     DesiredCapacity: originalASGSize[2],
   };
 
-  return retryWhenThrottled(() => autoscaling.updateAutoScalingGroup(params))
-    .then(() => asg);
+  await retryWhenThrottled(async () => client.send(new UpdateAutoScalingGroupCommand(params)));
+  return asg;
 }
 
 function startASGs(asgs) {
-  const startedASGs = asgs.map(asg => spinUpASG(asg));
+  const startedASGs = asgs.map((asg) => spinUpASG(asg));
   return Promise.all(startedASGs);
 }
 
