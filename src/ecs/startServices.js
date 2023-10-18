@@ -3,7 +3,7 @@ const retryWhenThrottled = require('../utils/retryWhenThrottled');
 
 function startService(service) {
   const ECS = new AWS.ECS();
-  const originalServiceSize = service.tags.find(tag => tag.key === 'hammertime:originalServiceSize').value;
+  const originalServiceSize = Number(service.tags.find(tag => tag.key === 'hammertime:originalServiceSize').value) || 1;
   const params = {
     cluster: service.clusterArn,
     service: service.serviceArn,
