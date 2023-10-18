@@ -1,6 +1,6 @@
 const caseInvariantStringEquals = require('../utils/caseInvariantStringEquals');
 const getHammertimeTags = require('./getHammerTimeTags');
-const { defaultOperatingTimezone } = require('../config');
+const defaultOperatingTimezone = require('../config').defaultOperatingTimezone;
 
 /**
  * Returns the operating timezone
@@ -8,7 +8,7 @@ const { defaultOperatingTimezone } = require('../config');
  * @returns {string}
  */
 module.exports = (tags) => {
-  const timezoneTags = getHammertimeTags(tags).filter((tag) => caseInvariantStringEquals(tag.Key, 'hammertime:operatingTimezone'));
+  const timezoneTags = getHammertimeTags(tags).filter(tag => caseInvariantStringEquals(tag.Key, 'hammertime:operatingTimezone'));
 
   if (timezoneTags.length === 0 || timezoneTags.length > 1) {
     console.log('No operating timezone tag found. Using default: ', defaultOperatingTimezone);

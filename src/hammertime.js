@@ -5,10 +5,6 @@ const stop = require('./stop');
 const dryRun = process.env.hammerTimeDryRun === 'true' || false;
 
 module.exports = {
-  start: (event, context, callback) => start({
-    event, context, callback, dryRun,
-  }),
-  stop: (event, context, callback) => stop({
-    event, context, callback, dryRun,
-  }),
+  start: (event, context, callback) => start({ event, context, callback, dryRun }),
+  stop: (event, context, callback) => stop({ event, context, callback, dryRun }),
 };

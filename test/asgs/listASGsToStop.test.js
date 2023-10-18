@@ -1,58 +1,58 @@
 const assert = require('assert');
-const { mockClient } = require('aws-sdk-client-mock');
-const { AutoScalingClient, DescribeAutoScalingGroupsCommand } = require('@aws-sdk/client-auto-scaling');
+const AWS = require('aws-sdk-mock');
 const listASGsToStop = require('../../src/asgs/listASGsToStop');
 const stopOnePageResponse = require('./responses/stopOnePageResponse');
 const emptyResponse = require('./responses/emptyResponse');
 const stopAlreadyRunResponse = require('./responses/stopAlreadyRunResponse');
-const stopTwoPageResponse = require('./responses/stopTwoPageResponse');
+const paginatedStop = require('./responses/paginatedStop');
 const defaultOperatingTimezone = require('../../src/config').defaultOperatingTimezone;
 
-const autoScalingMock = mockClient(AutoScalingClient);
-
 describe('listASGsToStop()', () => {
-  beforeEach(() => {
-    autoScalingMock.reset();
+  it('returns list of valid running asgs', () => {
+    AWS.mock('AutoScaling', 'describeAutoScalingGroups', stopOnePageResponse);
+
+    return listASGsToStop(defaultOperatingTimezone)
+      .then((validAsgs) => {
+        assert.equal(validAsgs.length, 1);
+        assert.equal(validAsgs[0].AutoScalingGroupName, 'can-touch-this-asg-page-2');
+      });
   });
 
-  it('returns list of valid running asgs', async () => {
-    autoScalingMock
-      .on(DescribeAutoScalingGroupsCommand)
-      .resolvesOnce(stopOnePageResponse)
+  it('returns an empty list if no asgs found', () => {
+    AWS.mock('AutoScaling', 'describeAutoScalingGroups', emptyResponse);
 
-    const validAsgs = await listASGsToStop(defaultOperatingTimezone);
-    assert.equal(validAsgs.length, 1);
-    assert.equal(validAsgs[0].AutoScalingGroupName, 'can-touch-this-asg-page-2');
+    return listASGsToStop(defaultOperatingTimezone)
+      .then((validAsgs) => {
+        assert.deepEqual(validAsgs, []);
+      });
   });
 
-  it('returns an empty list if no asgs found', async () => {
-    autoScalingMock
-      .on(DescribeAutoScalingGroupsCommand)
-      .resolvesOnce(emptyResponse)
+  it('handles pagination', () => {
+    AWS.mock('AutoScaling', 'describeAutoScalingGroups', (params, callback) => {
+      callback(null, paginatedStop(params.NextToken));
+    });
 
-    const validAsgs = await listASGsToStop(defaultOperatingTimezone);
-    assert.deepEqual(validAsgs, []);
+    return listASGsToStop(defaultOperatingTimezone)
+      .then((validAsgs) => {
+        assert.equal(validAsgs.length, 2);
+        assert.equal(validAsgs.some(asg => asg.AutoScalingGroupName === 'can-touch-this-asg-page-1'), true);
+        assert.equal(validAsgs.some(asg => asg.AutoScalingGroupName === 'can-touch-this-asg-page-2'), true);
+      });
   });
 
-  it('handles pagination', async () => {
-    autoScalingMock
-      .on(DescribeAutoScalingGroupsCommand)
-      .resolvesOnce(stopTwoPageResponse)
-      .resolvesOnce(stopOnePageResponse)
+  it('ignores asgs that are already stopped by hammertime', () => {
+    AWS.mock('AutoScaling', 'describeAutoScalingGroups', (params, callback) => {
+      callback(null, stopAlreadyRunResponse);
+    });
 
-    const validAsgs = await listASGsToStop(defaultOperatingTimezone);
-    assert.equal(validAsgs.length, 2);
-    assert.equal(validAsgs.some(asg => asg.AutoScalingGroupName === 'can-touch-this-asg-page-1'), true);
-    assert.equal(validAsgs.some(asg_1 => asg_1.AutoScalingGroupName === 'can-touch-this-asg-page-2'), true);
+    return listASGsToStop(defaultOperatingTimezone)
+      .then((validAsgs) => {
+        assert.equal(validAsgs.length, 1);
+        assert.equal(validAsgs.some(asg => asg.AutoScalingGroupName === 'can-touch-this-asg'), true);
+      });
   });
 
-  it('ignores asgs that are already stopped by hammertime', async () => {
-    autoScalingMock
-      .on(DescribeAutoScalingGroupsCommand)
-      .resolvesOnce(stopAlreadyRunResponse)
-
-    const validAsgs = await listASGsToStop(defaultOperatingTimezone);
-    assert.equal(validAsgs.length, 1);
-    assert.equal(validAsgs.some(asg => asg.AutoScalingGroupName === 'can-touch-this-asg'), true);
+  afterEach(() => {
+    AWS.restore('AutoScaling', 'describeAutoScalingGroups');
   });
 });

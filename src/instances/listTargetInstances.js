@@ -1,9 +1,7 @@
-const { EC2Client, DescribeInstancesCommand } = require('@aws-sdk/client-ec2');
+const AWS = require('aws-sdk');
 const canITouchThis = require('../tags/canITouchThis');
 const hasTag = require('../tags/hasTag');
 const isInOperatingTimezone = require('../operatingTimezone/isInOperatingTimezone');
-
-const region = process.env.RQP_REGION || 'ap-southeast-2';
 
 function validInstance(instance) {
   return canITouchThis(instance.Tags) && !hasTag(instance.Tags, 'aws:autoscaling:groupName');
@@ -11,24 +9,25 @@ function validInstance(instance) {
 
 function isInstanceInCurrentOperatingTimezone(currentOperatingTimezone) {
   const isInCurrentOperatingTimezone = isInOperatingTimezone(currentOperatingTimezone);
-  return (instance) => isInCurrentOperatingTimezone(instance.Tags);
+  return instance => isInCurrentOperatingTimezone(instance.Tags);
 }
 
 function filterInstances(data, currentOperatingTimezone) {
   return data
     .Reservations
-    .map((reservation) => reservation.Instances)
+    .map(reservation => reservation.Instances)
     .reduce((prev, curr) => prev.concat(curr), [])
     .filter(validInstance)
     .filter(isInstanceInCurrentOperatingTimezone(currentOperatingTimezone))
-    .map((instance) => instance.InstanceId);
+    .map(instance => instance.InstanceId);
 }
 
-async function listTargetInstances(options) {
+function listTargetInstances(options) {
   const { params, currentOperatingTimezone } = options;
-  const client = new EC2Client({ region: region });
-  return client.send(new DescribeInstancesCommand(params))
-    .then((data) => filterInstances(data, currentOperatingTimezone));
+  const ec2 = new AWS.EC2();
+  return ec2.describeInstances(params)
+    .promise()
+    .then(data => filterInstances(data, currentOperatingTimezone));
 }
 
 module.exports = listTargetInstances;

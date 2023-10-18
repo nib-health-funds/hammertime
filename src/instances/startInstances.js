@@ -1,10 +1,9 @@
-const { EC2Client, StartInstancesCommand } = require('@aws-sdk/client-ec2');
+const AWS = require('aws-sdk');
 
-const region = process.env.RQP_REGION || 'ap-southeast-2';
-
-async function startInstances(instanceIds) {
-  const client = new EC2Client({ region: region });
-  return client.send(new StartInstancesCommand({ InstanceIds: instanceIds }))
+function startInstances(instanceIds) {
+  const ec2 = new AWS.EC2();
+  return ec2.startInstances({ InstanceIds: instanceIds })
+    .promise()
     .then(() => instanceIds);
 }
 

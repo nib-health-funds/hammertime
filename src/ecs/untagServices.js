@@ -1,10 +1,8 @@
-const { ECSClient, UntagResourceCommand } = require('@aws-sdk/client-ecs');
-const retryWhenThrottled = require('../utils/retryWhenThrottled');
+const AWS = require('aws-sdk');
+const retryWhenThrottled = require('../utils/retryWhenThrottled.js');
 
-const region = process.env.RQP_REGION || 'ap-southeast-2';
-
-const untagService = async (service) => {
-  const client = new ECSClient({ region: region });
+const untagService = (service) => {
+  const ECS = new AWS.ECS();
   const params = {
     tagKeys: [
       'hammertime:originalServiceSize',
@@ -12,10 +10,9 @@ const untagService = async (service) => {
     ],
     resourceArn: service.serviceArn,
   };
-  await retryWhenThrottled(async () => client.send(new UntagResourceCommand(params)));
-  return service;
+  return retryWhenThrottled(() => ECS.untagResource(params)).then(() => service);
 };
 
-const untagServices = (services) => Promise.all(services.map((service) => untagService(service)));
+const untagServices = services => Promise.all(services.map(service => untagService(service)));
 
 module.exports = untagServices;

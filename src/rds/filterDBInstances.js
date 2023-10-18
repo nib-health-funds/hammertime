@@ -3,8 +3,10 @@ const allValidDBInstances = require('./allValidDBInstances');
 
 module.exports = function filterDBInstances(status) {
   return listAllDBInstances()
-    .then((data) => data
-      .DBInstances
-      .filter(allValidDBInstances, status)
-      .map((instance) => instance.DBInstanceArn));
-};
+    .then(data => {
+      return data
+        .DBInstances
+        .filter(allValidDBInstances, status)
+        .map(instance => instance.DBInstanceArn);
+    });
+}

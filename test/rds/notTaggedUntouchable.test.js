@@ -1,16 +1,9 @@
-const { mockClient } = require('aws-sdk-client-mock');
+const AWS = require('aws-sdk-mock');
 const assert = require('assert');
 const notTaggedUntouchable = require('../../src/rds/notTaggedUntouchable');
-const { RDSClient, ListTagsForResourceCommand } = require('@aws-sdk/client-rds')
-
-const rdsMock = mockClient(RDSClient);
 
 describe('notTaggedUntouchable', () => {
-  beforeEach(() => {
-    rdsMock.reset();
-  });
-
-  it('returns a null if an RDS DB instance is tagged with "hammertime:canttouchthis"', async () => {
+  it('returns a null if an RDS DB instance is tagged with "hammertime:canttouchthis"', () => {
     const mockTagList = {
       TagList: [{
           Key: 'hammertime:canttouchthis',
@@ -22,13 +15,13 @@ describe('notTaggedUntouchable', () => {
         }
       ]
     };
-    rdsMock
-        .on(ListTagsForResourceCommand)
-        .resolves(mockTagList)
-    const arn_1 = await notTaggedUntouchable('somearn');
-    assert.deepEqual(arn_1, null);
+    AWS.mock('RDS', 'listTagsForResource', mockTagList);
+    return notTaggedUntouchable('somearn')
+      .then((arn) => {
+        assert.deepEqual(arn, null);
+      });
   });
-  it('returns an arn if an RDS DB instance is not tagged with "hammertime:canttouchthis"', async () => {
+  it('returns an arn if an RDS DB instance is not tagged with "hammertime:canttouchthis"', () => {
     const mockTagList = {
       TagList: [{
           Key: 'summertime:gershwin',
@@ -40,10 +33,13 @@ describe('notTaggedUntouchable', () => {
         }
       ]
     };
-    rdsMock
-        .on(ListTagsForResourceCommand)
-        .resolves(mockTagList)
-    const arn_1 = await notTaggedUntouchable('somearn');
-    assert.deepEqual(arn_1, 'somearn');
+    AWS.mock('RDS', 'listTagsForResource', mockTagList);
+    return notTaggedUntouchable('somearn')
+      .then((arn) => {
+        assert.deepEqual(arn, 'somearn');
+      });
+  });
+  afterEach(() => {
+    AWS.restore('RDS', 'listTagsForResource');
   });
 });

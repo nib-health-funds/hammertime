@@ -1,8 +1,6 @@
-const { RDSClient, DescribeDBInstancesCommand } = require('@aws-sdk/client-rds');
+const AWS = require('aws-sdk');
 
-const region = process.env.RQP_REGION || 'ap-southeast-2';
-
-module.exports = async function listAllDBInstances() {
-  const client = new RDSClient({ region: region });
-  return client.send(new DescribeDBInstancesCommand({}));
+module.exports = function listAllDBInstances() {
+  const rds = new AWS.RDS();
+  return rds.describeDBInstances().promise();
 };

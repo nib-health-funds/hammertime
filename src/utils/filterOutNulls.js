@@ -1,1 +1,1 @@
-module.exports = (array) => array.filter((item) => item !== null);
+module.exports = array => array.filter(item => item !== null);

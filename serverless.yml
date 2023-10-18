@@ -1,10 +1,10 @@
 service: hammertime
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs12.x
   memorySize: 128
   stage: '${env:SLICE}'
-  region: '${env:RQP_REGION}'
+  region: '${env:AWS_REGION}'
   deploymentBucket: '${env:DEPLOY_BUCKET}'
   iamRoleStatements:
     - Effect: Allow
