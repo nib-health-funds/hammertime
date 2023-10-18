@@ -104,7 +104,7 @@ function stopAllDBInstances(dryRun) {
     });
 }
 
-function spinDownServices({ dryRun, currentOperatingTimezone }) {
+function spinDownServices({ dryRun, currentOperatingTimezone }){
   return listServicesToStop(currentOperatingTimezone)
     .then((stoppableServices) => {
       if (dryRun) {
@@ -112,7 +112,7 @@ function spinDownServices({ dryRun, currentOperatingTimezone }) {
         console.log(`Found the following ${stoppableServices.length} service[s] that would have been spun down...`);
         stoppableServices.forEach((service) => {
           console.log(service.serviceName);
-        });
+        })
         return [];
       }
 
@@ -121,10 +121,10 @@ function spinDownServices({ dryRun, currentOperatingTimezone }) {
         return [];
       }
 
-      console.log('Found the following service[s] to spin down...');
+      console.log('Found the following service[s] to spin down...')
       stoppableServices.forEach((service) => {
         console.log(service);
-      });
+      })
 
       return tagServices(stoppableServices).then((taggedServices) => {
         if (taggedServices.length > 0) {
@@ -132,19 +132,20 @@ function spinDownServices({ dryRun, currentOperatingTimezone }) {
           return stopServices(taggedServices);
         }
         return [];
-      });
-    });
+      })
+    })
 }
+
 
 module.exports = function stop(options) {
   const { event, callback, dryRun } = options;
-  const { currentOperatingTimezone } = event;
+  const currentOperatingTimezone = event.currentOperatingTimezone;
   console.log(`Hammertime stop for ${currentOperatingTimezone}`);
   Promise.all([
     stopAllDBInstances(dryRun),
     stopAllInstances({ dryRun, currentOperatingTimezone }),
     spinDownASGs({ dryRun, currentOperatingTimezone }),
-    spinDownServices({ dryRun, currentOperatingTimezone }),
+    spinDownServices({ dryRun, currentOperatingTimezone })
   ]).then(() => {
     if (!dryRun) {
       console.log('All EC2, RDS instances, ASGs, and ECS services stopped successfully. Good night!');

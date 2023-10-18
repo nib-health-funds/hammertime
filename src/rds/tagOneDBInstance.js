@@ -1,16 +1,15 @@
-const { RDSClient, AddTagsToResourceCommand } = require('@aws-sdk/client-rds');
+const AWS = require('aws-sdk');
 
-const region = process.env.RQP_REGION || 'ap-southeast-2';
-
-module.exports = async function tagOneDBInstance(arn) {
+module.exports = function tagOneDBInstance(arn) {
   const params = {
     ResourceName: arn,
     Tags: [{
       Key: 'hammertime:stop',
-      Value: new Date().toISOString(),
-    }],
+      Value: new Date().toISOString()
+    }]
   };
-  const client = new RDSClient({ region: region });
-  return client.send(new AddTagsToResourceCommand(params))
+  const rds = new AWS.RDS();
+  return rds.addTagsToResource(params)
+    .promise()
     .then(() => arn);
 };

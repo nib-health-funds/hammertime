@@ -15,4 +15,4 @@ const tagTests = [
  * @returns {Boolean}
  */
 // eslint-disable-next-line max-len
-module.exports = (tags) => getHammerTimeTags(tags).every((tag) => tagTests.reduce((prev, curr) => prev && !curr(tag), true));
+module.exports = tags => getHammerTimeTags(tags).every(tag => tagTests.reduce((prev, curr) => prev && !curr(tag), true));

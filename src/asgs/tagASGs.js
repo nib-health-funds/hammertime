@@ -1,11 +1,9 @@
-const { AutoScalingClient, CreateOrUpdateTagsCommand } = require('@aws-sdk/client-auto-scaling');
+const AWS = require('aws-sdk');
 const retryWhenThrottled = require('../utils/retryWhenThrottled');
 const createTag = require('../utils/createTag');
 
-const region = process.env.RQP_REGION || 'ap-southeast-2';
-
-async function tagASG(asg) {
-  const client = new AutoScalingClient({ region: region });
+function tagASG(asg) {
+  const autoscaling = new AWS.AutoScaling();
   const params = {
     Tags: [
       createTag('hammertime:originalASGSize', asg.AutoScalingGroupName, 'auto-scaling-group', `${asg.MinSize},${asg.MaxSize},${asg.DesiredCapacity}`),
@@ -13,12 +11,12 @@ async function tagASG(asg) {
     ],
   };
 
-  await retryWhenThrottled(async () => client.send(new CreateOrUpdateTagsCommand(params)));
-  return asg;
+  return retryWhenThrottled(() => autoscaling.createOrUpdateTags(params))
+    .then(() => asg);
 }
 
 function tagASGs(asgs) {
-  const taggedASGs = asgs.map((asg) => tagASG(asg));
+  const taggedASGs = asgs.map(asg => tagASG(asg));
   return Promise.all(taggedASGs);
 }
 

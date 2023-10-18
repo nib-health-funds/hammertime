@@ -3,5 +3,5 @@ const filterDBInstancesTaggedToStart = require('./filterDBInstancesTaggedToStart
 
 module.exports = function listDBInstancesToStart() {
   return filterDBInstances('stopped')
-    .then((arns) => filterDBInstancesTaggedToStart(arns));
+    .then(arns => filterDBInstancesTaggedToStart(arns));
 };

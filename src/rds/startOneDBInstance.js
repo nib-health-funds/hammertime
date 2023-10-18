@@ -1,14 +1,13 @@
-const { RDSClient, StartDBInstanceCommand } = require('@aws-sdk/client-rds');
+const AWS = require('aws-sdk');
 
-const region = process.env.RQP_REGION || 'ap-southeast-2';
+module.exports = function startOneDBInstance(arn) {
+  const rds = new AWS.RDS();
 
-module.exports = async function startOneDBInstance(arn) {
-  const client = new RDSClient({ region: region });
-
-  const instanceId = arn.split(':').pop();
-  console.log(`Starting ${instanceId} ...`);
-  return client.send(new StartDBInstanceCommand({
-    DBInstanceIdentifier: instanceId,
-  }))
+  var instanceId = arn.split(':').pop();
+  console.log("Starting " + instanceId + " ...");
+  return rds.startDBInstance({
+      DBInstanceIdentifier: instanceId
+    })
+    .promise()
     .then(() => arn);
 };
