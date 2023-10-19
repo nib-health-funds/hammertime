@@ -4,6 +4,7 @@ const valueForKey = require('../utils/valueForKey');
 
 function spinUpASG(asg) {
   const autoscaling = new AWS.AutoScaling();
+  console.log(`spinning up ${asg.AutoScalingGroupName} with tags ${asg.Tags}`);
   const originalASGSize = valueForKey(asg.Tags, 'hammertime:originalASGSize').split(',');
   const params = {
     AutoScalingGroupName: asg.AutoScalingGroupName,
@@ -18,7 +19,7 @@ function spinUpASG(asg) {
 
 function startASGs(asgs) {
   const startedASGs = asgs.map(asg => spinUpASG(asg));
-  return Promise.all(startedASGs);
+  return Promise.any(startedASGs);
 }
 
 module.exports = startASGs;
