@@ -34,6 +34,7 @@ Edit [serverless.yml](serverless.yml) where you can adjust
 - `hammertime:canttouchthis`: Will prevent hammertime from starting or stopping this asset in all cases.
 - `hammertime:canttouchthisbetween`: Will prevent hammertime from starting or stopping the asset between a given time range specified in the value of the tag. The expected format for the value is `{datetime} and {datetime}` For example: A value of `2017-05-06 and 2017-06-06` prevents hammertime from affecting this asset between the mentioned dates. The datetimes should be a valid ISO-8601 string.
 - `hammertime:canttouchthisbefore`: Will prevent hammertime from affecting the asset before a specific datetime represented in the value field of the tag. The datetime should be a valid ISO-8601 string. For example: A value of `2017-05-06` will ensure the given asset is not touched before the given date.
+- `hammertime:asgsuspend`: (ASG only) Will suspend all processes on the tagged ASG and shutdown ec2 instances attached to ASG (this is instead of the default behaviour of setting desired instance count to 0, which terminates all ec2 instances).
 
 `start-hammertime` will query the tags left by `stop-hammertime` and return the instances and ASGs to their previous status.
 

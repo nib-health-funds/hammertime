@@ -1,11 +1,15 @@
-const listTargetInstances = require('./listTargetInstances');
+const listTargetInstances = require("./listTargetInstances");
 
-function listInstancesToStop(currentOperatingTimezone) {
+function listInstancesToStop(currentOperatingTimezone, application) {
   const params = {
     Filters: [
       {
-        Name: 'instance-state-name',
-        Values: ['running'],
+        Name: "instance-state-name",
+        Values: ["running"],
+      },
+      {
+        Name: "tag:aws:cloudformation:logical-id",
+        Values: application,
       },
     ],
   };

@@ -3,18 +3,18 @@ const listTargetASGs = require("./listTargetASGs");
 const canITouchThis = require("../tags/canITouchThis");
 const hasTagValue = require("../tags/hasTagValue");
 
-function stoppableASG(application) {
-  return function stoppableASGFilter(asg) {
+function resumeableASG(application) {
+  return function suspendableASGFilter(asg) {
     if (application === "all") {
       return (
-        !hasTag(asg.Tags, "stop:hammertime") &&
-        !hasTag(asg.Tags, "hammertime:asgsuspend") &&
+        hasTag(asg.Tags, "stop:hammertime") &&
+        hasTag(asg.Tags, "hammertime:asgsuspend") &&
         canITouchThis(asg.Tags)
       );
     }
     return (
-      !hasTag(asg.Tags, "stop:hammertime") &&
-      !hasTag(asg.Tags, "hammertime:asgsuspend") &&
+      hasTag(asg.Tags, "stop:hammertime") &&
+      hasTag(asg.Tags, "hammertime:asgsuspend") &&
       canITouchThis(asg.Tags) &&
       hasTag(asg.Tags, "Application") &&
       hasTagValue(asg.Tags, "Application", application)
@@ -22,11 +22,11 @@ function stoppableASG(application) {
   };
 }
 
-function listASGsToStop(currentOperatingTimezone, application) {
+function listASGsToResume(currentOperatingTimezone, application) {
   return listTargetASGs({
-    filter: stoppableASG(application),
+    filter: resumeableASG(application),
     currentOperatingTimezone,
   });
 }
 
-module.exports = listASGsToStop;
+module.exports = listASGsToResume;

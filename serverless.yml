@@ -1,7 +1,7 @@
 service: hammertime
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   memorySize: 128
   stage: '${env:SLICE}'
   region: '${env:AWS_REGION}'
@@ -24,6 +24,9 @@ provider:
         - 'autoscaling:DeleteTags'
         - 'autoscaling:DescribeAutoScalingGroups'
         - 'autoscaling:UpdateAutoScalingGroup'
+        - 'autoscaling:SuspendProcesses'
+        - 'autoscaling:ResumeProcesses'
+        - 'kms:CreateGrant'
         - 'ecs:ListClusters'
         - 'ecs:ListServices'
         - 'ecs:DescribeServices'
@@ -47,9 +50,9 @@ provider:
 functions:
   stop-hammertime:
     handler: hammertime.stop
-    timeout: 180
+    timeout: 900
     events: ${file(./dist/events.js):stop}
   start-hammertime:
     handler: hammertime.start
-    timeout: 180
+    timeout: 900
     events: ${file(./dist/events.js):start}
