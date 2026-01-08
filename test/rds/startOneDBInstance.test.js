@@ -1,24 +1,32 @@
-const AWS = require('aws-sdk-mock');
+const AWSMock = require('aws-sdk-mock');
 const assert = require('assert');
-const startOneDBInstance = require('../../src/rds/startOneDBInstance');
 
 describe('startOneDBInstance', () => {
-  it('returns an arn of a started RDS DB instance', () => {
+  beforeEach(() => {
+    // Clear require cache so aws-sdk gets loaded fresh after mock is set up
+    delete require.cache[require.resolve('aws-sdk')];
+    delete require.cache[require.resolve('../../src/rds/startOneDBInstance')];
+    
     const mockResponse = {
-      DBInstance: [{
-          DBInstanceIdentifier: 'somenstanceid',
-          DBInstanceStatus: 'available',
-          DBInstanceArn: 'arn:aws:rds:aws-region:aws-account:db:somenstanceid',
-        }
-      ]
+      DBInstance: {
+        DBInstanceIdentifier: 'somenstanceid',
+        DBInstanceStatus: 'available',
+        DBInstanceArn: 'arn:aws:rds:aws-region:aws-account:db:somenstanceid'
+      }
     };
-    AWS.mock('RDS', 'startDBInstance', mockResponse);
+    AWSMock.mock('RDS', 'startDBInstance', (params, callback) => {
+      callback(null, mockResponse);
+    });
+  });
+
+  it('returns an arn of a started RDS DB instance', () => {
+    const startOneDBInstance = require('../../src/rds/startOneDBInstance');
     return startOneDBInstance('arn:aws:rds:aws-region:aws-account:db:somenstanceid')
       .then((arn) => {
         assert.deepEqual(arn, 'arn:aws:rds:aws-region:aws-account:db:somenstanceid');
       });
   });
   afterEach(() => {
-    AWS.restore('RDS', 'startDBInstance');
+    AWSMock.restore('RDS', 'startDBInstance');
   });
 });

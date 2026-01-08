@@ -1,8 +1,8 @@
 service: hammertime
 provider:
   name: aws
-  runtime: nodejs14.x
-  memorySize: 128
+  runtime: nodejs18.x
+  memorySize: 1024
   stage: '${env:SLICE}'
   region: '${env:AWS_REGION}'
   deploymentBucket: '${env:DEPLOY_BUCKET}'

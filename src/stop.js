@@ -69,9 +69,6 @@ function stopAllInstancesAndspinDownSuspenceASGs({
     })
     .then((result) => {
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 6 FINISH");
-    })
-    .catch((error) => {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ERROR", error);
     });
 }
 
@@ -305,7 +302,8 @@ module.exports = function stop(options) {
   console.log(
     `Hammertime stop for ${currentOperatingTimezone}, dryrun: ${dryRun}`
   );
-  Promise.all([
+  // Promise.allSettled will wait for all promises to settle (either fulfilled or rejected), while Promise.all will reject as soon as one of the promises rejects.
+  Promise.allSettled([
     stopAllDBInstances(dryRun),
     stopAllInstancesAndspinDownSuspenceASGs({
       dryRun,
@@ -313,22 +311,64 @@ module.exports = function stop(options) {
     }),
     spinDownServices({ dryRun, currentOperatingTimezone }),
   ])
-    .then(() => {
-      if (!dryRun) {
-        console.log(
-          "All EC2, RDS instances, ASGs, and ECS services stopped successfully. Good night!"
+    .then((results) => {
+      const fnNames = [
+        "stopAllDBInstances",
+        "stopAllInstancesAndspinDownSuspenceASGs",
+        "spinDownServices",
+      ];
+      const failed = results
+        .map((result, idx) => {
+          if (result.status === "rejected") {
+            return { fnName: fnNames[idx], reason: result.reason };
+          }
+          return null;
+        })
+        .filter(Boolean);
+
+      if (results.some((r) => r.status === "rejected")) {
+        failed.forEach((fail) => {
+          let errorMsg = fail.reason && fail.reason.stack
+            ? fail.reason.stack
+            : (fail.reason && fail.reason.message)
+              ? fail.reason.message
+              : JSON.stringify(fail.reason);
+          console.error(`Function ${fail.fnName} failed: ${errorMsg}`);
+        });
+        const errorDetails = failed
+          .map((f) => {
+            let errorMsg = f.reason && f.reason.stack
+              ? f.reason.stack
+              : (f.reason && f.reason.message)
+                ? f.reason.message
+                : JSON.stringify(f.reason);
+            return `${f.fnName}: ${errorMsg}`;
+          })
+          .join(" | ");
+        callback(
+          new Error(
+            `Stop: Hammertime failed for: ${errorDetails}`
+          ),
+          null,
+          event
+        );
+      } else {
+        if (!dryRun) {
+          console.log(
+            "All EC2, RDS instances, ASGs, and ECS services stopped successfully. Good night!"
+          );
+        }
+        callback(
+          null,
+          {
+            message: "Stop: Hammertime successfully completed.",
+          },
+          event
         );
       }
-      callback(
-        null,
-        {
-          message: "Stop: Hammertime successfully completed.",
-        },
-        event
-      );
     })
     .catch((err) => {
-      console.error(err);
+      console.error("Unexpected error in stop handler:", err);
       callback(err);
     });
 };

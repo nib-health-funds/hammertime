@@ -5,6 +5,7 @@ const resumeASGs = require("./asgs/resumeASGs");
 const listASGsToResume = require("./asgs/listASGsToResume");
 const untagResumedASGs = require("./asgs/untagResumedASGs");
 const startInstances = require("./instances/startInstances");
+const startInstancesWithRetry = require("./instances/startInstancesWithRetry");
 const listInstancesToStart = require("./instances/listInstancesToStart");
 const untagInstances = require("./instances/untagInstances");
 const listDBInstancesToStart = require("./rds/listDBInstancesToStart");
@@ -63,9 +64,6 @@ function startAllInstancesAndAsgs({ dryRun, currentOperatingTimezone }) {
     })
     .then((result) => {
       console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 6 FINISH");
-    })
-    .catch((error) => {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ERROR", error);
     });
 }
 /**
@@ -110,7 +108,7 @@ function startAllInstances({ dryRun, currentOperatingTimezone, application }) {
         console.log(instance);
       });
 
-      return startInstances(startableInstances).then((startedInstanceIds) => {
+      return startInstancesWithRetry(startableInstances).then((startedInstanceIds) => {
         console.log("Finished starting instances. Moving on to untag them.");
         return untagInstances(startedInstanceIds);
       });
@@ -296,27 +294,70 @@ module.exports = function start(options) {
   const { event, callback, dryRun } = options;
   const currentOperatingTimezone = event.currentOperatingTimezone;
   console.log(`Hammertime start for ${currentOperatingTimezone}`);
-  Promise.all([
+  // Promise.allSettled will wait for all promises to settle (either fulfilled or rejected), while Promise.all will reject as soon as one of the promises rejects.
+  Promise.allSettled([
     startAllDBInstances(dryRun),
     startAllInstancesAndAsgs({ dryRun, currentOperatingTimezone }),
     spinUpServices({ dryRun, currentOperatingTimezone }),
   ])
-    .then(() => {
-      if (!dryRun) {
-        console.log(
-          "All EC2, RDS instances, ASGs, and ECS services started successfully. Good morning!"
+    .then((results) => {
+      const fnNames = [
+        "startAllDBInstances",
+        "startAllInstancesAndAsgs",
+        "spinUpServices",
+      ];
+      const failed = results
+        .map((result, idx) => {
+          if (result.status === "rejected") {
+            return { fnName: fnNames[idx], reason: result.reason };
+          }
+          return null;
+        })
+        .filter(Boolean);
+
+      if (results.some((r) => r.status === "rejected")) {
+        failed.forEach((fail) => {
+          let errorMsg = fail.reason && fail.reason.stack
+            ? fail.reason.stack
+            : (fail.reason && fail.reason.message)
+              ? fail.reason.message
+              : JSON.stringify(fail.reason);
+          console.error(`Function ${fail.fnName} failed: ${errorMsg}`);
+        });
+        const errorDetails = failed
+          .map((f) => {
+            let errorMsg = f.reason && f.reason.stack
+              ? f.reason.stack
+              : (f.reason && f.reason.message)
+                ? f.reason.message
+                : JSON.stringify(f.reason);
+            return `${f.fnName}: ${errorMsg}`;
+          })
+          .join(" | ");
+        callback(
+          new Error(
+            `Start: Hammertime failed for: ${errorDetails}`
+          ),
+          null,
+          event
+        );
+      } else {
+        if (!dryRun) {
+          console.log(
+            "All EC2, RDS instances, ASGs, and ECS services started successfully. Good morning!"
+          );
+        }
+        callback(
+          null,
+          {
+            message: "Start: Hammertime successfully completed.",
+          },
+          event
         );
       }
-      callback(
-        null,
-        {
-          message: "Start: Hammertime successfully completed.",
-        },
-        event
-      );
     })
     .catch((err) => {
-      console.error(err);
+      console.error("Unexpected error in start handler:", err);
       callback(err);
     });
 };

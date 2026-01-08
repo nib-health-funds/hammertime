@@ -7,10 +7,10 @@
     "deploy": "node_modules/serverless/bin/serverless deploy --verbose",
     "destroy": "node_modules/serverless/bin/serverless remove --verbose",
     "lint": "eslint *.js",
-    "test:unit": "nyc mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec",
+    "test:unit": "NODE_ENV=test nyc mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec",
     "codecov": "codecov",
     "test": "npm run lint && npm run test.unit",
-    "test.unit": "nyc mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec && codecov",
+    "test.unit": "NODE_ENV=test nyc mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec && codecov",
     "build": "babel src --out-dir dist"
   },
   "repository": {
@@ -20,14 +20,14 @@
   "author": "nib",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.7.19",
+    "aws-sdk": "^2.1200.0",
     "handlebars": "^4.5.3",
     "@babel/register": "^7.6.2",
     "luxon": "^1.11.4",
     "moment": "^2.22.1",
     "nyc": "^14.1.1",
     "promise-retry": "^1.1.1",
-    "serverless": "^1.54.0"
+    "serverless": "^3.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
@@ -35,7 +35,7 @@
     "@babel/polyfill": "^7.6.0",
     "@babel/preset-env": "^7.6.3",
     "@istanbuljs/nyc-config-babel": "^2.1.1",
-    "aws-sdk-mock": "^1.7.0",
+    "aws-sdk-mock": "^4.5.0",
     "babel-plugin-istanbul": "^5.2.0",
     "babel-register": "^6.26.0",
     "chai": "^3.5.0",
