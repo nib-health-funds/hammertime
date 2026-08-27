@@ -1,16 +1,19 @@
 {
   "name": "hammertime",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "U Can't Touch This",
   "main": "hammertime.js",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
-    "deploy": "node_modules/serverless/bin/serverless deploy --verbose",
-    "destroy": "node_modules/serverless/bin/serverless remove --verbose",
-    "lint": "eslint *.js",
+    "deploy": "serverless deploy --verbose",
+    "destroy": "serverless remove --verbose",
+    "lint": "eslint --no-error-on-unmatched-pattern *.js",
     "test:unit": "nyc mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec",
     "codecov": "codecov",
-    "test": "npm run lint && npm run test.unit",
-    "test.unit": "nyc mocha --report lcovonly -- test/**/*.test.js --require test/global.js -R spec && codecov",
+    "test": "npm run lint && npm run test:unit",
+    "test.unit": "npm run test:unit",
     "build": "babel src --out-dir dist"
   },
   "repository": {
@@ -26,27 +29,23 @@
     "moment": "^2.22.1",
     "nyc": "^14.1.1",
     "promise-retry": "^1.1.1",
-    "serverless": "^1.54.0"
+    "serverless": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.4",
-    "@babel/core": "^7.6.4",
-    "@babel/polyfill": "^7.6.0",
-    "@babel/preset-env": "^7.6.3",
-    "@istanbuljs/nyc-config-babel": "^2.1.1",
-    "aws-sdk-mock": "^1.7.0",
-    "babel-plugin-istanbul": "^5.2.0",
-    "babel-register": "^6.26.0",
+    "@babel/cli": "^7.29.7",
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@istanbuljs/nyc-config-babel": "^3.0.0",
+    "aws-sdk-mock": "^6.2.2",
+    "babel-plugin-istanbul": "^7.0.0",
     "chai": "^3.5.0",
-    "codecov": "^3.6.5",
-    "eslint": "^4.18.2",
-    "eslint-config-airbnb": "^14.1.0",
-    "eslint-plugin-chai-expect": "^1.1.1",
-    "eslint-plugin-chai-friendly": "^0.3.6",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^3.0.2",
-    "eslint-plugin-mocha": "^4.9.0",
-    "eslint-plugin-react": "^6.9.0",
-    "mocha": "^6.2.1"
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-chai-expect": "^4.1.0",
+    "eslint-plugin-chai-friendly": "^1.2.1",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-mocha": "^10.5.0",
+    "mocha": "^10.0.0",
+    "nyc": "^17.1.0"
   }
 }
