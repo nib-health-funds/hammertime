@@ -20,6 +20,8 @@ Hammertime will automatically filter out RDS instances with the above conditions
 
 ## Getting Started
 
+Use Node.js 24 for local development and CI.
+
 Edit [serverless.yml](serverless.yml) where you can adjust
 * scheduled run time,
 * deployment s3 bucket (can be set as `DEPLOY_BUCKET` env var),
